@@ -125,7 +125,14 @@
 		"webpack-merge": "^4.1.1"
 	},
 	"dependencies": {
+		"@material-ui/core": "^3.0.3",
+		"@material-ui/icons": "^3.0.1",
+		"@types/nedb": "^1.8.5",
+		"@types/react-data-grid": "^4.0.0",
+		"camo": "^0.12.3",
+		"nedb": "^1.8.0",
 		"react": "^16.2.0",
+		"react-data-grid": "^4.0.8",
 		"react-dom": "^16.2.0",
 		"react-redux": "^5.0.7",
 		"redux": "^4.0.0",
