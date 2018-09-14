@@ -1,3 +1,4 @@
+/*
 import * as React from 'react';
 import * as renderer from 'react-test-renderer';
 
@@ -11,3 +12,4 @@ describe('Counter component', () => {
         expect(tree).toMatchSnapshot();
     });
 });
+*/
