@@ -4,7 +4,7 @@ import { ITextFormState } from '../states/TextFormState';
 
 type Props = ITextFormState & ITextFormActions;
 
-export const textFormComponent: React.SFC<Props> = (props: Props) => {
+export const TextFormComponent: React.SFC<Props> = (props: Props) => {
     return (
         <div>
             <input

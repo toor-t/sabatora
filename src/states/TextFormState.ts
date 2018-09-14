@@ -1,5 +1,5 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { textFormActions } from '../actions/TextFormAction';
+import { TextFormActions } from '../actions/TextFormAction';
 
 export interface ITextFormState {
     value: string;
@@ -9,8 +9,8 @@ const initialState: ITextFormState = {
     value: 'こんにちは。'
 };
 
-export const textFormStateReducer = reducerWithInitialState<ITextFormState>(initialState).case(
-    textFormActions.updateValue,
+export const TextFormStateReducer = reducerWithInitialState<ITextFormState>(initialState).case(
+    TextFormActions.updateValue,
     (state, value) => {
         return Object.assign({}, state, { value });
     }

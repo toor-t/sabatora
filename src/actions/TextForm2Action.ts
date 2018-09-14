@@ -6,6 +6,6 @@ export interface ITextForm2Actions {
 
 const actionCreator = actionCreatorFactory();
 
-export const textForm2Actions = {
+export const TextForm2Actions = {
     updateValue: actionCreator<string>('TEXT_FORM_2_ACTIONS_UPDATE_VALUE')
 };

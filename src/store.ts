@@ -1,6 +1,6 @@
 import { combineReducers, createStore } from 'redux';
-import { ITextForm2State, textForm2StateReducer } from './states/TextForm2State';
-import { ITextFormState, textFormStateReducer } from './states/TextFormState';
+import { ITextForm2State, TextForm2StateReducer } from './states/TextForm2State';
+import { ITextFormState, TextFormStateReducer } from './states/TextFormState';
 
 export interface IAppState {
     textForm2State: ITextForm2State;
@@ -9,8 +9,8 @@ export interface IAppState {
 
 const store = createStore(
     combineReducers<IAppState>({
-        textForm2State: textForm2StateReducer,
-        textFormState: textFormStateReducer
+        textForm2State: TextForm2StateReducer,
+        textFormState: TextFormStateReducer
     })
 );
 
