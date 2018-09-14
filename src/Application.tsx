@@ -4,16 +4,14 @@ import CheckBoxContainer from './containers/CheckBoxContainer';
 import TextForm2Container from './containers/TextForm2Container';
 import TextFormContainer from './containers/TextFormContainer';
 
-class Application extends React.Component {
-    public render() {
-        return (
-            <div className="App">
-                <TextFormContainer />
-                <CheckBoxContainer />
-                <TextForm2Container />
-            </div>
-        );
-    }
-}
+const Application: React.SFC = () => {
+    return (
+        <div className="App">
+            <TextFormContainer />
+            <TextForm2Container />
+            <CheckBoxContainer />
+        </div>
+    );
+};
 
 export default Application;
