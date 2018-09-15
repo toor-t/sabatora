@@ -1,3 +1,4 @@
+'use strict';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { TextFormActions } from '../actions/TextFormAction';
 import { CheckBoxActions } from '../actions/CheckBoxAction';

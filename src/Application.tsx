@@ -1,3 +1,4 @@
+'use strict';
 import * as React from 'react';
 import './Application.css';
 import CheckBoxContainer from './containers/CheckBoxContainer';

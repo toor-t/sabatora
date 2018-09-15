@@ -1,3 +1,4 @@
+'use strict';
 import * as React from 'react';
 import { ITextFormActions } from '../actions/TextFormAction';
 import { ITextFormState } from '../states/TextFormState';

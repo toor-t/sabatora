@@ -1,3 +1,4 @@
+'use strict';
 import { Action, actionCreatorFactory } from 'typescript-fsa';
 
 export interface ITextFormActions {
