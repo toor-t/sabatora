@@ -2,17 +2,17 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { Action } from 'typescript-fsa';
 import { ICheckBoxActions, CheckBoxActions } from '../actions/CheckBoxAction';
-import { CheckBoxComponent } from '../components/CheckBoxComponent';
+import CheckBoxComponent, { ICheckBoxComponentProps } from '../components/CheckBoxComponent';
 import { ICheckBoxState } from '../states/CheckBoxState';
 import { IAppState } from '../store';
 
-function mapStateToProps(appState: IAppState): ICheckBoxState {
-    return Object.assign({}, appState.checkBoxState);
+function mapStateToProps(appState: IAppState): ICheckBoxComponentProps {
+    return { checked: appState.checkBoxState.checked };
 }
 
-function mapDispatchToProps(dispatch: Dispatch<Action<any>>): ICheckBoxActions {
+function mapDispatchToProps(dispatch: Dispatch<Action<any>>): ICheckBoxComponentProps {
     return {
-        updateValue: (v: boolean) => dispatch(CheckBoxActions.updateValue(v))
+        onChange: (e: any) => dispatch(CheckBoxActions.updateValue(e.target.checked))
     };
 }
 

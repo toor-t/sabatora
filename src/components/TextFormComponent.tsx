@@ -1,22 +1,50 @@
 import * as React from 'react';
 import { ITextFormActions } from '../actions/TextFormAction';
 import { ITextFormState } from '../states/TextFormState';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Input from '@material-ui/core/Input';
 
-type Props = ITextFormState & ITextFormActions;
+const styles = (theme: Theme) =>
+    createStyles({
+        container: {
+            display: 'inline',
+            flexWrap: 'wrap'
+        },
+        input: {
+            margin: theme.spacing.unit
+        }
+    });
 
-export const TextFormComponent: React.SFC<Props> = props => {
+export interface ITextFormComponentProps {
+    placeholder?: string;
+    value?: string;
+    onChange?: (e: any) => any;
+}
+
+type _ITextFormComponentProps = ITextFormComponentProps & WithStyles<typeof styles>;
+
+const TextFormComponent: React.SFC<_ITextFormComponentProps> = props => {
+    const { placeholder, value, onChange } = props;
+    const { classes } = props;
     return (
         <div>
-            <input
-                type="text"
-                placeholder="value"
-                value={props.value}
-                // tslint:disable-next-line:jsx-no-lambda
-                onChange={(e: any) => props.updateValue(e.target.value)}
-            />
+            <div className={classes.container}>
+                <Input
+                    className={classes.input}
+                    type="text"
+                    placeholder={placeholder == null ? 'value' : placeholder}
+                    value={value}
+                    onChange={onChange}
+                    inputProps={{
+                        'aria-label': 'Description'
+                    }}
+                />
+            </div>
             <br />
-            <h1>{props.value}</h1>
+            <h1>{value}</h1>
             <br />
         </div>
     );
 };
+
+export default withStyles(styles)(TextFormComponent);

@@ -3,21 +3,21 @@ import * as React from 'react';
 import { ICheckBoxActions } from '../actions/CheckBoxAction';
 import { ICheckBoxState } from '../states/CheckBoxState';
 
-type Props = ICheckBoxState & ICheckBoxActions;
+export interface ICheckBoxComponentProps {
+    checked?: boolean;
+    onChange?: (e: any) => any;
+}
 
-export const CheckBoxComponent: React.SFC<Props> = props => {
+const CheckBoxComponent: React.SFC<ICheckBoxComponentProps> = props => {
+    const { checked, onChange } = props;
     return (
         <div>
-            <input
-                type="checkbox"
-                checked={props.value}
-                // tslint:disable-next-line:jsx-no-lambda
-                onChange={e => props.updateValue(e.target.checked)}
-            />{' '}
-            <br />
+            <input type="checkbox" checked={checked} onChange={onChange} /> <br />
             <div>
-                <Paper elevation={3}> {props.value ? 'TRUE' : 'FALSE'} </Paper>
+                <Paper elevation={3}> {checked ? 'TRUE' : 'FALSE'} </Paper>
             </div>
         </div>
     );
 };
+
+export default CheckBoxComponent;
