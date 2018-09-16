@@ -2,9 +2,8 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { Action } from 'typescript-fsa';
-import { ITextFormActions, TextFormActions } from '../actions/TextFormAction';
+import { TextFormActions } from '../actions/TextFormAction';
 import TextFormComponent, { ITextFormComponentProps } from '../components/TextFormComponent';
-import { ITextFormState } from '../states/TextFormState';
 import { IAppState } from '../store';
 
 function mapStateToProps(appState: IAppState): ITextFormComponentProps {

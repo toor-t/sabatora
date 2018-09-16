@@ -1,7 +1,5 @@
 'use strict';
 import * as React from 'react';
-import { ITextFormActions } from '../actions/TextFormAction';
-import { ITextFormState } from '../states/TextFormState';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 
