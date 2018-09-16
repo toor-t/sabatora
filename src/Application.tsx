@@ -8,8 +8,6 @@ import JikkenContainer from './containers/JikkenContainer';
 const Application: React.SFC = () => {
     return (
         <div className="App">
-            <TextFormContainer />
-            <CheckBoxContainer />
             <JikkenContainer />
         </div>
     );

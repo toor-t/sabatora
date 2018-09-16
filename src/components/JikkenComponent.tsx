@@ -10,38 +10,43 @@ export interface IJikkenComponentProps {
 const _columns = [
     {
         key: 'id',
-        name: 'ID',
+        name: 'No.',
         width: 80
     },
     {
-        key: 'task',
-        name: 'Title',
+        key: 'level_1',
+        name: '大分類',
         editable: true
     },
     {
-        key: 'priority',
-        name: 'Priority',
+        key: 'level_2',
+        name: '中分類',
         editable: true
     },
     {
-        key: 'issueType',
-        name: 'Issue Type',
+        key: 'level_3',
+        name: '小分類',
         editable: true
     },
     {
-        key: 'complete',
-        name: '% Complete',
+        key: 'name',
+        name: '名称',
         editable: true
     },
     {
-        key: 'startDate',
-        name: 'Start Date',
+        key: 'unitPrice',
+        name: '単価',
         editable: true
     },
     {
-        key: 'completeDate',
-        name: 'Expected Complete',
+        key: 'number',
+        name: '個数',
         editable: true
+    },
+    {
+        key: 'price',
+        name: '価格',
+        editable: false
     }
 ];
 
@@ -50,16 +55,20 @@ let rows: {}[];
 const createRows = (numberOfRows: number) => {
     const rows = [];
     // tslint:disable-next-line:no-increment-decrement
-    for (let i = 1; i < numberOfRows; i++) {
+    for (let i = 1; i <= numberOfRows; i++) {
         rows.push({
             id: i,
             // tslint:disable-next-line:prefer-template
-            task: 'Task ' + i,
-            complete: Math.min(100, Math.round(Math.random() * 110)),
-            priority: ['Critical', 'High', 'Medium', 'Low'][Math.floor(Math.random() * 3 + 1)],
-            issueType: ['Bug', 'Improvement', 'Epic', 'Story'][Math.floor(Math.random() * 3 + 1)],
-            startDate: getRandomDate(new Date(2015, 3, 1), new Date()),
-            completeDate: getRandomDate(new Date(), new Date(2016, 0, 1))
+            level_1: '大分類 ' + i,
+            // tslint:disable-next-line:prefer-template
+            level_2: '中分類 ' + i,
+            // tslint:disable-next-line:prefer-template
+            level_3: '小分類 ' + i,
+            // tslint:disable-next-line:prefer-template
+            name: 'すごいもの ' + i,
+            unitPrice: i * 10,
+            key: Math.floor(Math.random() * 100 + 1),
+            price: 0
         });
     }
     return rows;
@@ -91,7 +100,7 @@ const getRandomDate = (start: any, end: any) => {
 class JikkenComponent extends React.Component {
     constructor(props: any, context: any) {
         super(props, context);
-        rows = createRows(1000);
+        rows = createRows(10000);
     }
 
     render() {
@@ -101,7 +110,7 @@ class JikkenComponent extends React.Component {
                 columns={_columns}
                 rowGetter={rowGetter}
                 rowsCount={rows.length}
-                minHeight={500}
+                minHeight={100}
                 onGridRowsUpdated={handleGridRowsUpdated}
             />
         );
