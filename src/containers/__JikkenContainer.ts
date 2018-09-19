@@ -2,9 +2,9 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { Action } from 'typescript-fsa';
-import { IJikkenActions, JikkenActions } from '../actions/JikkenAction';
-import JikkenComponent, { IJikkenComponentProps } from '../components/JikkenComponent';
-import { IJikkenState } from '../states/JikkenState';
+import { IJikkenActions, JikkenActions } from '../actions/__JikkenAction';
+import __JikkenComponent, { IJikkenComponentProps } from '../components/__JikkenComponent';
+import { IJikkenState } from '../states/__JikkenState';
 import { IAppState } from '../store';
 
 function mapStateToProps(appState: IAppState): IJikkenComponentProps {
@@ -20,4 +20,4 @@ function mapDispatchToProps(dispatch: Dispatch<Action<any>>): IJikkenComponentPr
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(JikkenComponent);
+)(__JikkenComponent);

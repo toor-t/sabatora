@@ -2,8 +2,8 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { Action } from 'typescript-fsa';
-import { TextFormActions } from '../actions/TextFormAction';
-import TextFormComponent, { ITextFormComponentProps } from '../components/TextFormComponent';
+import { TextFormActions } from '../actions/__TextFormAction';
+import __TextFormComponent, { ITextFormComponentProps } from '../components/__TextFormComponent';
 import { IAppState } from '../store';
 
 function mapStateToProps(appState: IAppState): ITextFormComponentProps {
@@ -19,4 +19,4 @@ function mapDispatchToProps(dispatch: Dispatch<Action<any>>): ITextFormComponent
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(TextFormComponent);
+)(__TextFormComponent);

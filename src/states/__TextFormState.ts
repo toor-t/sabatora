@@ -1,7 +1,7 @@
 'use strict';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { TextFormActions } from '../actions/TextFormAction';
-import { CheckBoxActions } from '../actions/CheckBoxAction';
+import { TextFormActions } from '../actions/__TextFormAction';
+import { CheckBoxActions } from '../actions/__CheckBoxAction';
 
 export interface ITextFormState {
     value: string;

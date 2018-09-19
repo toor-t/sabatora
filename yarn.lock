@@ -107,9 +107,9 @@
     csstype "^2.0.0"
     indefinite-observable "^1.0.1"
 
-"@types/nedb@^1.8.5":
-  version "1.8.5"
-  resolved "https://registry.yarnpkg.com/@types/nedb/-/nedb-1.8.5.tgz#badacf5f70e8c4ae1d6c3ad09dddc055ed2e044f"
+"@types/nedb@^1.8.6":
+  version "1.8.6"
+  resolved "https://registry.yarnpkg.com/@types/nedb/-/nedb-1.8.6.tgz#cbb63bce2f975507452b5d6ec6b57d8f6e52052d"
 
 "@types/node@*":
   version "10.9.4"

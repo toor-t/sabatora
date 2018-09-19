@@ -127,7 +127,7 @@
 	"dependencies": {
 		"@material-ui/core": "^3.0.3",
 		"@material-ui/icons": "^3.0.1",
-		"@types/nedb": "^1.8.5",
+		"@types/nedb": "^1.8.6",
 		"@types/react-data-grid": "^4.0.0",
 		"camo": "^0.12.3",
 		"immutability-helper": "^2.8.0",

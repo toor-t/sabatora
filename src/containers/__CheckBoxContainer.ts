@@ -2,8 +2,8 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { Action } from 'typescript-fsa';
-import { CheckBoxActions } from '../actions/CheckBoxAction';
-import CheckBoxComponent, { ICheckBoxComponentProps } from '../components/CheckBoxComponent';
+import { CheckBoxActions } from '../actions/__CheckBoxAction';
+import __CheckBoxComponent, { ICheckBoxComponentProps } from '../components/__CheckBoxComponent';
 import { IAppState } from '../store';
 
 function mapStateToProps(appState: IAppState): ICheckBoxComponentProps {
@@ -19,4 +19,4 @@ function mapDispatchToProps(dispatch: Dispatch<Action<any>>): ICheckBoxComponent
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(CheckBoxComponent);
+)(__CheckBoxComponent);
