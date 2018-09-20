@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { Action } from 'typescript-fsa';
 // TODO:
-import { CheckBoxActions } from '../actions/__CheckBoxAction';
+import { CreateFormActions } from '../actions/CreateFormAction';
 
 import CreateFormComponent, { ICreateFormComponentProps } from '../components/CreateFormComponent';
 import { IAppState } from '../store';
@@ -17,7 +17,7 @@ function mapStateToProps(appState: IAppState): ICreateFormComponentProps {
 function mapDispatchToProps(dispatch: Dispatch<Action<any>>): ICreateFormComponentProps {
     // TODO:
     return {
-        onChange: (e: any) => dispatch(CheckBoxActions.updateValue(e.target.checked))
+        onChange: (e: any) => dispatch(CreateFormActions.selectRow(0))
     };
 }
 

@@ -4,6 +4,7 @@ import { combineReducers, createStore } from 'redux';
 // Electron remote
 import { remote } from 'electron';
 
+import { ICreateFormState, CreateFormStateReducer } from './states/CreateFormState';
 import { ITextFormState, TextFormStateReducer } from './states/__TextFormState';
 import { ICheckBoxState, CheckBoxStateReducer } from './states/__CheckBoxState';
 import { IJikkenState, JikkenReducer } from './states/__JikkenState';
@@ -24,6 +25,8 @@ const conf: Nedb = new DataStore({
 });
 
 export interface IAppState {
+    createFormState: ICreateFormState;
+
     textFormState: ITextFormState;
     checkBoxState: ICheckBoxState;
 
@@ -32,6 +35,8 @@ export interface IAppState {
 
 const store = createStore(
     combineReducers<IAppState>({
+        createFormState: CreateFormStateReducer,
+
         textFormState: TextFormStateReducer,
         checkBoxState: CheckBoxStateReducer,
 
