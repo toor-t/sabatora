@@ -49,7 +49,32 @@ export interface ICreateFormState {
 
 // TODO:
 const initialState: ICreateFormState = {
-    dataRows: [],
+    dataRows: [
+        {
+            id: 0,
+            level_1: '大項目1',
+            level_1_isValid: true,
+            level_1_isEmpty: false,
+            level_2: '中項目1',
+            level_2_isValid: true,
+            level_2_isEmpty: false,
+            level_3: '小項目1',
+            level_3_isValid: true,
+            level_3_isEmpty: false,
+            itemName: 'すごいもの1',
+            itemName_isEmpty: false,
+            itemName_isValid: true,
+            unitPrice: 100,
+            unitPrice_isEmpty: false,
+            unitPrice_isValid: true,
+            num: 0,
+            num_isEmpty: false,
+            num_isValid: true,
+            price: 0,
+            price_isEmpty: false,
+            checked: false
+        }
+    ],
     title: 'Untitled',
     isEditting: false,
     edittingCell: { column: -1, row: -1 },

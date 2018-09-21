@@ -1,8 +1,17 @@
 'use strict';
 import * as ReactDataGrid from 'react-data-grid';
 import * as React from 'react';
+import { Editors } from 'react-data-grid-addons';
 import immutabilityHelper from 'immutability-helper';
 
+const { AutoComplete: AutoCompleteEditor } = Editors;
+
+let autoCompleteOptions: { id: number; title: string }[];
+// autoCompleteOptions = [{ id: 1, title: 'へへへ' }, { id: 2, title: 'ゆかい' }, { id: 3, title: 'だぜ' }];
+autoCompleteOptions = [];
+for (let i = 0; i < 100; i = i + 1) {
+    autoCompleteOptions.push({ id: i, title: `${i}` });
+}
 export interface ICreateFormDataGridComponentProps {
     // TODO:
     rows?: {}[];
@@ -18,27 +27,27 @@ const _columns = [
     {
         key: 'level_1',
         name: '大分類',
-        editable: true
+        editor: <AutoCompleteEditor options={autoCompleteOptions} />
     },
     {
         key: 'level_2',
         name: '中分類',
-        editable: true
+        editor: <AutoCompleteEditor options={autoCompleteOptions} />
     },
     {
         key: 'level_3',
         name: '小分類',
-        editable: true
+        editor: <AutoCompleteEditor options={autoCompleteOptions} />
     },
     {
         key: 'itemName',
         name: '名称',
-        editable: true
+        editor: <AutoCompleteEditor options={autoCompleteOptions} />
     },
     {
         key: 'unitPrice',
         name: '単価',
-        editable: true
+        editor: <AutoCompleteEditor options={autoCompleteOptions} />
     },
     {
         key: 'num',
@@ -88,7 +97,7 @@ const CreateFormDataGridComponent: React.SFC<ICreateFormDataGridComponentProps> 
             rowGetter={rowGetter}
             rowsCount={rows.length}
             minHeight={500}
-            onGridRowsUpdated={props.onGridRowUpdate}
+            onGridRowsUpdated={/*props.onGridRowUpdate*/ handleGridRowsUpdated}
         />
     );
 };
