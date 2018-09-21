@@ -5,8 +5,8 @@ import immutabilityHelper from 'immutability-helper';
 
 export interface ICreateFormDataGridComponentProps {
     // TODO:
-    checked?: boolean;
-    onChange?: (e: any) => any;
+    rows?: {}[];
+    onGridRowUpdate?: (e: any) => void;
 }
 
 const _columns = [
@@ -78,6 +78,9 @@ const handleGridRowsUpdated = (e: any) => {
 // };
 
 const CreateFormDataGridComponent: React.SFC<ICreateFormDataGridComponentProps> = props => {
+    if (props.rows !== undefined) {
+        rows = props.rows;
+    }
     return (
         <ReactDataGrid
             enableCellSelect={true}
@@ -85,7 +88,7 @@ const CreateFormDataGridComponent: React.SFC<ICreateFormDataGridComponentProps> 
             rowGetter={rowGetter}
             rowsCount={rows.length}
             minHeight={500}
-            onGridRowsUpdated={handleGridRowsUpdated}
+            onGridRowsUpdated={props.onGridRowUpdate}
         />
     );
 };

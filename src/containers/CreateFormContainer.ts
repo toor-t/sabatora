@@ -11,7 +11,11 @@ import { IAppState } from '../store';
 
 function mapStateToProps(appState: IAppState): ICreateFormComponentProps {
     // TODO:
-    return { title: appState.createFormState.title };
+    return {
+        title: appState.createFormState.title,
+        totalPrice: appState.createFormState.totalPrice,
+        rows: appState.createFormState.dataRows
+    };
 }
 
 function mapDispatchToProps(dispatch: Dispatch<Action<any>>): ICreateFormComponentProps {

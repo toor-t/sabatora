@@ -1,9 +1,11 @@
 // TODO: 帳票作成画面コンポーネンt
 'use strict';
 import * as React from 'react';
-import CreateFormDataGridComponent from './CreateFormDataGridComponent';
+import CreateFormDataGridComponent, {
+    ICreateFormDataGridComponentProps
+} from './CreateFormDataGridComponent';
 
-export interface ICreateFormComponentProps {
+export interface ICreateFormComponentProps extends ICreateFormDataGridComponentProps {
     // TODO:
     title?: string;
     totalPrice?: number;
@@ -13,12 +15,13 @@ export interface ICreateFormComponentProps {
 
 const CreateFormComponent: React.SFC<ICreateFormComponentProps> = props => {
     // TODO:
-    const { title, totalPrice } = props;
+    const { title, totalPrice, ...rest } = props;
+
     return (
         <div>
             <h1>{title}</h1>
             <br />
-            <CreateFormDataGridComponent />
+            <CreateFormDataGridComponent {...rest} />
             <br />
             <div>合計: {totalPrice} 円</div>
         </div>

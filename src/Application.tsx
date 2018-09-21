@@ -4,11 +4,12 @@ import './Application.css';
 import __CheckBoxContainer from './containers/__CheckBoxContainer';
 import __TextFormContainer from './containers/__TextFormContainer';
 import __JikkenContainer from './containers/__JikkenContainer';
+import CreateFormContainer from './containers/CreateFormContainer';
 
 const Application: React.SFC = () => {
     return (
         <div className="App">
-            <__JikkenContainer />
+            <CreateFormContainer />
         </div>
     );
 };
