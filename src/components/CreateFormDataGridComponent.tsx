@@ -9,13 +9,18 @@ const { AutoComplete: AutoCompleteEditor } = Editors;
 let autoCompleteOptions: { id: number; title: string }[];
 // autoCompleteOptions = [{ id: 1, title: 'へへへ' }, { id: 2, title: 'ゆかい' }, { id: 3, title: 'だぜ' }];
 autoCompleteOptions = [];
-for (let i = 0; i < 100; i = i + 1) {
-    autoCompleteOptions.push({ id: i, title: `${i}` });
+// for (let i = 0; i < 100; i = i + 1) {
+// 	autoCompleteOptions.push({ id: i, title: `${i}` });
+// }
+function getAutoCompleteOptions() {
+    return autoCompleteOptions;
 }
 export interface ICreateFormDataGridComponentProps {
     // TODO:
     rows?: {}[];
     onGridRowUpdate?: (e: any) => void;
+    onSelectedCell?: (col: { rowIdx: number; idx: number }) => void;
+    autoCompleteOptions?: { id: number; title: string }[];
 }
 
 const _columns = [
@@ -27,27 +32,27 @@ const _columns = [
     {
         key: 'level_1',
         name: '大分類',
-        editor: <AutoCompleteEditor options={autoCompleteOptions} />
+        editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
     },
     {
         key: 'level_2',
         name: '中分類',
-        editor: <AutoCompleteEditor options={autoCompleteOptions} />
+        editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
     },
     {
         key: 'level_3',
         name: '小分類',
-        editor: <AutoCompleteEditor options={autoCompleteOptions} />
+        editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
     },
     {
         key: 'itemName',
         name: '名称',
-        editor: <AutoCompleteEditor options={autoCompleteOptions} />
+        editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
     },
     {
         key: 'unitPrice',
         name: '単価',
-        editor: <AutoCompleteEditor options={autoCompleteOptions} />
+        editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
     },
     {
         key: 'num',
@@ -80,6 +85,7 @@ const handleGridRowsUpdated = (e: any) => {
     rows = _rows;
 };
 
+const handleCellSelected = (col: any) => {};
 // const getRandomDate = (start: any, end: any) => {
 //     return new Date(
 //         start.getTime() + Math.random() * (end.getTime() - start.getTime())
@@ -90,6 +96,10 @@ const CreateFormDataGridComponent: React.SFC<ICreateFormDataGridComponentProps> 
     if (props.rows !== undefined) {
         rows = props.rows;
     }
+    if (props.autoCompleteOptions !== undefined) {
+        autoCompleteOptions = props.autoCompleteOptions;
+    }
+
     return (
         <ReactDataGrid
             enableCellSelect={true}
@@ -98,6 +108,7 @@ const CreateFormDataGridComponent: React.SFC<ICreateFormDataGridComponentProps> 
             rowsCount={rows.length}
             minHeight={500}
             onGridRowsUpdated={/*props.onGridRowUpdate*/ handleGridRowsUpdated}
+            onCellSelected={props.onSelectedCell}
         />
     );
 };

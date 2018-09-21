@@ -3,7 +3,7 @@ import { Action, actionCreatorFactory } from 'typescript-fsa';
 
 export interface ICreateFormActions {
     selectRow: (r: number) => Action<number>;
-    selectCell: (cel: {}) => Action<{}>;
+    selectCell: (cel: { rowIdx: number; idx: number }) => Action<{}>;
     startEdittingCell: (cel: {}) => Action<{}>;
     updateEdittingCellValue: (v: string) => Action<string>;
     endEdittingCell: (cel: {}) => Action<{}>;
@@ -17,22 +17,25 @@ export interface ICreateFormActions {
     loadFrom: () => Action<void>; // TODO:
 }
 
-const actionCreator = actionCreatorFactory();
+const actionCreator = actionCreatorFactory('CREATE_FORM_ACTIONS');
 
 export const CreateFormActions = {
-    selectRow: actionCreator<number>('CREATE_FORM_ACTIONS_SELECT_ROW'),
-    selectCell: actionCreator<{}>('CREATE_FORM_ACTIONS_SELECT_CELL'),
-    startEdittingCell: actionCreator<{}>('CREATE_FORM_ACTIONS_START_EDITTING_CELL'),
-    updateEdittingCellValue: actionCreator<string>(
-        'CREATE_FORM_ACTIONS_UPDATE_EDITTING_CELL_VALUE'
-    ),
-    endEdittingCell: actionCreator<{}>('CREATE_FORM_ACTIONS_END_EDITTING_CELL'),
-    addRow: actionCreator<number>('CREATE_FORM_ACTIONS_ADD_ROW'),
-    deleteRow: actionCreator<number>('CREATE_FORM_ACTIONS_DELETE_ROW'),
-    insertRow: actionCreator<number>('CREATE_FORM_ACTIONS_INSERT_ROW'),
-    startEdittingTitle: actionCreator<void>('CREATE_FORM_ACTIONS_START_EDITTING_TITLE'),
-    endEdittingTitle: actionCreator<string>('CREATE_FORM_ACTIONS_END_EDITTING_TITLE'),
-    printForm: actionCreator<void>('CREATE_FORM_ACTIONS_PRINT_FORM'),
-    saveForm: actionCreator<void>('CREATE_FORM_ACTIONS_SAVE_FORM'),
-    loadFrom: actionCreator<void>('CREATE_FORM_ACTIONS_LOAD_FORM')
+    selectRow: actionCreator<number>('SELECT_ROW'),
+    selectCell: actionCreator<{ rowIdx: number; idx: number }>('SELECT_CELL'),
+    startEdittingCell: actionCreator<{}>('START_EDITTING_CELL'),
+    updateEdittingCellValue: actionCreator<string>('UPDATE_EDITTING_CELL_VALUE'),
+    endEdittingCell: actionCreator<{}>('END_EDITTING_CELL'),
+    addRow: actionCreator<number>('ADD_ROW'),
+    deleteRow: actionCreator<number>('DELETE_ROW'),
+    insertRow: actionCreator<number>('INSERT_ROW'),
+    startEdittingTitle: actionCreator<void>('START_EDITTING_TITLE'),
+    endEdittingTitle: actionCreator<string>('END_EDITTING_TITLE'),
+    printForm: actionCreator<void>('PRINT_FORM'),
+    saveForm: actionCreator<void>('SAVE_FORM'),
+    loadFrom: actionCreator<void>('LOAD_FORM'),
+
+    // TODO:  非同期
+    updateAutoCompleteOptions: actionCreator.async<{ rowIdx: number; idx: number }, []>(
+        'UPDATE_AUTO_COMPLETE_OPTIONS'
+    )
 };

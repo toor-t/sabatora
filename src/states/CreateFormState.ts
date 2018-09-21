@@ -2,6 +2,8 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { CreateFormActions } from '../actions/CreateFormAction';
 
+import { data_db } from '../db';
+
 export interface FormDataRow {
     id: number;
 
@@ -45,6 +47,9 @@ export interface ICreateFormState {
     selectedRow: number;
     selectedCell: { column: number; row: number };
     totalPrice: number;
+
+    // TODO:
+    autoComplateOptions: { id: number; title: string }[];
 }
 
 // TODO:
@@ -81,7 +86,9 @@ const initialState: ICreateFormState = {
     autoCompleteOptions: {},
     selectedRow: -1,
     selectedCell: { column: -1, row: -1 },
-    totalPrice: 0
+    totalPrice: 0,
+    // TODO:
+    autoComplateOptions: [{ id: 0, title: 'hogehoge' }]
 };
 
 // TODO:
@@ -117,8 +124,65 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         // TODO:
         return state;
     })
-    .case(CreateFormActions.selectCell, (state, cell) => {
+    .case(CreateFormActions.selectCell, (state, col) => {
         // TODO:
+        // autoCompleteOptions をアップデートする
+        const { rowIdx, idx } = col;
+
+        const _row = state.dataRows[rowIdx];
+        let _level_1 = _row.level_1 === '' || _row.level_1 === undefined ? '' : _row.level_1;
+        let _level_2 = _row.level_2 === '' || _row.level_2 === undefined ? '' : _row.level_2;
+        let _level_3 = _row.level_3 === '' || _row.level_3 === undefined ? '' : _row.level_3;
+        let _itemName = _row.itemName === '' || _row.itemName === undefined ? '' : _row.itemName;
+
+        let result: {}[];
+        const _autoCompleteOptions: {}[] = [];
+        switch (idx) {
+            case 1: // 大項目
+                _level_1 = '';
+                new Promise((resolve, reject) => {
+                    data_db.find(
+                        {
+                            /*level_2: _level_2, level_3: _level_3, itemName: _itemName*/
+                        },
+                        { level_1: 1 },
+                        (err, docs) => {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                console.log('hogehoge');
+                                resolve(docs);
+                            }
+                        }
+                    );
+                }).then(
+                    docs => {
+                        result = Array.from(new Set(docs as {}[]));
+
+                        for (let i = 0; i < result.length; i = i + 1) {
+                            _autoCompleteOptions.push({ id: i, title: result[i] });
+                        }
+                        console.log(result.length);
+                    },
+                    err => {}
+                );
+
+                return Object.assign({}, state, { autoCompleteOptions: _autoCompleteOptions });
+
+                break;
+            case 2: // 中項目
+                _level_2 = '';
+                break;
+            case 3: // 小項目
+                _level_3 = '';
+                break;
+            case 4: // 名称
+                _itemName = '';
+                break;
+            default:
+                break;
+        }
+
         return state;
     })
     .case(CreateFormActions.selectRow, (state, r) => {
@@ -134,6 +198,18 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         return state;
     })
     .case(CreateFormActions.updateEdittingCellValue, (state, value) => {
+        // TODO:
+        return state;
+    })
+    .case(CreateFormActions.updateAutoCompleteOptions.started, (state, cell) => {
+        // TODO:
+        return state;
+    })
+    .case(CreateFormActions.updateAutoCompleteOptions.done, (state, result) => {
+        // TODO:
+        return state;
+    })
+    .case(CreateFormActions.updateAutoCompleteOptions.failed, (state, error) => {
         // TODO:
         return state;
     });
