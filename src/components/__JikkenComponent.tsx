@@ -110,7 +110,7 @@ class JikkenComponent extends React.Component {
                 columns={_columns}
                 rowGetter={rowGetter}
                 rowsCount={rows.length}
-                minHeight={100}
+                minHeight={500}
                 onGridRowsUpdated={handleGridRowsUpdated}
             />
         );

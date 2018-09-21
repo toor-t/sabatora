@@ -11,13 +11,13 @@ import { IAppState } from '../store';
 
 function mapStateToProps(appState: IAppState): ICreateFormComponentProps {
     // TODO:
-    return { checked: appState.checkBoxState.checked };
+    return { title: appState.createFormState.title };
 }
 
 function mapDispatchToProps(dispatch: Dispatch<Action<any>>): ICreateFormComponentProps {
     // TODO:
     return {
-        onChange: (e: any) => dispatch(CreateFormActions.selectRow(0))
+        // onChange: (e: any) => dispatch(CreateFormActions.selectRow(0))
     };
 }
 
