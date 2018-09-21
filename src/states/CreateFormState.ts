@@ -86,7 +86,7 @@ const initialState: ICreateFormState = {
     selectedCell: { column: -1, row: -1 },
     totalPrice: 0,
     // TODO:
-    autoCompleteOptions: [{ id: 0, title: 'hogehoge' }]
+    autoCompleteOptions: [{ id: 0, title: '残念!!' }, { id: 1, title: 'うまくいかないよ。' }]
 };
 
 // TODO:
@@ -134,7 +134,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         let _itemName = _row.itemName === '' || _row.itemName === undefined ? '' : _row.itemName;
 
         let result: {}[];
-        const _autoCompleteOptions: {}[] = [];
+        const _autoCompleteOptions: { id: number; title: string }[] = [];
         switch (idx) {
             case 1: // 大項目
                 _level_1 = '';

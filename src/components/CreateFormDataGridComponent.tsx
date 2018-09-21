@@ -10,6 +10,8 @@ let autoCompleteOptions: { id: number; title: string }[];
 autoCompleteOptions = [];
 
 const getOptions = (): { id: number; title: string }[] => {
+    console.log('Call getOptions()');
+    console.log(autoCompleteOptions);
     return autoCompleteOptions;
 };
 // for (let i = 0; i < 100; i = i + 1) {
@@ -59,7 +61,7 @@ let _columns = [
     {
         key: 'level_1',
         name: '大分類',
-        editor: MyAutoCompleteEditor
+        editor: <AutoCompleteEditor options={getOptions()} />
     },
     {
         key: 'level_2',
@@ -92,6 +94,54 @@ let _columns = [
         editable: false
     }
 ];
+const getColumns = (_options: { id: number; title: string }[] | undefined) => {
+    console.log(`Call getColumns(${_options})`);
+    const __options = _options !== undefined ? _options : [];
+    const options = [{ id: 0, title: new Date().getSeconds().toString() }];
+    console.log(options);
+    return [
+        {
+            key: 'id',
+            name: 'No.',
+            width: 80
+        },
+        {
+            key: 'level_1',
+            name: '大分類',
+            editor: <AutoCompleteEditor options={options} />
+        },
+        {
+            key: 'level_2',
+            name: '中分類',
+            editor: <AutoCompleteEditor options={options} />
+        },
+        {
+            key: 'level_3',
+            name: '小分類',
+            editor: <AutoCompleteEditor options={options} />
+        },
+        {
+            key: 'itemName',
+            name: '名称',
+            editor: <AutoCompleteEditor options={options} />
+        },
+        {
+            key: 'unitPrice',
+            name: '単価',
+            editor: <AutoCompleteEditor options={options} />
+        },
+        {
+            key: 'num',
+            name: '個数',
+            editable: true
+        },
+        {
+            key: 'price',
+            name: '価格',
+            editable: false
+        }
+    ];
+};
 
 let rows: {}[];
 
@@ -131,7 +181,7 @@ const CreateFormDataGridComponent: React.SFC<ICreateFormDataGridComponentProps> 
         <div>
             <ReactDataGrid
                 enableCellSelect={true}
-                columns={_columns}
+                columns={getColumns(props.autoCompleteOptions)}
                 rowGetter={rowGetter}
                 rowsCount={rows.length}
                 minHeight={500}
