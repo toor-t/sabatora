@@ -7,14 +7,40 @@ import immutabilityHelper from 'immutability-helper';
 const { AutoComplete: AutoCompleteEditor } = Editors;
 
 let autoCompleteOptions: { id: number; title: string }[];
-// autoCompleteOptions = [{ id: 1, title: 'へへへ' }, { id: 2, title: 'ゆかい' }, { id: 3, title: 'だぜ' }];
 autoCompleteOptions = [];
+
+const getOptions = (): { id: number; title: string }[] => {
+    return autoCompleteOptions;
+};
 // for (let i = 0; i < 100; i = i + 1) {
 // 	autoCompleteOptions.push({ id: i, title: `${i}` });
 // }
-function getAutoCompleteOptions() {
-    return autoCompleteOptions;
-}
+
+// interface IMyAutoComleteEditorStates {
+// 	autoCompleteOptions: { id: number; title: string }[];
+// }
+
+// class MyAutoCompleteEditor extends React.Component<EditorsBasePros,IMyAutoComleteEditorStates> {
+// 	constructor(props: any) {
+// 		super(props);
+// 		this.state = {
+// 			autoCompleteOptions,
+// 		}
+// 	};
+// 	render() {
+// 		return (
+// 			<AutoCompleteEditor
+// 				// tslint:disable-next-line:jsx-no-lambda
+// 				onFocus={() => this.setState({ autoCompleteOptions })}
+// 				options={(this.state as IMyAutoComleteEditorStates).autoCompleteOptions}
+// 				{...this.props}
+// 			/>
+// 		);
+// 	}
+// }
+
+const MyAutoCompleteEditor = <AutoCompleteEditor options={getOptions()} />;
+
 export interface ICreateFormDataGridComponentProps {
     // TODO:
     rows?: {}[];
@@ -23,7 +49,8 @@ export interface ICreateFormDataGridComponentProps {
     autoCompleteOptions?: { id: number; title: string }[];
 }
 
-const _columns = [
+// tslint:disable-next-line:prefer-const
+let _columns = [
     {
         key: 'id',
         name: 'No.',
@@ -32,27 +59,27 @@ const _columns = [
     {
         key: 'level_1',
         name: '大分類',
-        editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
+        editor: MyAutoCompleteEditor
     },
     {
         key: 'level_2',
         name: '中分類',
-        editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
+        editor: MyAutoCompleteEditor
     },
     {
         key: 'level_3',
         name: '小分類',
-        editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
+        editor: MyAutoCompleteEditor
     },
     {
         key: 'itemName',
         name: '名称',
-        editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
+        editor: MyAutoCompleteEditor
     },
     {
         key: 'unitPrice',
         name: '単価',
-        editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
+        editor: MyAutoCompleteEditor
     },
     {
         key: 'num',
@@ -98,18 +125,21 @@ const CreateFormDataGridComponent: React.SFC<ICreateFormDataGridComponentProps> 
     }
     if (props.autoCompleteOptions !== undefined) {
         autoCompleteOptions = props.autoCompleteOptions;
+        // console.log(props.autoCompleteOptions);
     }
-
     return (
-        <ReactDataGrid
-            enableCellSelect={true}
-            columns={_columns}
-            rowGetter={rowGetter}
-            rowsCount={rows.length}
-            minHeight={500}
-            onGridRowsUpdated={/*props.onGridRowUpdate*/ handleGridRowsUpdated}
-            onCellSelected={props.onSelectedCell}
-        />
+        <div>
+            <ReactDataGrid
+                enableCellSelect={true}
+                columns={_columns}
+                rowGetter={rowGetter}
+                rowsCount={rows.length}
+                minHeight={500}
+                onGridRowsUpdated={handleGridRowsUpdated}
+                onCellSelected={props.onSelectedCell}
+            />
+            <br />
+        </div>
     );
 };
 

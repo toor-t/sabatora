@@ -43,13 +43,12 @@ export interface ICreateFormState {
     title: string;
     isEditting: boolean;
     edittingCell: { column: number; row: number };
-    autoCompleteOptions: {};
     selectedRow: number;
     selectedCell: { column: number; row: number };
     totalPrice: number;
 
     // TODO:
-    autoComplateOptions: { id: number; title: string }[];
+    autoCompleteOptions: { id: number; title: string }[];
 }
 
 // TODO:
@@ -83,12 +82,11 @@ const initialState: ICreateFormState = {
     title: 'Untitled',
     isEditting: false,
     edittingCell: { column: -1, row: -1 },
-    autoCompleteOptions: {},
     selectedRow: -1,
     selectedCell: { column: -1, row: -1 },
     totalPrice: 0,
     // TODO:
-    autoComplateOptions: [{ id: 0, title: 'hogehoge' }]
+    autoCompleteOptions: [{ id: 0, title: 'hogehoge' }]
 };
 
 // TODO:
@@ -150,7 +148,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
                             if (err) {
                                 reject(err);
                             } else {
-                                console.log('hogehoge');
+                                // console.log('hogehoge');
                                 resolve(docs);
                             }
                         }
@@ -160,15 +158,21 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
                         result = Array.from(new Set(docs as {}[]));
 
                         for (let i = 0; i < result.length; i = i + 1) {
-                            _autoCompleteOptions.push({ id: i, title: result[i] });
+                            _autoCompleteOptions.push({
+                                id: i,
+                                title: (result[i] as { level_1: string }).level_1
+                            });
                         }
-                        console.log(result.length);
+                        // console.log(`_autoCompleteOptions=${_autoCompleteOptions}`);
                     },
                     err => {}
                 );
 
-                return Object.assign({}, state, { autoCompleteOptions: _autoCompleteOptions });
-
+                const newState = Object.assign({}, state, {
+                    autoCompleteOptions: _autoCompleteOptions
+                });
+                // console.log(`newState=${newState}`);
+                return newState;
                 break;
             case 2: // 中項目
                 _level_2 = '';

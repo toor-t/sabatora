@@ -15,7 +15,7 @@ function mapStateToProps(appState: IAppState): ICreateFormComponentProps {
         title: appState.createFormState.title,
         totalPrice: appState.createFormState.totalPrice,
         rows: appState.createFormState.dataRows,
-        autoCompleteOptions: appState.createFormState.autoComplateOptions
+        autoCompleteOptions: appState.createFormState.autoCompleteOptions
     };
 }
 
@@ -23,7 +23,6 @@ function mapDispatchToProps(dispatch: Dispatch<Action<any>>): ICreateFormCompone
     // TODO:
     return {
         onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col))
-        // onChange: (e: any) => dispatch(CreateFormActions.selectRow(0))
     };
 }
 
