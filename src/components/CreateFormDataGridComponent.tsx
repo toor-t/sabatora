@@ -15,8 +15,7 @@ const getAutoCompleteOptions = (): { id: number; title: string }[] => {
 };
 
 interface IMyAutoComleteEditorStates {
-    options: { id: number; title: string }[];
-    getOptions: () => { id: number; title: string }[];
+    // TODO:
 }
 
 class MyAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
@@ -25,10 +24,8 @@ class MyAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
 > {
     constructor(props: any) {
         super(props);
-        const { getOptions } = this.props;
         this.state = {
-            getOptions,
-            options: getOptions()
+            // TODO:
         };
         console.log('constructor called.');
     }
@@ -36,7 +33,7 @@ class MyAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
         const { options, getOptions, ...rest } = this.props;
         console.log(`render called.`);
         console.log(this.props);
-        return <AutoCompleteEditor options={this.state.options} {...rest} />;
+        return <AutoCompleteEditor options={getOptions()} {...rest} />;
     }
 }
 
@@ -48,145 +45,104 @@ export interface ICreateFormDataGridComponentProps {
     autoCompleteOptions?: { id: number; title: string }[];
 }
 
-const columns = [
-    {
-        key: 'id',
-        name: 'No.',
-        width: 80
-    },
-    {
-        key: 'level_1',
-        name: '大分類',
-        editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
-        // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
-    },
-    {
-        key: 'level_2',
-        name: '中分類',
-        editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
-        // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
-    },
-    {
-        key: 'level_3',
-        name: '小分類',
-        editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
-        // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
-    },
-    {
-        key: 'itemName',
-        name: '名称',
-        editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
-        // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
-    },
-    {
-        key: 'unitPrice',
-        name: '単価',
-        editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
-        // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
-    },
-    {
-        key: 'num',
-        name: '個数',
-        editable: true
-    },
-    {
-        key: 'price',
-        name: '価格',
-        editable: false
+interface ICreateFormDataGridComponentStates {
+    columns: any[];
+}
+
+class CreateFormDataGridComponent extends React.Component<
+    ICreateFormDataGridComponentProps,
+    ICreateFormDataGridComponentStates
+> {
+    constructor(props: ICreateFormDataGridComponentProps) {
+        super(props);
+        const _columns = [
+            {
+                key: 'id',
+                name: 'No.',
+                width: 80
+            },
+            {
+                key: 'level_1',
+                name: '大分類',
+                editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
+                // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
+            },
+            {
+                key: 'level_2',
+                name: '中分類',
+                editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
+                // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
+            },
+            {
+                key: 'level_3',
+                name: '小分類',
+                editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
+                // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
+            },
+            {
+                key: 'itemName',
+                name: '名称',
+                editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
+                // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
+            },
+            {
+                key: 'unitPrice',
+                name: '単価',
+                editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
+                // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
+            },
+            {
+                key: 'num',
+                name: '個数',
+                editable: true
+            },
+            {
+                key: 'price',
+                name: '価格',
+                editable: false
+            }
+        ];
+
+        this.state = {
+            columns: _columns
+        };
+
+        this.rowGetter.bind(this);
+        this.rowCount.bind(this);
+
+        console.log('constructed.');
     }
-];
+    rowGetter = (i: number) => {
+        return !this.props.rows ? [] : this.props.rows[i];
+    };
+    rowCount = () => {
+        return !this.props.rows ? 0 : this.props.rows.length;
+    };
+    render() {
+        // TODO:
+        if (this.props.autoCompleteOptions !== undefined) {
+            autoCompleteOptions = this.props.autoCompleteOptions;
+        }
 
-// const getColumns = (_options: { id: number; title: string }[] | undefined) => {
-// 	console.log(`Call getColumns(${_options})`);
-// 	const __options = _options !== undefined ? _options : [];
-// 	const options = __options;// [{ id: 0, title: new Date().getSeconds().toString() }];
-// 	console.log(options);
-// 	return [
-// 		{
-// 			key: 'id',
-// 			name: 'No.',
-// 			width: 80,
-// 		},
-// 		{
-// 			key: 'level_1',
-// 			name: '大分類',
-// 			editor: MyAutoCompleteEditor
-// 		},
-// 		{
-// 			key: 'level_2',
-// 			name: '中分類',
-// 			editor: MyAutoCompleteEditor
-// 		},
-// 		{
-// 			key: 'level_3',
-// 			name: '小分類',
-// 			editor: MyAutoCompleteEditor
-// 		},
-// 		{
-// 			key: 'itemName',
-// 			name: '名称',
-// 			editor: MyAutoCompleteEditor
-// 		},
-// 		{
-// 			key: 'unitPrice',
-// 			name: '単価',
-// 			editor: MyAutoCompleteEditor
-// 		},
-// 		{
-// 			key: 'num',
-// 			name: '個数',
-// 			editable: true
-// 		},
-// 		{
-// 			key: 'price',
-// 			name: '価格',
-// 			editable: false
-// 		}
-// 	];
-// };
-
-let rows: {}[];
-
-const rowGetter = (i: number) => {
-    return rows[i];
-};
-
-const handleGridRowsUpdated = (e: any) => {
-    const _rows = rows.slice();
-
-    // tslint:disable-next-line:no-increment-decrement
-    for (let i = e.fromRow; i <= e.toRow; i++) {
-        const rowToUpdate = rows[i];
-        const updatedRow = immutabilityHelper(rowToUpdate, { $merge: e.updated });
-        _rows[i] = updatedRow;
+        return (
+            <div>
+                <ReactDataGrid
+                    enableCellSelect={true}
+                    columns={this.state.columns}
+                    rowGetter={this.rowGetter}
+                    rowsCount={this.rowCount()}
+                    minHeight={500}
+                    onGridRowsUpdated={this.props.onGridRowUpdate}
+                    onCellSelected={this.props.onSelectedCell}
+                    toolbar={
+                        // tslint:disable-next-line:jsx-no-lambda
+                        <Toolbar onAddRow={() => console.log('Add Row.')} enableFilter={true} />
+                    }
+                />
+                <br />
+            </div>
+        );
     }
-
-    rows = _rows;
-};
-
-const CreateFormDataGridComponent: React.SFC<ICreateFormDataGridComponentProps> = props => {
-    if (props.rows !== undefined) {
-        rows = props.rows;
-    }
-    if (props.autoCompleteOptions !== undefined) {
-        autoCompleteOptions = props.autoCompleteOptions;
-    }
-    return (
-        <div>
-            <ReactDataGrid
-                enableCellSelect={true}
-                columns={columns}
-                rowGetter={rowGetter}
-                rowsCount={rows.length}
-                minHeight={500}
-                onGridRowsUpdated={props.onGridRowUpdate}
-                onCellSelected={props.onSelectedCell}
-                // tslint:disable-next-line:jsx-no-lambda
-                toolbar={<Toolbar onAddRow={() => console.log('Add Row.')} enableFilter={true} />}
-            />
-            <br />
-        </div>
-    );
-};
+}
 
 export default CreateFormDataGridComponent;
