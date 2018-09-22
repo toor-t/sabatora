@@ -175,7 +175,7 @@ const CreateFormDataGridComponent: React.SFC<ICreateFormDataGridComponentProps> 
                 rowGetter={rowGetter}
                 rowsCount={rows.length}
                 minHeight={500}
-                onGridRowsUpdated={handleGridRowsUpdated}
+                onGridRowsUpdated={props.onGridRowUpdate}
                 onCellSelected={props.onSelectedCell}
                 // tslint:disable-next-line:jsx-no-lambda
                 toolbar={<Toolbar onAddRow={() => console.log('Add Row.')} enableFilter={true} />}

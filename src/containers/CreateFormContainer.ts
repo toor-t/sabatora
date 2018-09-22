@@ -26,7 +26,8 @@ function mapDispatchToProps(
     // TODO:
     return {
         ...props,
-        onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col))
+        onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col)),
+        onGridRowUpdate: (e: any) => dispatch(CreateFormActions.updateGridRow(e))
     };
 }
 

@@ -1,6 +1,7 @@
 'use strict';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { CreateFormActions } from '../actions/CreateFormAction';
+import immutabilityHelper from 'immutability-helper';
 
 import { data_db } from '../db';
 
@@ -108,16 +109,28 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         // TODO:
         return state;
     })
-    .case(CreateFormActions.endEdittingCell, (state, cell) => {
-        // TODO:
-        return state;
-    })
+    // .case(CreateFormActions.endEdittingCell, (state, cell) => {
+    //     // TODO:
+    //     return state;
+    // })
     .case(CreateFormActions.endEdittingTitle, (state, _title) => {
         return Object.assign({}, state, { title: _title });
     })
     .case(CreateFormActions.insertRow, (state, r) => {
         // TODO:
         return state;
+    })
+    .case(CreateFormActions.updateGridRow, (state, e) => {
+        // TODO:
+        const _rows = state.dataRows.slice();
+
+        // tslint:disable-next-line:no-increment-decrement
+        for (let i = e.fromRow; i <= e.toRow; i++) {
+            const rowToUpdate = state.dataRows[i];
+            const updatedRow = immutabilityHelper(rowToUpdate, { $merge: e.updated });
+            _rows[i] = updatedRow;
+        }
+        return Object.assign({}, state, { dataRows: _rows });
     })
     .case(CreateFormActions.loadFrom, state => {
         // TODO:
@@ -202,18 +215,18 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         // TODO:
         return state;
     })
-    .case(CreateFormActions.startEdittingCell, (state, cell) => {
-        // TODO:
-        return state;
-    })
+    // .case(CreateFormActions.startEdittingCell, (state, cell) => {
+    //     // TODO:
+    //     return state;
+    // })
     .case(CreateFormActions.startEdittingTitle, (state, cell) => {
         // TODO:
         return state;
     })
-    .case(CreateFormActions.updateEdittingCellValue, (state, value) => {
-        // TODO:
-        return state;
-    })
+    // .case(CreateFormActions.updateEdittingCellValue, (state, value) => {
+    //     // TODO:
+    //     return state;
+    // })
     .case(CreateFormActions.updateAutoCompleteOptions.started, (state, cell) => {
         // TODO:
         return state;
