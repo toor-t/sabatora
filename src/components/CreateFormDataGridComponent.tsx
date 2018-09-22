@@ -34,6 +34,8 @@ class MyAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
     }
     render() {
         const { options, getOptions, ...rest } = this.props;
+        console.log(`render called.`);
+        console.log(this.props);
         return <AutoCompleteEditor options={this.state.options} {...rest} />;
     }
 }
@@ -56,26 +58,31 @@ const columns = [
         key: 'level_1',
         name: '大分類',
         editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
+        // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
     },
     {
         key: 'level_2',
         name: '中分類',
         editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
+        // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
     },
     {
         key: 'level_3',
         name: '小分類',
         editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
+        // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
     },
     {
         key: 'itemName',
         name: '名称',
         editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
+        // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
     },
     {
         key: 'unitPrice',
         name: '単価',
         editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
+        // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
     },
     {
         key: 'num',
@@ -157,15 +164,12 @@ const handleGridRowsUpdated = (e: any) => {
     rows = _rows;
 };
 
-const handleCellSelected = (col: any) => {};
-
 const CreateFormDataGridComponent: React.SFC<ICreateFormDataGridComponentProps> = props => {
     if (props.rows !== undefined) {
         rows = props.rows;
     }
     if (props.autoCompleteOptions !== undefined) {
         autoCompleteOptions = props.autoCompleteOptions;
-        // console.log(props.autoCompleteOptions);
     }
     return (
         <div>
