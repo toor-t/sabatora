@@ -9,47 +9,34 @@ const { AutoComplete: AutoCompleteEditor } = Editors;
 let autoCompleteOptions: { id: number; title: string }[];
 autoCompleteOptions = [];
 
-const getOptions = (): { id: number; title: string }[] => {
-    console.log('Call getOptions()');
-    console.log(autoCompleteOptions);
+// TODO:
+const getAutoCompleteOptions = (): { id: number; title: string }[] => {
     return autoCompleteOptions;
 };
-// for (let i = 0; i < 100; i = i + 1) {
-// 	autoCompleteOptions.push({ id: i, title: `${i}` });
-// }
 
 interface IMyAutoComleteEditorStates {
     options: { id: number; title: string }[];
+    getOptions: () => { id: number; title: string }[];
 }
 
-// interface IMyAutoCompleteEditorProps {
-// 	autoCompleteOptions: { id: number; title: string }[];
-// }
 class MyAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
     any,
     IMyAutoComleteEditorStates
 > {
     constructor(props: any) {
         super(props);
-        // const { options } = this.props;
+        const { getOptions } = this.props;
         this.state = {
-            options: autoCompleteOptions
+            getOptions,
+            options: getOptions()
         };
+        console.log('constructor called.');
     }
     render() {
-        const { options, ...rest } = this.props;
-        return (
-            <AutoCompleteEditor
-                // tslint:disable-next-line:jsx-no-lambda
-                onFocus={() => this.setState({ options: autoCompleteOptions })}
-                options={this.state.options}
-                {...rest}
-            />
-        );
+        const { options, getOptions, ...rest } = this.props;
+        return <AutoCompleteEditor options={this.state.options} {...rest} />;
     }
 }
-
-// const MyAutoCompleteEditor = <AutoCompleteEditor options={getOptions()} />;
 
 export interface ICreateFormDataGridComponentProps {
     // TODO:
@@ -59,7 +46,7 @@ export interface ICreateFormDataGridComponentProps {
     autoCompleteOptions?: { id: number; title: string }[];
 }
 
-const _columns = [
+const columns = [
     {
         key: 'id',
         name: 'No.',
@@ -68,27 +55,27 @@ const _columns = [
     {
         key: 'level_1',
         name: '大分類',
-        editor: <MyAutoCompleteEditor />
+        editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
     },
     {
         key: 'level_2',
         name: '中分類',
-        editor: <MyAutoCompleteEditor />
+        editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
     },
     {
         key: 'level_3',
         name: '小分類',
-        editor: <MyAutoCompleteEditor />
+        editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
     },
     {
         key: 'itemName',
         name: '名称',
-        editor: <MyAutoCompleteEditor />
+        editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
     },
     {
         key: 'unitPrice',
         name: '単価',
-        editor: <MyAutoCompleteEditor />
+        editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
     },
     {
         key: 'num',
@@ -171,11 +158,6 @@ const handleGridRowsUpdated = (e: any) => {
 };
 
 const handleCellSelected = (col: any) => {};
-// const getRandomDate = (start: any, end: any) => {
-//     return new Date(
-//         start.getTime() + Math.random() * (end.getTime() - start.getTime())
-//     ).toLocaleDateString();
-// };
 
 const CreateFormDataGridComponent: React.SFC<ICreateFormDataGridComponentProps> = props => {
     if (props.rows !== undefined) {
@@ -189,7 +171,7 @@ const CreateFormDataGridComponent: React.SFC<ICreateFormDataGridComponentProps> 
         <div>
             <ReactDataGrid
                 enableCellSelect={true}
-                columns={_columns}
+                columns={columns}
                 rowGetter={rowGetter}
                 rowsCount={rows.length}
                 minHeight={500}
