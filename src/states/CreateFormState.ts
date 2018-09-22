@@ -4,6 +4,8 @@ import { CreateFormActions } from '../actions/CreateFormAction';
 
 import { data_db } from '../db';
 
+import wrapAsyncWorker from '../wrapAsyncWorker';
+
 export interface FormDataRow {
     id: number;
 
@@ -88,6 +90,13 @@ const initialState: ICreateFormState = {
     // TODO:
     autoCompleteOptions: [{ id: 0, title: '残念!!' }, { id: 1, title: 'うまくいかないよ。' }]
 };
+
+// // TODO: 非同期でautoCompleteOptionsを更新する
+// const updateAutoCompleteOptionsWorker =
+// 	wrapAsyncWorker<{ rowData: FormDataRow, idx: number }, [], {}>
+// 		(CreateFormActions.updateAutoCompleteOptions, ({ rowData, idx }): Promise<[]> => {
+
+// 		});
 
 // TODO:
 export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(initialState)
@@ -187,7 +196,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
                 break;
         }
 
-        return state;
+        return Object.assign({}, state, { autoCompleteOptions: [{ id: 0, title: `${col.idx}` }] });
     })
     .case(CreateFormActions.selectRow, (state, r) => {
         // TODO:

@@ -1,7 +1,7 @@
 'use strict';
 import * as ReactDataGrid from 'react-data-grid';
 import * as React from 'react';
-import { Editors } from 'react-data-grid-addons';
+import { Toolbar, Editors } from 'react-data-grid-addons';
 import immutabilityHelper from 'immutability-helper';
 
 const { AutoComplete: AutoCompleteEditor } = Editors;
@@ -18,30 +18,38 @@ const getOptions = (): { id: number; title: string }[] => {
 // 	autoCompleteOptions.push({ id: i, title: `${i}` });
 // }
 
-// interface IMyAutoComleteEditorStates {
+interface IMyAutoComleteEditorStates {
+    options: { id: number; title: string }[];
+}
+
+// interface IMyAutoCompleteEditorProps {
 // 	autoCompleteOptions: { id: number; title: string }[];
 // }
+class MyAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
+    any,
+    IMyAutoComleteEditorStates
+> {
+    constructor(props: any) {
+        super(props);
+        // const { options } = this.props;
+        this.state = {
+            options: autoCompleteOptions
+        };
+    }
+    render() {
+        const { options, ...rest } = this.props;
+        return (
+            <AutoCompleteEditor
+                // tslint:disable-next-line:jsx-no-lambda
+                onFocus={() => this.setState({ options: autoCompleteOptions })}
+                options={this.state.options}
+                {...rest}
+            />
+        );
+    }
+}
 
-// class MyAutoCompleteEditor extends React.Component<EditorsBasePros,IMyAutoComleteEditorStates> {
-// 	constructor(props: any) {
-// 		super(props);
-// 		this.state = {
-// 			autoCompleteOptions,
-// 		}
-// 	};
-// 	render() {
-// 		return (
-// 			<AutoCompleteEditor
-// 				// tslint:disable-next-line:jsx-no-lambda
-// 				onFocus={() => this.setState({ autoCompleteOptions })}
-// 				options={(this.state as IMyAutoComleteEditorStates).autoCompleteOptions}
-// 				{...this.props}
-// 			/>
-// 		);
-// 	}
-// }
-
-const MyAutoCompleteEditor = <AutoCompleteEditor options={getOptions()} />;
+// const MyAutoCompleteEditor = <AutoCompleteEditor options={getOptions()} />;
 
 export interface ICreateFormDataGridComponentProps {
     // TODO:
@@ -51,8 +59,7 @@ export interface ICreateFormDataGridComponentProps {
     autoCompleteOptions?: { id: number; title: string }[];
 }
 
-// tslint:disable-next-line:prefer-const
-let _columns = [
+const _columns = [
     {
         key: 'id',
         name: 'No.',
@@ -61,27 +68,27 @@ let _columns = [
     {
         key: 'level_1',
         name: '大分類',
-        editor: <AutoCompleteEditor options={getOptions()} />
+        editor: <MyAutoCompleteEditor />
     },
     {
         key: 'level_2',
         name: '中分類',
-        editor: MyAutoCompleteEditor
+        editor: <MyAutoCompleteEditor />
     },
     {
         key: 'level_3',
         name: '小分類',
-        editor: MyAutoCompleteEditor
+        editor: <MyAutoCompleteEditor />
     },
     {
         key: 'itemName',
         name: '名称',
-        editor: MyAutoCompleteEditor
+        editor: <MyAutoCompleteEditor />
     },
     {
         key: 'unitPrice',
         name: '単価',
-        editor: MyAutoCompleteEditor
+        editor: <MyAutoCompleteEditor />
     },
     {
         key: 'num',
@@ -94,54 +101,55 @@ let _columns = [
         editable: false
     }
 ];
-const getColumns = (_options: { id: number; title: string }[] | undefined) => {
-    console.log(`Call getColumns(${_options})`);
-    const __options = _options !== undefined ? _options : [];
-    const options = [{ id: 0, title: new Date().getSeconds().toString() }];
-    console.log(options);
-    return [
-        {
-            key: 'id',
-            name: 'No.',
-            width: 80
-        },
-        {
-            key: 'level_1',
-            name: '大分類',
-            editor: <AutoCompleteEditor options={options} />
-        },
-        {
-            key: 'level_2',
-            name: '中分類',
-            editor: <AutoCompleteEditor options={options} />
-        },
-        {
-            key: 'level_3',
-            name: '小分類',
-            editor: <AutoCompleteEditor options={options} />
-        },
-        {
-            key: 'itemName',
-            name: '名称',
-            editor: <AutoCompleteEditor options={options} />
-        },
-        {
-            key: 'unitPrice',
-            name: '単価',
-            editor: <AutoCompleteEditor options={options} />
-        },
-        {
-            key: 'num',
-            name: '個数',
-            editable: true
-        },
-        {
-            key: 'price',
-            name: '価格',
-            editable: false
-        }
-    ];
-};
+
+// const getColumns = (_options: { id: number; title: string }[] | undefined) => {
+// 	console.log(`Call getColumns(${_options})`);
+// 	const __options = _options !== undefined ? _options : [];
+// 	const options = __options;// [{ id: 0, title: new Date().getSeconds().toString() }];
+// 	console.log(options);
+// 	return [
+// 		{
+// 			key: 'id',
+// 			name: 'No.',
+// 			width: 80,
+// 		},
+// 		{
+// 			key: 'level_1',
+// 			name: '大分類',
+// 			editor: MyAutoCompleteEditor
+// 		},
+// 		{
+// 			key: 'level_2',
+// 			name: '中分類',
+// 			editor: MyAutoCompleteEditor
+// 		},
+// 		{
+// 			key: 'level_3',
+// 			name: '小分類',
+// 			editor: MyAutoCompleteEditor
+// 		},
+// 		{
+// 			key: 'itemName',
+// 			name: '名称',
+// 			editor: MyAutoCompleteEditor
+// 		},
+// 		{
+// 			key: 'unitPrice',
+// 			name: '単価',
+// 			editor: MyAutoCompleteEditor
+// 		},
+// 		{
+// 			key: 'num',
+// 			name: '個数',
+// 			editable: true
+// 		},
+// 		{
+// 			key: 'price',
+// 			name: '価格',
+// 			editable: false
+// 		}
+// 	];
+// };
 
 let rows: {}[];
 
@@ -181,12 +189,14 @@ const CreateFormDataGridComponent: React.SFC<ICreateFormDataGridComponentProps> 
         <div>
             <ReactDataGrid
                 enableCellSelect={true}
-                columns={getColumns(props.autoCompleteOptions)}
+                columns={_columns}
                 rowGetter={rowGetter}
                 rowsCount={rows.length}
                 minHeight={500}
                 onGridRowsUpdated={handleGridRowsUpdated}
                 onCellSelected={props.onSelectedCell}
+                // tslint:disable-next-line:jsx-no-lambda
+                toolbar={<Toolbar onAddRow={() => console.log('Add Row.')} enableFilter={true} />}
             />
             <br />
         </div>

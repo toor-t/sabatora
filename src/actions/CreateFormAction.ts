@@ -1,5 +1,6 @@
 'use strict';
 import { Action, actionCreatorFactory } from 'typescript-fsa';
+import { FormDataRow } from '../states/CreateFormState';
 
 export interface ICreateFormActions {
     selectRow: (r: number) => Action<number>;
@@ -15,6 +16,8 @@ export interface ICreateFormActions {
     printForm: () => Action<void>; // TODO:
     saveForm: () => Action<void>; // TODO:
     loadFrom: () => Action<void>; // TODO:
+
+    updateAutoCompleteOptions: any; // TODO:
 }
 
 const actionCreator = actionCreatorFactory('CREATE_FORM_ACTIONS');
@@ -35,7 +38,7 @@ export const CreateFormActions = {
     loadFrom: actionCreator<void>('LOAD_FORM'),
 
     // TODO:  非同期
-    updateAutoCompleteOptions: actionCreator.async<{ rowIdx: number; idx: number }, []>(
+    updateAutoCompleteOptions: actionCreator.async<{ rowData: FormDataRow; idx: number }, []>(
         'UPDATE_AUTO_COMPLETE_OPTIONS'
     )
 };

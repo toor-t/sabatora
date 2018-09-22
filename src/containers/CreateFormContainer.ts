@@ -19,9 +19,13 @@ function mapStateToProps(appState: IAppState): ICreateFormComponentProps {
     };
 }
 
-function mapDispatchToProps(dispatch: Dispatch<Action<any>>): ICreateFormComponentProps {
+function mapDispatchToProps(
+    dispatch: Dispatch<Action<any>>,
+    props: ICreateFormComponentProps
+): ICreateFormComponentProps {
     // TODO:
     return {
+        ...props,
         onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col))
     };
 }
