@@ -29,7 +29,8 @@ function mapDispatchToProps(
         ...props,
         onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col)),
         onGridRowUpdate: (e: any) => dispatch(CreateFormActions.updateGridRow(e)),
-        updateAutoCompleteOptions: (col: any) => updateAutoCompleteOptionsWorker(dispatch, col)
+        updateAutoCompleteOptions: (c: any) => updateAutoCompleteOptionsWorker(dispatch, c),
+        addRow: () => dispatch(CreateFormActions.addRow())
     };
 }
 

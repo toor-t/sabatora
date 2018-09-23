@@ -59,26 +59,26 @@ const initialState: ICreateFormState = {
     dataRows: [
         {
             id: 0,
-            level_1: '大項目1',
-            level_1_isValid: true,
-            level_1_isEmpty: false,
-            level_2: '中項目1',
-            level_2_isValid: true,
-            level_2_isEmpty: false,
-            level_3: '小項目1',
-            level_3_isValid: true,
-            level_3_isEmpty: false,
-            itemName: 'すごいもの1',
-            itemName_isEmpty: false,
-            itemName_isValid: true,
-            unitPrice: 100,
-            unitPrice_isEmpty: false,
-            unitPrice_isValid: true,
+            level_1: '',
+            level_1_isValid: false,
+            level_1_isEmpty: true,
+            level_2: '',
+            level_2_isValid: false,
+            level_2_isEmpty: true,
+            level_3: '',
+            level_3_isValid: false,
+            level_3_isEmpty: true,
+            itemName: '',
+            itemName_isEmpty: true,
+            itemName_isValid: false,
+            unitPrice: 0,
+            unitPrice_isEmpty: true,
+            unitPrice_isValid: false,
             num: 0,
-            num_isEmpty: false,
-            num_isValid: true,
+            num_isEmpty: true,
+            num_isValid: false,
             price: 0,
-            price_isEmpty: false,
+            price_isEmpty: true,
             checked: false
         }
     ],
@@ -94,60 +94,72 @@ const initialState: ICreateFormState = {
 
 // TODO: 非同期でautoCompleteOptionsを更新する
 export const updateAutoCompleteOptionsWorker = wrapAsyncWorker<
-    { rowIdx: number; idx: number },
+    { rowData: FormDataRow; idx: number },
     {}[],
     {}
 >(
     CreateFormActions.updateAutoCompleteOptions,
-    ({ rowIdx, idx }): Promise<{}[]> => {
-        return updateAutoCompleteOptions(rowIdx, idx);
+    ({ rowData, idx }): Promise<{}[]> => {
+        return updateAutoCompleteOptions(rowData, idx);
     }
 );
 
-const updateAutoCompleteOptions = (rowIdx: number, idx: number): Promise<{}[]> => {
-    let keyName: string = '';
+const updateAutoCompleteOptions = (rowData: FormDataRow, idx: number): Promise<{}[]> => {
+    let level_1 = rowData.level_1;
+    let level_2 = rowData.level_2;
+    let level_3 = rowData.level_3;
+    let itemName = rowData.itemName;
+
+    let projectionKeyName: string = '';
     switch (idx) {
         case 1: // 大項目
-            keyName = 'level_1';
+            projectionKeyName = 'level_1';
+            level_1 = '';
             break;
         case 2: // 中項目
-            keyName = 'level_2';
+            projectionKeyName = 'level_2';
+            level_2 = '';
             break;
         case 3: // 小項目
-            keyName = 'level_3';
+            projectionKeyName = 'level_3';
+            level_3 = '';
             break;
         case 4: // 名称
-            keyName = 'itemName';
+            projectionKeyName = 'itemName';
+            itemName = '';
             break;
     }
+    let query: {} = {};
+    if (level_1 !== '') query = { ...query, level_1 };
+    if (level_2 !== '') query = { ...query, level_2 };
+    if (level_3 !== '') query = { ...query, level_3 };
+    if (itemName !== '') query = { ...query, itemName };
+
     return new Promise((resolve, reject) => {
-        data_db.find(
-            {
-                /*level_2: _level_2, level_3: _level_3, itemName: _itemName*/
-            },
-            { [keyName]: 1 },
-            (err, docs: any[]) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    const newDocs: string[] = [];
-                    for (let i = 0; i < docs.length; i = i + 1) {
-                        const doc = docs[i];
-                        newDocs.push(doc[keyName]);
-                    }
-                    const result = Array.from(new Set(newDocs));
-                    const _autoCompleteOptions: {}[] = [];
-                    for (let i = 0; i < result.length; i = i + 1) {
-                        _autoCompleteOptions.push({
-                            id: i,
-                            title: result[i]
-                        });
-                    }
-                    // console.log(`_autoCompleteOptions=${_autoCompleteOptions}`);
-                    resolve(_autoCompleteOptions);
+        console.log(`query=`);
+        console.log(query);
+        console.log(`projectionKeyName=${projectionKeyName}`);
+        data_db.find(query, { [projectionKeyName]: 1 }, (err, docs: any[]) => {
+            if (err) {
+                reject(err);
+            } else {
+                const newDocs: string[] = [];
+                for (let i = 0; i < docs.length; i = i + 1) {
+                    const doc = docs[i];
+                    newDocs.push(doc[projectionKeyName]);
                 }
+                const result = Array.from(new Set(newDocs)).sort();
+                const _autoCompleteOptions: {}[] = [];
+                for (let i = 0; i < result.length; i = i + 1) {
+                    _autoCompleteOptions.push({
+                        id: i,
+                        title: result[i]
+                    });
+                }
+                // console.log(`_autoCompleteOptions=${_autoCompleteOptions}`);
+                resolve(_autoCompleteOptions);
             }
-        );
+        });
     });
 };
 
@@ -155,7 +167,35 @@ const updateAutoCompleteOptions = (rowIdx: number, idx: number): Promise<{}[]> =
 export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(initialState)
     .case(CreateFormActions.addRow, (state, r) => {
         // TODO:
-        return state;
+        console.log('addRow');
+        const newDataRows = state.dataRows.slice();
+        const rowsCount = newDataRows.length;
+        newDataRows.push({
+            id: rowsCount, // TODO:  これじゃダメ、どうすべき？
+            level_1: '',
+            level_1_isEmpty: true,
+            level_1_isValid: false,
+            level_2: '',
+            level_2_isEmpty: true,
+            level_2_isValid: false,
+            level_3: '',
+            level_3_isEmpty: true,
+            level_3_isValid: false,
+            itemName: '',
+            itemName_isEmpty: true,
+            itemName_isValid: false,
+            unitPrice: 0,
+            unitPrice_isEmpty: true,
+            unitPrice_isValid: false,
+            num: 0,
+            num_isEmpty: true,
+            num_isValid: false,
+            price: 0,
+            price_isEmpty: true,
+            checked: false
+        });
+
+        return Object.assign({}, state, { dataRows: newDataRows });
     })
     .case(CreateFormActions.deleteRow, (state, r) => {
         // TODO:
@@ -182,6 +222,8 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
             const updatedRow = immutabilityHelper(rowToUpdate, { $merge: e.updated });
             _rows[i] = updatedRow;
         }
+        // TODO: 価格を計算
+
         return Object.assign({}, state, { dataRows: _rows });
     })
     .case(CreateFormActions.loadFrom, state => {

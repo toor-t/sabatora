@@ -3,6 +3,7 @@ import * as ReactDataGrid from 'react-data-grid';
 import * as React from 'react';
 import { Toolbar, Editors } from 'react-data-grid-addons';
 import immutabilityHelper from 'immutability-helper';
+import { FormDataRow } from '../states/CreateFormState';
 
 const { AutoComplete: AutoCompleteEditor } = Editors;
 
@@ -66,7 +67,8 @@ export interface ICreateFormDataGridComponentProps {
     onGridRowUpdate?: (e: any) => void;
     onSelectedCell?: (col: { rowIdx: number; idx: number }) => void;
     autoCompleteOptions?: { id: number; title: string }[];
-    updateAutoCompleteOptions?: (col: { rowIdx: number; idx: number }) => void;
+    updateAutoCompleteOptions?: (col: { rowData: FormDataRow; idx: number }) => void;
+    addRow?: () => void;
 }
 
 interface ICreateFormDataGridComponentStates {
@@ -142,6 +144,18 @@ class CreateFormDataGridComponent extends React.Component<
     rowCount = () => {
         return !this.props.rows ? 0 : this.props.rows.length;
     };
+    handleCellSeceted = (col: { rowIdx: number; idx: number }) => {
+        // TODO:
+        if (this.props.onSelectedCell) {
+            this.props.onSelectedCell(col);
+        }
+        if (this.props.updateAutoCompleteOptions && this.props.rows) {
+            this.props.updateAutoCompleteOptions({
+                rowData: this.props.rows[col.rowIdx] as FormDataRow,
+                idx: col.idx
+            });
+        }
+    };
     render() {
         // TODO:
         if (this.props.autoCompleteOptions !== undefined) {
@@ -157,10 +171,10 @@ class CreateFormDataGridComponent extends React.Component<
                     rowsCount={this.rowCount()}
                     minHeight={500}
                     onGridRowsUpdated={this.props.onGridRowUpdate}
-                    onCellSelected={this.props./*onSelectedCell*/ updateAutoCompleteOptions}
+                    onCellSelected={this.handleCellSeceted}
                     toolbar={
                         // tslint:disable-next-line:jsx-no-lambda
-                        <Toolbar onAddRow={() => console.log('Add Row.')} enableFilter={true} />
+                        <Toolbar onAddRow={this.props.addRow} enableFilter={true} />
                     }
                 />
                 <br />

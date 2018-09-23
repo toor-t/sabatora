@@ -8,7 +8,7 @@ export interface ICreateFormActions {
     // startEdittingCell: (cel: {}) => Action<{}>;
     // updateEdittingCellValue: (v: string) => Action<string>;
     // endEdittingCell: (cel: {}) => Action<{}>;
-    addRow: (r: number) => Action<number>; // TODO:
+    addRow: () => Action<void>; // TODO:
     deleteRow: (r: number) => Action<number>; // TODO:
     insertRow: (r: number) => Action<number>; // TODO:
     updateGridRow: (e: any) => Action<any>; // TODO:
@@ -30,7 +30,7 @@ export const CreateFormActions = {
     // startEdittingCell: actionCreator<{}>('START_EDITTING_CELL'),
     // updateEdittingCellValue: actionCreator<string>('UPDATE_EDITTING_CELL_VALUE'),
     // endEdittingCell: actionCreator<{}>('END_EDITTING_CELL'),
-    addRow: actionCreator<number>('ADD_ROW'),
+    addRow: actionCreator<void>('ADD_ROW'),
     deleteRow: actionCreator<number>('DELETE_ROW'),
     insertRow: actionCreator<number>('INSERT_ROW'),
     updateGridRow: actionCreator<any>('UPDATE_GRID_ROW'),
@@ -41,7 +41,7 @@ export const CreateFormActions = {
     loadFrom: actionCreator<void>('LOAD_FORM'),
 
     // TODO:  非同期
-    updateAutoCompleteOptions: actionCreator.async<{ rowIdx: number; idx: number }, {}[]>(
+    updateAutoCompleteOptions: actionCreator.async<{ rowData: FormDataRow; idx: number }, {}[]>(
         'UPDATE_AUTO_COMPLETE_OPTIONS'
     )
 };

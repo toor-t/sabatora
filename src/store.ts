@@ -4,7 +4,6 @@ import { combineReducers, createStore } from 'redux';
 import { ICreateFormState, CreateFormStateReducer } from './states/CreateFormState';
 import { ITextFormState, TextFormStateReducer } from './states/__TextFormState';
 import { ICheckBoxState, CheckBoxStateReducer } from './states/__CheckBoxState';
-import { IJikkenState, JikkenReducer } from './states/__JikkenState';
 
 import { data_db, conf_db, makeDummyDB } from './db';
 
@@ -16,8 +15,6 @@ export interface IAppState {
 
     textFormState: ITextFormState;
     checkBoxState: ICheckBoxState;
-
-    jikkenState: IJikkenState;
 }
 
 const store = createStore(
@@ -25,9 +22,7 @@ const store = createStore(
         createFormState: CreateFormStateReducer,
 
         textFormState: TextFormStateReducer,
-        checkBoxState: CheckBoxStateReducer,
-
-        jikkenState: JikkenReducer
+        checkBoxState: CheckBoxStateReducer
     })
 );
 
