@@ -130,7 +130,6 @@ const updateAutoCompleteOptions = (rowIdx: number, idx: number): Promise<{}[]> =
                 if (err) {
                     reject(err);
                 } else {
-                    // console.log('hogehoge');
                     const newDocs: string[] = [];
                     for (let i = 0; i < docs.length; i = i + 1) {
                         const doc = docs[i];
