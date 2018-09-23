@@ -3,8 +3,10 @@ import { combineReducers, createStore, applyMiddleware } from 'redux';
 import reduxThunk from 'redux-thunk';
 
 import { ICreateFormState, CreateFormStateReducer } from './states/CreateFormState';
+import { IAboutState, AboutStateReducer } from './states/AboutState';
+import { IConfigState, ConfigStateReducer } from './states/ConfigState';
+import { IManageDataState, ManageDataStateReducer } from './states/ManageDataState';
 import { ITextFormState, TextFormStateReducer } from './states/__TextFormState';
-import { ICheckBoxState, CheckBoxStateReducer } from './states/__CheckBoxState';
 
 import { data_db, conf_db, makeDummyDB } from './db';
 
@@ -13,17 +15,21 @@ import { data_db, conf_db, makeDummyDB } from './db';
 
 export interface IAppState {
     createFormState: ICreateFormState;
+    aboutState: IAboutState;
+    configState: IConfigState;
+    manageDataState: IManageDataState;
 
     textFormState: ITextFormState;
-    checkBoxState: ICheckBoxState;
 }
 
 const store = createStore(
     combineReducers<IAppState>({
         createFormState: CreateFormStateReducer,
+        aboutState: AboutStateReducer,
+        configState: ConfigStateReducer,
+        manageDataState: ManageDataStateReducer,
 
-        textFormState: TextFormStateReducer,
-        checkBoxState: CheckBoxStateReducer
+        textFormState: TextFormStateReducer
     }),
     applyMiddleware(reduxThunk)
 );
