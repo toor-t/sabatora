@@ -130,6 +130,7 @@ class CreateFormDataGridComponent extends React.Component<
 
         this.rowGetter.bind(this);
         this.rowCount.bind(this);
+        this.handleCellSeceted.bind(this);
 
         console.log('constructed.');
     }

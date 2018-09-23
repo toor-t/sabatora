@@ -1,5 +1,6 @@
 'use strict';
-import { combineReducers, createStore } from 'redux';
+import { combineReducers, createStore, applyMiddleware } from 'redux';
+import reduxThunk from 'redux-thunk';
 
 import { ICreateFormState, CreateFormStateReducer } from './states/CreateFormState';
 import { ITextFormState, TextFormStateReducer } from './states/__TextFormState';
@@ -23,7 +24,8 @@ const store = createStore(
 
         textFormState: TextFormStateReducer,
         checkBoxState: CheckBoxStateReducer
-    })
+    }),
+    applyMiddleware(reduxThunk)
 );
 
 export default store;
