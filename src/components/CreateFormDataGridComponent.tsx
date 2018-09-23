@@ -85,37 +85,32 @@ class CreateFormDataGridComponent extends React.Component<
             {
                 key: 'id',
                 name: 'No.',
-                width: 80
+                width: 64
             },
             {
                 key: 'level_1',
                 name: '大分類',
                 editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
-                // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
             },
             {
                 key: 'level_2',
                 name: '中分類',
                 editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
-                // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
             },
             {
                 key: 'level_3',
                 name: '小分類',
                 editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
-                // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
             },
             {
                 key: 'itemName',
                 name: '名称',
                 editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
-                // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
             },
             {
                 key: 'unitPrice',
                 name: '単価',
                 editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
-                // editor: <AutoCompleteEditor options={getAutoCompleteOptions()} />
             },
             {
                 key: 'num',

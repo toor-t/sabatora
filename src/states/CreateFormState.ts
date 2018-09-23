@@ -240,70 +240,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     })
     .case(CreateFormActions.selectCell, (state, col) => {
         // TODO:
-        // autoCompleteOptions をアップデートする
-        const { rowIdx, idx } = col;
-
-        const _row = state.dataRows[rowIdx];
-        let _level_1 = _row.level_1 === '' || _row.level_1 === undefined ? '' : _row.level_1;
-        let _level_2 = _row.level_2 === '' || _row.level_2 === undefined ? '' : _row.level_2;
-        let _level_3 = _row.level_3 === '' || _row.level_3 === undefined ? '' : _row.level_3;
-        let _itemName = _row.itemName === '' || _row.itemName === undefined ? '' : _row.itemName;
-
-        let result: {}[];
-        const _autoCompleteOptions: { id: number; title: string }[] = [];
-        switch (idx) {
-            case 1: // 大項目
-                _level_1 = '';
-                new Promise((resolve, reject) => {
-                    data_db.find(
-                        {
-                            /*level_2: _level_2, level_3: _level_3, itemName: _itemName*/
-                        },
-                        { level_1: 1 },
-                        (err, docs) => {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                // console.log('hogehoge');
-                                resolve(docs);
-                            }
-                        }
-                    );
-                }).then(
-                    docs => {
-                        result = Array.from(new Set(docs as {}[]));
-
-                        for (let i = 0; i < result.length; i = i + 1) {
-                            _autoCompleteOptions.push({
-                                id: i,
-                                title: (result[i] as { level_1: string }).level_1
-                            });
-                        }
-                        // console.log(`_autoCompleteOptions=${_autoCompleteOptions}`);
-                    },
-                    err => {}
-                );
-
-                const newState = Object.assign({}, state, {
-                    autoCompleteOptions: _autoCompleteOptions
-                });
-                // console.log(`newState=${newState}`);
-                return newState;
-                break;
-            case 2: // 中項目
-                _level_2 = '';
-                break;
-            case 3: // 小項目
-                _level_3 = '';
-                break;
-            case 4: // 名称
-                _itemName = '';
-                break;
-            default:
-                break;
-        }
-
-        return Object.assign({}, state, { autoCompleteOptions: [{ id: 0, title: `${col.idx}` }] });
+        return state;
     })
     .case(CreateFormActions.selectRow, (state, r) => {
         // TODO:
