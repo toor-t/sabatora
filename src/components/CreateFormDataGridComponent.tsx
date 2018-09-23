@@ -66,6 +66,7 @@ export interface ICreateFormDataGridComponentProps {
     onGridRowUpdate?: (e: any) => void;
     onSelectedCell?: (col: { rowIdx: number; idx: number }) => void;
     autoCompleteOptions?: { id: number; title: string }[];
+    updateAutoCompleteOptions?: (col: { rowIdx: number; idx: number }) => void;
 }
 
 interface ICreateFormDataGridComponentStates {
@@ -156,7 +157,7 @@ class CreateFormDataGridComponent extends React.Component<
                     rowsCount={this.rowCount()}
                     minHeight={500}
                     onGridRowsUpdated={this.props.onGridRowUpdate}
-                    onCellSelected={this.props.onSelectedCell}
+                    onCellSelected={this.props./*onSelectedCell*/ updateAutoCompleteOptions}
                     toolbar={
                         // tslint:disable-next-line:jsx-no-lambda
                         <Toolbar onAddRow={() => console.log('Add Row.')} enableFilter={true} />

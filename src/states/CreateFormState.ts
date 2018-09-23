@@ -92,12 +92,65 @@ const initialState: ICreateFormState = {
     autoCompleteOptions: [{ id: 0, title: '残念!!' }, { id: 1, title: 'うまくいかないよ。' }]
 };
 
-// // TODO: 非同期でautoCompleteOptionsを更新する
-// const updateAutoCompleteOptionsWorker =
-// 	wrapAsyncWorker<{ rowData: FormDataRow, idx: number }, [], {}>
-// 		(CreateFormActions.updateAutoCompleteOptions, ({ rowData, idx }): Promise<[]> => {
+// TODO: 非同期でautoCompleteOptionsを更新する
+export const updateAutoCompleteOptionsWorker = wrapAsyncWorker<
+    { rowIdx: number; idx: number },
+    {}[],
+    {}
+>(
+    CreateFormActions.updateAutoCompleteOptions,
+    ({ rowIdx, idx }): Promise<{}[]> => {
+        return updateAutoCompleteOptions(rowIdx, idx);
+    }
+);
 
-// 		});
+const updateAutoCompleteOptions = (rowIdx: number, idx: number): Promise<{}[]> => {
+    let keyName: string = '';
+    switch (idx) {
+        case 1: // 大項目
+            keyName = 'level_1';
+            break;
+        case 2: // 中項目
+            keyName = 'level_2';
+            break;
+        case 3: // 小項目
+            keyName = 'level_3';
+            break;
+        case 4: // 名称
+            keyName = 'itemName';
+            break;
+    }
+    return new Promise((resolve, reject) => {
+        data_db.find(
+            {
+                /*level_2: _level_2, level_3: _level_3, itemName: _itemName*/
+            },
+            { [keyName]: 1 },
+            (err, docs: any[]) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    // console.log('hogehoge');
+                    const newDocs: string[] = [];
+                    for (let i = 0; i < docs.length; i = i + 1) {
+                        const doc = docs[i];
+                        newDocs.push(doc[keyName]);
+                    }
+                    const result = Array.from(new Set(newDocs));
+                    const _autoCompleteOptions: {}[] = [];
+                    for (let i = 0; i < result.length; i = i + 1) {
+                        _autoCompleteOptions.push({
+                            id: i,
+                            title: result[i]
+                        });
+                    }
+                    // console.log(`_autoCompleteOptions=${_autoCompleteOptions}`);
+                    resolve(_autoCompleteOptions);
+                }
+            }
+        );
+    });
+};
 
 // TODO:
 export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(initialState)
@@ -229,13 +282,17 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     // })
     .case(CreateFormActions.updateAutoCompleteOptions.started, (state, cell) => {
         // TODO:
+        console.log('CreateFormActions.updateAutoCompleteOptions.started');
         return state;
     })
-    .case(CreateFormActions.updateAutoCompleteOptions.done, (state, result) => {
+    .case(CreateFormActions.updateAutoCompleteOptions.done, (state, done) => {
         // TODO:
-        return state;
+        console.log('CreateFormActions.updateAutoCompleteOptions.done');
+        console.log(done);
+        return Object.assign({}, state, { autoCompleteOptions: done.result });
     })
     .case(CreateFormActions.updateAutoCompleteOptions.failed, (state, error) => {
         // TODO:
+        console.log('CreateFormActions.updateAutoCompleteOptions.failed');
         return state;
     });

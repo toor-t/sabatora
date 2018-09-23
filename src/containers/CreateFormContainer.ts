@@ -8,6 +8,7 @@ import { CreateFormActions } from '../actions/CreateFormAction';
 
 import CreateFormComponent, { ICreateFormComponentProps } from '../components/CreateFormComponent';
 import { IAppState } from '../store';
+import { updateAutoCompleteOptionsWorker } from '../states/CreateFormState';
 
 function mapStateToProps(appState: IAppState): ICreateFormComponentProps {
     // TODO:
@@ -27,7 +28,8 @@ function mapDispatchToProps(
     return {
         ...props,
         onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col)),
-        onGridRowUpdate: (e: any) => dispatch(CreateFormActions.updateGridRow(e))
+        onGridRowUpdate: (e: any) => dispatch(CreateFormActions.updateGridRow(e)),
+        updateAutoCompleteOptions: (col: any) => updateAutoCompleteOptionsWorker(dispatch, col)
     };
 }
 
