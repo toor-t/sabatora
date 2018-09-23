@@ -7,7 +7,7 @@ import immutabilityHelper from 'immutability-helper';
 const { AutoComplete: AutoCompleteEditor } = Editors;
 
 let autoCompleteOptions: { id: number; title: string }[];
-autoCompleteOptions = [];
+autoCompleteOptions = [/*TEST DATA*/ { id: 0, title: 'hehehe' }];
 
 // TODO:
 const getAutoCompleteOptions = (): { id: number; title: string }[] => {
@@ -27,13 +27,36 @@ class MyAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
         this.state = {
             // TODO:
         };
-        console.log('constructor called.');
+        this.getValue.bind(this);
+        this.getInputNode.bind(this);
+        this.hasResults.bind(this);
+        // console.log('constructor called.');
+    }
+    autoComplete: any;
+
+    getValue() {
+        console.log('getValue() called!!');
+        return this.autoComplete.getValue();
+    }
+    getInputNode() {
+        console.log('getInputNode() called!!!');
+        return this.autoComplete.getInputNode();
+    }
+    hasResults() {
+        console.log('hasResults() called!!!');
+        return this.autoComplete.hasResults();
     }
     render() {
-        const { options, getOptions, ...rest } = this.props;
-        console.log(`render called.`);
-        console.log(this.props);
-        return <AutoCompleteEditor options={getOptions()} {...rest} />;
+        const { ref, options, getOptions, ...rest } = this.props;
+        // console.log(`render called.`);
+        // console.log(this.props);
+        return (
+            <AutoCompleteEditor
+                ref={node => (this.autoComplete = node)}
+                options={getOptions()}
+                {...rest}
+            />
+        );
     }
 }
 
