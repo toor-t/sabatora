@@ -89,10 +89,13 @@ const initialState: ICreateFormState = {
     selectedCell: { column: -1, row: -1 },
     totalPrice: 0,
     // TODO:
-    autoCompleteOptions: [{ id: 0, title: '残念!!' }, { id: 1, title: 'うまくいかないよ。' }]
+    autoCompleteOptions: [
+        /* TODO:暫定データ */ { id: 0, title: '残念!!' },
+        { id: 1, title: 'うまくいかないよ。' }
+    ]
 };
 
-// TODO: 非同期でautoCompleteOptionsを更新する
+// TODO: 非同期でautoCompleteOptionsを更新する  ※これここに置くべきか？
 export const updateAutoCompleteOptionsWorker = wrapAsyncWorker<
     { rowData: FormDataRow; idx: number },
     {}[],
@@ -129,7 +132,7 @@ const updateAutoCompleteOptions = (rowData: FormDataRow, idx: number): Promise<{
             itemName = '';
             break;
     }
-    let query: {} = {};
+    let query: Object = {};
     if (level_1 !== '') query = { ...query, level_1 };
     if (level_2 !== '') query = { ...query, level_2 };
     if (level_3 !== '') query = { ...query, level_3 };
@@ -163,6 +166,7 @@ const updateAutoCompleteOptions = (rowData: FormDataRow, idx: number): Promise<{
     });
 };
 
+/* Reducer */
 // TODO:
 export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(initialState)
     .case(CreateFormActions.addRow, (state, r) => {

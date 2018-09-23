@@ -15,6 +15,7 @@ export interface ICreateFormActions {
 
     startEdittingTitle: () => Action<void>;
     endEdittingTitle: (title: string) => Action<string>;
+
     printForm: () => Action<void>; // TODO:
     saveForm: () => Action<void>; // TODO:
     loadFrom: () => Action<void>; // TODO:

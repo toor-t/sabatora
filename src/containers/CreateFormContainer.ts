@@ -3,11 +3,10 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { Action } from 'typescript-fsa';
-// TODO:
 import { CreateFormActions } from '../actions/CreateFormAction';
-
 import CreateFormComponent, { ICreateFormComponentProps } from '../components/CreateFormComponent';
 import { IAppState } from '../store';
+// TODO:
 import { updateAutoCompleteOptionsWorker } from '../states/CreateFormState';
 
 function mapStateToProps(appState: IAppState): ICreateFormComponentProps {
