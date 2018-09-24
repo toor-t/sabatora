@@ -3,7 +3,7 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { CreateFormActions } from '../actions/CreateFormAction';
 import immutabilityHelper from 'immutability-helper';
 
-import { data_db, DataDoc, DataDocKeys } from '../db';
+import { data_db, DataDoc, DataDocKeys, updateAutoCompleteOptions } from '../db';
 
 import wrapAsyncWorker from '../wrapAsyncWorker';
 
@@ -136,7 +136,8 @@ export const updateAutoCompleteOptionsWorker = wrapAsyncWorker<
 >(
     CreateFormActions.updateAutoCompleteOptions,
     ({ rowData, idx }): Promise<{} /*[]*/> => {
-        return updateAutoCompleteOptions(rowData, idx);
+        // return updateAutoCompleteOptions(rowData, idx);
+        return updateAutoCompleteOptions(rowData);
     }
 );
 
@@ -144,7 +145,7 @@ let prevQuery: Object = {};
 let prevProjectionKeyName: string = '';
 let prevAutoCompleteOptions: {}[] = [];
 
-const updateAutoCompleteOptions = (rowData: FormDataRow, idx: number): Promise<{} /*[]*/> => {
+const _updateAutoCompleteOptions = (rowData: FormDataRow, idx: number): Promise<{} /*[]*/> => {
     let level_1 = rowData.level_1;
     let level_2 = rowData.level_2;
     let level_3 = rowData.level_3;

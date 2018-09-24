@@ -37,35 +37,95 @@ export const conf_db: Nedb = new DataStore({
     autoload: true
 });
 
-//
-// export const dataFind = (query: Object, projection: Object) => {
-// 	new Promise((resolve, reject) => {
-// 		console.log(`query=`);
-// 		console.log(query);
-// 		console.log(`projectionKeyName=${projectionKeyName}`);
-// 		data_db.find(query, { [projectionKeyName]: 1 }, (err, docs: any[]) => {
-// 			if (err) {
-// 				reject(err);
-// 			} else {
-// 				const newDocs: string[] = [];
-// 				for (let i = 0; i < docs.length; i = i + 1) {
-// 					const doc = docs[i];
-// 					newDocs.push(doc[projectionKeyName]);
-// 				}
-// 				const result = Array.from(new Set(newDocs)).sort();
-// 				const _autoCompleteOptions: {}[] = [];
-// 				for (let i = 0; i < result.length; i = i + 1) {
-// 					_autoCompleteOptions.push({
-// 						id: i,
-// 						title: result[i]
-// 					});
-// 				}
-// 				// console.log(`_autoCompleteOptions=${_autoCompleteOptions}`);
-// 				prevAutoCompleteOptions = _autoCompleteOptions.slice();
+export const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promise<{}> => {
+    return new Promise((resolve, reject) => {
+        // query生成
+        let _query = {};
+        for (const key in query) {
+            switch (key) {
+                case DataDocKeys.level_1:
+                case DataDocKeys.level_2:
+                case DataDocKeys.level_3:
+                case DataDocKeys.itemName:
+                    if (query[key] !== '') {
+                        _query = Object.assign(_query, { [key]: query[key] });
+                    }
+                    break;
+                case DataDocKeys.unitPrice:
+                    // TODO: 何もしないで良いか？
+                    break;
+                default:
+                    // 何もしない
+                    break;
+            }
+        }
+        console.log('_query=');
+        console.log(_query);
+        // projection生成
+        let _projection = {};
+        for (const key in projection) {
+            switch (projection[key]) {
+                case DataDocKeys.level_1:
+                case DataDocKeys.level_2:
+                case DataDocKeys.level_3:
+                case DataDocKeys.itemName:
+                case DataDocKeys.unitPrice:
+                    _projection = Object.assign(_projection, { [projection[key]]: 1 });
+                    break;
+                default:
+                    break;
+            }
+        }
+        console.log('_projection');
+        console.log(_projection);
+        data_db.find(_query, _projection, (err, docs: any[]) => {
+            if (err) {
+                reject(err);
+            } else {
+                console.log('docs=');
+                console.log(docs);
+                let projectionKeys = projection;
+                if (projectionKeys.length === 0) {
+                    projectionKeys = [
+                        DataDocKeys.level_1,
+                        DataDocKeys.level_2,
+                        DataDocKeys.level_3,
+                        DataDocKeys.itemName
+                        // DataDocKeys.unitPrice,
+                    ];
+                }
+                console.log('projectionKeys=');
+                console.log(projectionKeys);
+                let autoCompleteOptions = {};
+                for (const key in projectionKeys) {
+                    const newDocs: string[] = [];
+                    for (let i = 0; i < docs.length; i = i + 1) {
+                        const doc = docs[i];
+                        newDocs.push(doc[projectionKeys[key]]);
+                    }
+                    const result = Array.from(new Set(newDocs)).sort();
+                    const _options: {}[] = [];
+                    for (let i = 0; i < result.length; i = i + 1) {
+                        _options.push({
+                            id: i,
+                            title: result[i]
+                        });
+                    }
+                    console.log('_options=');
+                    console.log(_options);
+                    //
+                    autoCompleteOptions = Object.assign(autoCompleteOptions, {
+                        [projectionKeys[key]]: _options
+                    });
+                }
+                console.log('autoCompleteOptions=');
+                console.log(autoCompleteOptions);
+                resolve(autoCompleteOptions);
+            }
+        });
+    });
+};
 
-// 				resolve(_autoCompleteOptions);
-// 			}
-// 		}
 /***************************************/
 
 // ダミーDB作成
