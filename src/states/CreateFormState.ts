@@ -3,41 +3,74 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { CreateFormActions } from '../actions/CreateFormAction';
 import immutabilityHelper from 'immutability-helper';
 
-import { data_db } from '../db';
+import { data_db, DataDoc, DataDocKeys } from '../db';
 
 import wrapAsyncWorker from '../wrapAsyncWorker';
 
+export namespace FormDataRowKeys {
+    // TODO:
+    export const id = 'id'; // : number;
+
+    export const level_1 = 'level_1'; // : string; // 大項目
+    export const level_1_isValid = 'level_1_isValid'; // : boolean;
+    export const level_1_isEmpty = 'level_1_isEmpty'; // : boolean;
+
+    export const level_2 = 'level_2'; // : string; // 中項目
+    export const level_2_isValid = 'level_2_isValid'; // : boolean;
+    export const level_2_isEmpty = 'level_2_isEmpty'; // : boolean;
+
+    export const level_3 = 'level_3'; // : string; // 小項目
+    export const level_3_isValid = 'level_3_isValid'; // : boolean;
+    export const level_3_isEmpty = 'level_3_isEmpty'; // : boolean;
+
+    export const itemName = 'itemName'; // : string; // 名称
+    export const itemName_isValid = 'itemName_isValid'; // : boolean;
+    export const itemName_isEmpty = 'itemName_isEmpty'; // : boolean;
+
+    export const unitPrice = 'unitPrice'; // : number; // 単価 TODO: データをどのように持たすか？
+    export const unitPrice_isValid = 'unitPrice_isValid'; // : boolean;
+    export const unitPrice_isEmpty = 'unitPrice_isEmpty'; // : boolean;
+
+    export const num = 'num'; // : number; // 個数
+    export const num_isValid = 'num_isValid'; // : boolean;
+    export const num_isEmpty = 'num_isEmpty'; // : boolean;
+
+    export const price = 'price'; // : number; // 価格
+    export const price_isEmpty = 'price_isEmpty'; // : boolean;
+
+    export const checked = 'checked'; // : boolean;
+}
 export interface FormDataRow {
-    id: number;
+    [FormDataRowKeys.id]: number;
 
-    level_1: string; // 大項目
-    level_1_isValid: boolean;
-    level_1_isEmpty: boolean;
+    [FormDataRowKeys.level_1]: string; // 大項目
+    [FormDataRowKeys.level_1_isValid]: boolean;
+    [FormDataRowKeys.level_1_isEmpty]: boolean;
 
-    level_2: string; // 中項目
-    level_2_isValid: boolean;
-    level_2_isEmpty: boolean;
+    [FormDataRowKeys.level_2]: string; // 中項目
+    [FormDataRowKeys.level_2_isValid]: boolean;
+    [FormDataRowKeys.level_2_isEmpty]: boolean;
 
-    level_3: string; // 小項目
-    level_3_isValid: boolean;
-    level_3_isEmpty: boolean;
+    [FormDataRowKeys.level_3]: string; // 小項目
+    [FormDataRowKeys.level_3_isValid]: boolean;
+    [FormDataRowKeys.level_3_isEmpty]: boolean;
 
-    itemName: string; // 名称
-    itemName_isValid: boolean;
-    itemName_isEmpty: boolean;
+    [FormDataRowKeys.itemName]: string; // 名称
+    [FormDataRowKeys.itemName_isValid]: boolean;
+    [FormDataRowKeys.itemName_isEmpty]: boolean;
 
-    unitPrice: number; // 単価 TODO: データをどのように持たすか？
-    unitPrice_isValid: boolean;
-    unitPrice_isEmpty: boolean;
+    [FormDataRowKeys.unitPrice]: number; // 単価 TODO: データをどのように持たすか？
+    [FormDataRowKeys.unitPrice_isValid]: boolean;
+    [FormDataRowKeys.unitPrice_isEmpty]: boolean;
 
-    num: number; // 個数
-    num_isValid: boolean;
-    num_isEmpty: boolean;
+    [FormDataRowKeys.num]: number; // 個数
+    [FormDataRowKeys.num_isValid]: boolean;
+    [FormDataRowKeys.num_isEmpty]: boolean;
 
-    price: number; // 価格
-    price_isEmpty: boolean;
+    [FormDataRowKeys.price]: number; // 価格
+    [FormDataRowKeys.price_isEmpty]: boolean;
 
-    checked: boolean;
+    [FormDataRowKeys.checked]: boolean;
 }
 
 // TODO:
@@ -45,9 +78,9 @@ export interface ICreateFormState {
     dataRows: FormDataRow[];
     title: string;
     isEditting: boolean;
-    edittingCell: { column: number; row: number };
+    edittingCell: { rowIdx: number; idx: number };
     selectedRow: number;
-    selectedCell: { column: number; row: number };
+    selectedCell: { rowIdx: number; idx: number };
     totalPrice: number;
 
     // TODO:
@@ -82,11 +115,11 @@ const initialState: ICreateFormState = {
             checked: false
         }
     ],
-    title: 'Untitled',
+    title: '無題',
     isEditting: false,
-    edittingCell: { column: -1, row: -1 },
+    edittingCell: { rowIdx: -1, idx: -1 },
     selectedRow: -1,
-    selectedCell: { column: -1, row: -1 },
+    selectedCell: { rowIdx: -1, idx: -1 },
     totalPrice: 0,
     // TODO:
     autoCompleteOptions: [
@@ -98,16 +131,20 @@ const initialState: ICreateFormState = {
 // TODO: 非同期でautoCompleteOptionsを更新する  ※これここに置くべきか？
 export const updateAutoCompleteOptionsWorker = wrapAsyncWorker<
     { rowData: FormDataRow; idx: number },
-    {}[],
+    {} /*[]*/,
     {}
 >(
     CreateFormActions.updateAutoCompleteOptions,
-    ({ rowData, idx }): Promise<{}[]> => {
+    ({ rowData, idx }): Promise<{} /*[]*/> => {
         return updateAutoCompleteOptions(rowData, idx);
     }
 );
 
-const updateAutoCompleteOptions = (rowData: FormDataRow, idx: number): Promise<{}[]> => {
+let prevQuery: Object = {};
+let prevProjectionKeyName: string = '';
+let prevAutoCompleteOptions: {}[] = [];
+
+const updateAutoCompleteOptions = (rowData: FormDataRow, idx: number): Promise<{} /*[]*/> => {
     let level_1 = rowData.level_1;
     let level_2 = rowData.level_2;
     let level_3 = rowData.level_3;
@@ -116,54 +153,68 @@ const updateAutoCompleteOptions = (rowData: FormDataRow, idx: number): Promise<{
     let projectionKeyName: string = '';
     switch (idx) {
         case 1: // 大項目
-            projectionKeyName = 'level_1';
+            projectionKeyName = DataDocKeys.level_1;
             level_1 = '';
             break;
         case 2: // 中項目
-            projectionKeyName = 'level_2';
+            projectionKeyName = DataDocKeys.level_2;
             level_2 = '';
             break;
         case 3: // 小項目
-            projectionKeyName = 'level_3';
+            projectionKeyName = DataDocKeys.level_3;
             level_3 = '';
             break;
         case 4: // 名称
-            projectionKeyName = 'itemName';
+            projectionKeyName = DataDocKeys.itemName;
             itemName = '';
             break;
     }
     let query: Object = {};
-    if (level_1 !== '') query = { ...query, level_1 };
-    if (level_2 !== '') query = { ...query, level_2 };
-    if (level_3 !== '') query = { ...query, level_3 };
-    if (itemName !== '') query = { ...query, itemName };
+    if (level_1 !== '') query = { ...query, [DataDocKeys.level_1]: level_1 };
+    if (level_2 !== '') query = { ...query, [DataDocKeys.level_2]: level_2 };
+    if (level_3 !== '') query = { ...query, [DataDocKeys.level_3]: level_3 };
+    if (itemName !== '') query = { ...query, [DataDocKeys.itemName]: itemName };
 
-    return new Promise((resolve, reject) => {
-        console.log(`query=`);
-        console.log(query);
-        console.log(`projectionKeyName=${projectionKeyName}`);
-        data_db.find(query, { [projectionKeyName]: 1 }, (err, docs: any[]) => {
-            if (err) {
-                reject(err);
-            } else {
-                const newDocs: string[] = [];
-                for (let i = 0; i < docs.length; i = i + 1) {
-                    const doc = docs[i];
-                    newDocs.push(doc[projectionKeyName]);
+    let promise: Promise<{} /*[]*/>;
+    if (projectionKeyName !== prevProjectionKeyName) {
+        prevQuery = Object.assign({}, query);
+        prevProjectionKeyName = projectionKeyName;
+
+        promise = new Promise((resolve, reject) => {
+            console.log(`query=`);
+            console.log(query);
+            console.log(`projectionKeyName=${projectionKeyName}`);
+            data_db.find(query, { [projectionKeyName]: 1 }, (err, docs: any[]) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    const newDocs: string[] = [];
+                    for (let i = 0; i < docs.length; i = i + 1) {
+                        const doc = docs[i];
+                        newDocs.push(doc[projectionKeyName]);
+                    }
+                    const result = Array.from(new Set(newDocs)).sort();
+                    const _autoCompleteOptions: {}[] = [];
+                    for (let i = 0; i < result.length; i = i + 1) {
+                        _autoCompleteOptions.push({
+                            id: i,
+                            title: result[i]
+                        });
+                    }
+                    // console.log(`_autoCompleteOptions=${_autoCompleteOptions}`);
+                    prevAutoCompleteOptions = _autoCompleteOptions.slice();
+
+                    resolve({ [projectionKeyName]: _autoCompleteOptions } /*_autoCompleteOptions*/);
                 }
-                const result = Array.from(new Set(newDocs)).sort();
-                const _autoCompleteOptions: {}[] = [];
-                for (let i = 0; i < result.length; i = i + 1) {
-                    _autoCompleteOptions.push({
-                        id: i,
-                        title: result[i]
-                    });
-                }
-                // console.log(`_autoCompleteOptions=${_autoCompleteOptions}`);
-                resolve(_autoCompleteOptions);
-            }
+            });
         });
-    });
+    } else {
+        promise = new Promise((resolve, reject) => {
+            const _ret = prevAutoCompleteOptions.slice();
+            resolve({ [projectionKeyName]: _ret } /*_ret*/);
+        });
+    }
+    return promise;
 };
 
 /* Reducer */
@@ -244,7 +295,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     })
     .case(CreateFormActions.selectCell, (state, col) => {
         // TODO:
-        return state;
+        return Object.assign({}, state, { sellectedCell: col });
     })
     .case(CreateFormActions.selectRow, (state, r) => {
         // TODO:

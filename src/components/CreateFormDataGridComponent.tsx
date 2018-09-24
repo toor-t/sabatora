@@ -3,16 +3,23 @@ import * as ReactDataGrid from 'react-data-grid';
 import * as React from 'react';
 import { Toolbar, Editors } from 'react-data-grid-addons';
 import immutabilityHelper from 'immutability-helper';
-import { FormDataRow } from '../states/CreateFormState';
+import { FormDataRow, FormDataRowKeys } from '../states/CreateFormState';
+import { DataDocKeys } from '../db';
 
 const { AutoComplete: AutoCompleteEditor } = Editors;
 
-let autoCompleteOptions: { id: number; title: string }[];
-autoCompleteOptions = [/*TEST DATA*/ { id: 0, title: 'hehehe' }];
+let autoCompleteOptions: any;
+autoCompleteOptions = {};
 
 // TODO:
-const getAutoCompleteOptions = (): { id: number; title: string }[] => {
-    return autoCompleteOptions;
+// const getAutoCompleteOptions = (): { id: number; title: string }[] => {
+// 	return autoCompleteOptions;
+// };
+
+const getOptions = (ddKey: string): { (): { id: number; title: string } } => {
+    return () => {
+        return autoCompleteOptions[ddKey];
+    };
 };
 
 interface IMyAutoComleteEditorStates {
@@ -33,8 +40,38 @@ class MyAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
         this.hasResults.bind(this);
         // console.log('constructor called.');
     }
+    // TODO:
     autoComplete: any;
 
+    componentWillMount() {
+        console.log(`componentWillMount() this=${this.toString()}`);
+    }
+    componentWillUnmount() {
+        console.log(`componentWillUnmount() this=${this.toString()}`);
+    }
+    componentWillUpdate() {
+        console.log(`componentWillUpdate() this=${this.toString()}`);
+    }
+    componentWillReceiveProps() {
+        console.log(`componentWillReceiveProps() this=${this.toString()}`);
+    }
+    componentDidMount() {
+        console.log(`componentDidMount() this=${this.toString()}`);
+    }
+    componentDidUpdate() {
+        console.log(`componentDidUpdate() this=${this.toString()}`);
+    }
+    componentDidCatch() {
+        console.log(`componentDidCatch() this=${this.toString()}`);
+    }
+    shouldComponentUpdate(nextProps: Readonly<any>, nextState: Readonly<any>, nextContext: any) {
+        console.log(`shouldComponentUpdate(${nextProps.toString()},${nextState.toString()},${nextContext.toString()})
+		 this=${this.toString()}`);
+        return true;
+    }
+    getSnapshotBeforeUpdate() {
+        console.log(`getSnapshotBeforeUpdate() this=${this.toString()}`);
+    }
     getValue() {
         console.log('getValue() called!!');
         return this.autoComplete.getValue();
@@ -64,6 +101,7 @@ class MyAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
 export interface ICreateFormDataGridComponentProps {
     // TODO:
     rows?: {}[];
+    // colmuns?: {}[];
     onGridRowUpdate?: (e: any) => void;
     onSelectedCell?: (col: { rowIdx: number; idx: number }) => void;
     autoCompleteOptions?: { id: number; title: string }[];
@@ -83,42 +121,47 @@ class CreateFormDataGridComponent extends React.Component<
         super(props);
         const _columns = [
             {
-                key: 'id',
+                key: FormDataRowKeys.id,
                 name: 'No.',
                 width: 64
             },
             {
-                key: 'level_1',
+                key: FormDataRowKeys.level_1,
                 name: '大分類',
-                editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
+                ddKey: DataDocKeys.level_1,
+                editor: <MyAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_1)} />
             },
             {
-                key: 'level_2',
+                key: FormDataRowKeys.level_2,
                 name: '中分類',
-                editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
+                ddKey: DataDocKeys.level_2,
+                editor: <MyAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_2)} />
             },
             {
-                key: 'level_3',
+                key: FormDataRowKeys.level_3,
                 name: '小分類',
-                editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
+                ddKey: DataDocKeys.level_3,
+                editor: <MyAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_3)} />
             },
             {
-                key: 'itemName',
+                key: FormDataRowKeys.itemName,
                 name: '名称',
-                editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
+                ddKey: DataDocKeys.itemName,
+                editor: <MyAutoCompleteEditor getOptions={getOptions(DataDocKeys.itemName)} />
             },
             {
-                key: 'unitPrice',
+                key: FormDataRowKeys.unitPrice,
                 name: '単価',
-                editor: <MyAutoCompleteEditor getOptions={getAutoCompleteOptions} />
+                ddKey: DataDocKeys.unitPrice,
+                editor: <MyAutoCompleteEditor getOptions={getOptions(DataDocKeys.unitPrice)} />
             },
             {
-                key: 'num',
+                key: FormDataRowKeys.num,
                 name: '個数',
                 editable: true
             },
             {
-                key: 'price',
+                key: FormDataRowKeys.price,
                 name: '価格',
                 editable: false
             }

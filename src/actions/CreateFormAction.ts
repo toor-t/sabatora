@@ -42,7 +42,8 @@ export const CreateFormActions = {
     loadFrom: actionCreator<void>('LOAD_FORM'),
 
     // TODO:  非同期
-    updateAutoCompleteOptions: actionCreator.async<{ rowData: FormDataRow; idx: number }, {}[]>(
-        'UPDATE_AUTO_COMPLETE_OPTIONS'
-    )
+    updateAutoCompleteOptions: actionCreator.async<
+        { rowData: FormDataRow; idx: number },
+        {} /*[]*/
+    >('UPDATE_AUTO_COMPLETE_OPTIONS')
 };
