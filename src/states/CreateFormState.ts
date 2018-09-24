@@ -217,6 +217,18 @@ const updateAutoCompleteOptions = (rowData: FormDataRow, idx: number): Promise<{
     return promise;
 };
 
+// 合計計算
+function calcTotalPrice(rows: FormDataRow[]): number {
+    let totalPrice: number = 0;
+    for (let i = 0; i < rows.length; i = i + 1) {
+        if (!rows[i][FormDataRowKeys.price_isEmpty]) {
+            totalPrice += rows[i][FormDataRowKeys.price];
+        }
+    }
+    console.log(`totalPrice=${totalPrice}`);
+    return totalPrice;
+}
+
 /* Reducer */
 // TODO:
 export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(initialState)
@@ -250,11 +262,18 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
             checked: false
         });
 
-        return Object.assign({}, state, { dataRows: newDataRows });
+        // 合計を計算
+        const totalPrice = calcTotalPrice(state.dataRows);
+
+        return Object.assign({}, state, { totalPrice, dataRows: newDataRows });
     })
     .case(CreateFormActions.deleteRow, (state, r) => {
         // TODO:
-        return state;
+
+        // 合計を計算
+        const totalPrice = calcTotalPrice(state.dataRows);
+
+        return Object.assign({}, state, { totalPrice /* TODO: */ });
     })
     // .case(CreateFormActions.endEdittingCell, (state, cell) => {
     //     // TODO:
@@ -265,7 +284,11 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     })
     .case(CreateFormActions.insertRow, (state, r) => {
         // TODO:
-        return state;
+
+        // 合計を計算
+        const totalPrice = calcTotalPrice(state.dataRows);
+
+        return Object.assign({}, state, { totalPrice /* TODO: */ });
     })
     .case(CreateFormActions.updateGridRow, (state, e) => {
         // TODO:
@@ -274,12 +297,27 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         // tslint:disable-next-line:no-increment-decrement
         for (let i = e.fromRow; i <= e.toRow; i++) {
             const rowToUpdate = state.dataRows[i];
+
+            // TODO: 価格を計算
+            console.log(`unitPrice=${e.updated[FormDataRowKeys.unitPrice]}`);
+            console.log(`num=${e.updated[FormDataRowKeys.num]}`);
+            const _unitPrice = !e.updated[FormDataRowKeys.unitPrice]
+                ? rowToUpdate[FormDataRowKeys.unitPrice]
+                : e.updated[FormDataRowKeys.unitPrice];
+            const _num = !e.updated[FormDataRowKeys.num]
+                ? rowToUpdate[FormDataRowKeys.num]
+                : e.updated[FormDataRowKeys.num];
+
+            e.updated[FormDataRowKeys.price] = _unitPrice * _num;
+            e.updated[FormDataRowKeys.price_isEmpty] = false;
+
             const updatedRow = immutabilityHelper(rowToUpdate, { $merge: e.updated });
             _rows[i] = updatedRow;
         }
-        // TODO: 価格を計算
+        // 合計を計算
+        const totalPrice = calcTotalPrice(_rows);
 
-        return Object.assign({}, state, { dataRows: _rows });
+        return Object.assign({}, state, { totalPrice, dataRows: _rows });
     })
     .case(CreateFormActions.loadFrom, state => {
         // TODO:
