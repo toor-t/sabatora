@@ -5,6 +5,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const baseConfig = require('./webpack.base.config');
 
+const TITLE = 'sabatora.';
+
 module.exports = merge.smart(baseConfig, {
 	target: 'electron-renderer',
 	entry: {
@@ -51,7 +53,9 @@ module.exports = merge.smart(baseConfig, {
 		]
 	},
 	plugins: [
-		new HtmlWebpackPlugin(),
+		new HtmlWebpackPlugin({
+			title: TITLE,
+		}),
 		new webpack.DefinePlugin({
 			'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
 		})
