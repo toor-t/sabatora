@@ -14,7 +14,8 @@ module.exports = merge.smart(baseConfig, {
 			{
 				test: /\.tsx?$/,
 				include: [
-					path.resolve(__dirname, 'src', 'main.ts')
+					path.resolve(__dirname, 'src', 'main.ts'),
+					path.resolve(__dirname, 'src', 'db_main.ts')
 				],
 				loader: 'awesome-typescript-loader'
 			}

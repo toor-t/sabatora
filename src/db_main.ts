@@ -1,7 +1,8 @@
 'use strict';
-import { ipcMain, remote } from 'electron';
+import { ipcMain } from 'electron';
+import * as DataStore from 'nedb';
 
-const DataStore = remote.require('nedb');
+// import { win } from './main';
 
 export namespace DataDocKeys {
     export const level_1 = 'level_1';
@@ -24,11 +25,6 @@ export interface ConfDoc {
     // TODO:
 }
 
-ipcMain.on('updateAutoCompleteOptions-request', (event, arg) => {
-    // TODO:
-    event.sender.send('updateAutoCompleteOptions-reply');
-});
-
 export const data_db: Nedb = new DataStore({
     filename: './db/data.db', // TODO:  ファイル名
     autoload: true
@@ -41,6 +37,27 @@ export const conf_db: Nedb = new DataStore({
     filename: './db/conf.db', // TODO: ファイル名
     autoload: true
 });
+
+// // TODO:
+// export const updateAutoCompleteOptions_request =
+// 	ipcMain.on('updateAutoCompleteOptions-request', (event: any, arg: any) => {
+// 		// TODO:
+// 		console.log(`updateAutoCompleteOptions-request=${arg}`)
+// 		updateAutoCompleteOptions(arg[0], arg[1]).then(
+// 			(result) => {
+// 				if (win) {
+// 					win.webContents.send('updateAutoCompleteOptions-result', result);
+// 				};
+// 			},
+// 			(reject) => {
+// 				// TODO:
+// 				if (win) {
+// 					win.webContents.send('updateAutoCompleteOptions-reject', reject);
+// 				}
+// 			}
+// 		)
+// 		event.sender.send('updateAutoCompleteOptions-reply', 'Request received.');
+// 	});
 
 export const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promise<{}> => {
     return new Promise((resolve, reject) => {

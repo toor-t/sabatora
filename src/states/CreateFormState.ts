@@ -3,7 +3,7 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { CreateFormActions } from '../actions/CreateFormAction';
 import immutabilityHelper from 'immutability-helper';
 
-import { data_db, DataDoc, DataDocKeys, updateAutoCompleteOptions } from '../db';
+import { DataDoc, DataDocKeys, updateAutoCompleteOptions } from '../db';
 
 import wrapAsyncWorker from '../wrapAsyncWorker';
 
@@ -140,83 +140,6 @@ export const updateAutoCompleteOptionsWorker = wrapAsyncWorker<
         return updateAutoCompleteOptions(rowData);
     }
 );
-
-let prevQuery: Object = {};
-let prevProjectionKeyName: string = '';
-let prevAutoCompleteOptions: {}[] = [];
-
-const _updateAutoCompleteOptions = (rowData: FormDataRow, idx: number): Promise<{} /*[]*/> => {
-    let level_1 = rowData.level_1;
-    let level_2 = rowData.level_2;
-    let level_3 = rowData.level_3;
-    let itemName = rowData.itemName;
-
-    let projectionKeyName: string = '';
-    switch (idx) {
-        case 1: // 大項目
-            projectionKeyName = DataDocKeys.level_1;
-            level_1 = '';
-            break;
-        case 2: // 中項目
-            projectionKeyName = DataDocKeys.level_2;
-            level_2 = '';
-            break;
-        case 3: // 小項目
-            projectionKeyName = DataDocKeys.level_3;
-            level_3 = '';
-            break;
-        case 4: // 名称
-            projectionKeyName = DataDocKeys.itemName;
-            itemName = '';
-            break;
-    }
-    let query: Object = {};
-    if (level_1 !== '') query = { ...query, [DataDocKeys.level_1]: level_1 };
-    if (level_2 !== '') query = { ...query, [DataDocKeys.level_2]: level_2 };
-    if (level_3 !== '') query = { ...query, [DataDocKeys.level_3]: level_3 };
-    if (itemName !== '') query = { ...query, [DataDocKeys.itemName]: itemName };
-
-    let promise: Promise<{} /*[]*/>;
-    if (projectionKeyName !== prevProjectionKeyName) {
-        prevQuery = Object.assign({}, query);
-        prevProjectionKeyName = projectionKeyName;
-
-        promise = new Promise((resolve, reject) => {
-            console.log(`query=`);
-            console.log(query);
-            console.log(`projectionKeyName=${projectionKeyName}`);
-            data_db.find(query, { [projectionKeyName]: 1 }, (err, docs: any[]) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    const newDocs: string[] = [];
-                    for (let i = 0; i < docs.length; i = i + 1) {
-                        const doc = docs[i];
-                        newDocs.push(doc[projectionKeyName]);
-                    }
-                    const result = Array.from(new Set(newDocs)).sort();
-                    const _autoCompleteOptions: {}[] = [];
-                    for (let i = 0; i < result.length; i = i + 1) {
-                        _autoCompleteOptions.push({
-                            id: i,
-                            title: result[i]
-                        });
-                    }
-                    // console.log(`_autoCompleteOptions=${_autoCompleteOptions}`);
-                    prevAutoCompleteOptions = _autoCompleteOptions.slice();
-
-                    resolve({ [projectionKeyName]: _autoCompleteOptions } /*_autoCompleteOptions*/);
-                }
-            });
-        });
-    } else {
-        promise = new Promise((resolve, reject) => {
-            const _ret = prevAutoCompleteOptions.slice();
-            resolve({ [projectionKeyName]: _ret } /*_ret*/);
-        });
-    }
-    return promise;
-};
 
 // 合計計算
 function calcTotalPrice(rows: FormDataRow[]): number {

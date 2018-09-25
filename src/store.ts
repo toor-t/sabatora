@@ -8,7 +8,7 @@ import { IConfigState, ConfigStateReducer } from './states/ConfigState';
 import { IManageDataState, ManageDataStateReducer } from './states/ManageDataState';
 import { ITextFormState, TextFormStateReducer } from './states/__TextFormState';
 
-import { data_db, conf_db, makeDummyDB } from './db';
+// import { data_db, conf_db, makeDummyDB } from './db';
 
 // Jikken  ダミーDB作成
 // makeDummyDB();
