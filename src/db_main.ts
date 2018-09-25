@@ -81,8 +81,8 @@ export const updateAutoCompleteOptions = (query: any, projection: string[] = [])
                     break;
             }
         }
-        console.log('_query=');
-        console.log(_query);
+        // console.log('_query=');
+        // console.log(_query);
         // projection生成
         let _projection = {};
         for (const key in projection) {
@@ -98,14 +98,14 @@ export const updateAutoCompleteOptions = (query: any, projection: string[] = [])
                     break;
             }
         }
-        console.log('_projection');
-        console.log(_projection);
+        // console.log('_projection');
+        // console.log(_projection);
         data_db.find(_query, _projection, (err, docs: any[]) => {
             if (err) {
                 reject(err);
             } else {
-                console.log('docs=');
-                console.log(docs);
+                // console.log('docs=');
+                // console.log(docs);
                 let projectionKeys = projection;
                 if (projectionKeys.length === 0) {
                     projectionKeys = [
@@ -116,8 +116,8 @@ export const updateAutoCompleteOptions = (query: any, projection: string[] = [])
                         // DataDocKeys.unitPrice,
                     ];
                 }
-                console.log('projectionKeys=');
-                console.log(projectionKeys);
+                // console.log('projectionKeys=');
+                // console.log(projectionKeys);
                 let autoCompleteOptions = {};
                 for (const key in projectionKeys) {
                     const newDocs: string[] = [];
@@ -133,15 +133,15 @@ export const updateAutoCompleteOptions = (query: any, projection: string[] = [])
                             title: result[i]
                         });
                     }
-                    console.log('_options=');
-                    console.log(_options);
+                    // console.log('_options=');
+                    // console.log(_options);
                     //
                     autoCompleteOptions = Object.assign(autoCompleteOptions, {
                         [projectionKeys[key]]: _options
                     });
                 }
-                console.log('autoCompleteOptions=');
-                console.log(autoCompleteOptions);
+                // console.log('autoCompleteOptions=');
+                // console.log(autoCompleteOptions);
                 resolve(autoCompleteOptions);
             }
         });

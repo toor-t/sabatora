@@ -213,7 +213,7 @@ class CreateFormDataGridComponent extends React.Component<
                     onCellSelected={this.handleCellSeceted}
                     toolbar={
                         // tslint:disable-next-line:jsx-no-lambda
-                        <Toolbar onAddRow={this.props.addRow} enableFilter={true} />
+                        <Toolbar onAddRow={this.props.addRow} addRowButtonText="行追加" />
                     }
                 />
                 <br />
