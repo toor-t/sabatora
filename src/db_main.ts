@@ -1,5 +1,5 @@
 'use strict';
-import { ipcRenderer, remote } from 'electron';
+import { ipcMain, remote } from 'electron';
 
 const DataStore = remote.require('nedb');
 
@@ -24,6 +24,11 @@ export interface ConfDoc {
     // TODO:
 }
 
+ipcMain.on('updateAutoCompleteOptions-request', (event, arg) => {
+    // TODO:
+    event.sender.send('updateAutoCompleteOptions-reply');
+});
+
 export const data_db: Nedb = new DataStore({
     filename: './db/data.db', // TODO:  ファイル名
     autoload: true
@@ -36,9 +41,6 @@ export const conf_db: Nedb = new DataStore({
     filename: './db/conf.db', // TODO: ファイル名
     autoload: true
 });
-
-ipcRenderer.on('updateAutoCompleteOptions-reply', reply => {});
-ipcRenderer.on('updateAutoCompleteOptions-result', result => {});
 
 export const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promise<{}> => {
     return new Promise((resolve, reject) => {
