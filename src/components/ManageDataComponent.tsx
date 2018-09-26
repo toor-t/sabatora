@@ -1,4 +1,6 @@
-// TODO: データ管理画面コンポーネント
+//
+// ManageDataComponent
+//
 'use strict';
 import * as React from 'react';
 
@@ -7,7 +9,6 @@ export interface IManageDataComponentProps {
     checked?: boolean;
     onChange?: (e: any) => any;
 }
-
 const ManageDataComponent: React.SFC<IManageDataComponentProps> = props => {
     // TODO:
     const { checked, onChange } = props;

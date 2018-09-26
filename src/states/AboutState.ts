@@ -1,3 +1,6 @@
+//
+// AboutState
+//
 'use strict';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { AboutActions } from '../actions/AboutAction';
@@ -5,7 +8,6 @@ import { AboutActions } from '../actions/AboutAction';
 export interface IAboutState {
     checked: boolean;
 }
-
 const initialState: IAboutState = {
     checked: true
 };

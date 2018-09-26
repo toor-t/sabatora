@@ -1,3 +1,6 @@
+//
+// ConfigComponent
+//
 'use strict';
 import * as React from 'react';
 
@@ -6,7 +9,6 @@ export interface IConfigComponentProps {
     checked?: boolean;
     onChange?: (e: any) => any;
 }
-
 const ConfigComponent: React.SFC<IConfigComponentProps> = props => {
     // TODO:
     const { checked, onChange } = props;

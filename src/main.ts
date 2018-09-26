@@ -1,8 +1,10 @@
+//
+// main
+//
 'use strict';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-
 import { updateAutoCompleteOptions, makeDummyDB } from './db_main';
 
 let win: BrowserWindow | null;

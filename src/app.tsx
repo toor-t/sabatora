@@ -1,8 +1,10 @@
+//
+// app
+//
 'use strict';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-
 import Application from './Application';
 import store from './store';
 

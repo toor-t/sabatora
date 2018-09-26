@@ -1,3 +1,6 @@
+//
+// ManageDataState
+//
 'use strict';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { ManageDataActions } from '../actions/ManageDataAction';
@@ -5,7 +8,6 @@ import { ManageDataActions } from '../actions/ManageDataAction';
 export interface IManageDataState {
     checked: boolean;
 }
-
 const initialState: IManageDataState = {
     checked: true
 };

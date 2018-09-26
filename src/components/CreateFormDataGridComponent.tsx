@@ -1,20 +1,19 @@
+//
+// CreateFormDataGridComponent
+//
 'use strict';
+
 import * as ReactDataGrid from 'react-data-grid';
 import * as React from 'react';
 import { Toolbar, Editors } from 'react-data-grid-addons';
 import immutabilityHelper from 'immutability-helper';
 import { FormDataRow, FormDataRowKeys } from '../states/CreateFormState';
 import { DataDocKeys } from '../db';
-
 const { AutoComplete: AutoCompleteEditor } = Editors;
 
+// autoCompleteOptions
 let autoCompleteOptions: any;
 autoCompleteOptions = {};
-
-// TODO:
-// const getAutoCompleteOptions = (): { id: number; title: string }[] => {
-// 	return autoCompleteOptions;
-// };
 
 const getOptions = (ddKey: string): { (): { id: number; title: string } } => {
     return () => {
@@ -22,10 +21,10 @@ const getOptions = (ddKey: string): { (): { id: number; title: string } } => {
     };
 };
 
+// MyAutoCompleteEditor
 interface IMyAutoComleteEditorStates {
     // TODO:
 }
-
 class MyAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
     any,
     IMyAutoComleteEditorStates
@@ -40,48 +39,18 @@ class MyAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
         this.hasResults.bind(this);
         // console.log('constructor called.');
     }
-    // TODO:
     autoComplete: any;
 
-    // componentWillMount() {
-    //     console.log(`componentWillMount() this=${this.toString()}`);
-    // }
-    // componentWillUnmount() {
-    //     console.log(`componentWillUnmount() this=${this.toString()}`);
-    // }
-    // componentWillUpdate() {
-    //     console.log(`componentWillUpdate() this=${this.toString()}`);
-    // }
-    // componentWillReceiveProps() {
-    //     console.log(`componentWillReceiveProps() this=${this.toString()}`);
-    // }
-    // componentDidMount() {
-    //     console.log(`componentDidMount() this=${this.toString()}`);
-    // }
-    // componentDidUpdate() {
-    //     console.log(`componentDidUpdate() this=${this.toString()}`);
-    // }
-    // componentDidCatch() {
-    //     console.log(`componentDidCatch() this=${this.toString()}`);
-    // }
-    // shouldComponentUpdate(nextProps: Readonly<any>, nextState: Readonly<any>, nextContext: any) {
-    //     console.log(`shouldComponentUpdate(${nextProps.toString()},${nextState.toString()},${nextContext.toString()})
-    // 	 this=${this.toString()}`);
-    //     return true;
-    // }
-    // getSnapshotBeforeUpdate() {
-    //     console.log(`getSnapshotBeforeUpdate() this=${this.toString()}`);
-    // }
     getValue() {
-        console.log('getValue() called!!');
+        // console.log('getValue() called!!');
         return this.autoComplete.getValue();
     }
     getInputNode() {
-        console.log('getInputNode() called!!!');
+        // console.log('getInputNode() called!!!');
         return this.autoComplete.getInputNode();
     }
     hasResults() {
-        console.log('hasResults() called!!!');
+        // console.log('hasResults() called!!!');
         return this.autoComplete.hasResults();
     }
     render() {
@@ -105,7 +74,6 @@ class NumberRightFormatter extends React.Component<any> {
             /(\d)(?=(\d\d\d)+(?!\d))/g,
             '$1,'
         );
-
         return (
             <div title={this.props.value} className="text-right">
                 {formattedValue}
@@ -113,7 +81,6 @@ class NumberRightFormatter extends React.Component<any> {
         );
     }
 }
-
 class CenterFormatter extends React.Component<any> {
     render() {
         return (
@@ -139,17 +106,14 @@ class MyRowRenderer extends React.Component<any> {
         // if you want freeze columns to work, you need to make sure you implement this as apass through
         this.row.setScrollLeft(scrollBy);
     };
-
     getRowStyle = () => {
         return {
             backgroundColor: this.getRowBackground()
         };
     };
-
     getRowBackground = () => {
         return this.props.idx % 2 ? 'green' : 'blue';
     };
-
     render() {
         if (this.props.row.checked) {
             // TODO: 実験用コード
@@ -189,7 +153,6 @@ class MyRowRenderer extends React.Component<any> {
                 </div>
             );
         }
-
         return (
             <div>
                 <ReactDataGrid.Row ref={node => (this.row = node)} {...this.props} />
@@ -198,6 +161,7 @@ class MyRowRenderer extends React.Component<any> {
     }
 }
 
+// CreatFormDataGridComponent
 export interface ICreateFormDataGridComponentProps {
     // TODO:
     rows?: {}[];
@@ -208,17 +172,16 @@ export interface ICreateFormDataGridComponentProps {
     updateAutoCompleteOptions?: (col: { rowData: FormDataRow; idx: number }) => void;
     addRow?: () => void;
 }
-
 interface ICreateFormDataGridComponentStates {
     columns: any[];
 }
-
 class CreateFormDataGridComponent extends React.Component<
     ICreateFormDataGridComponentProps,
     ICreateFormDataGridComponentStates
 > {
     constructor(props: ICreateFormDataGridComponentProps) {
         super(props);
+        // カラム定義
         const _columns = [
             {
                 key: FormDataRowKeys.id,
@@ -270,16 +233,13 @@ class CreateFormDataGridComponent extends React.Component<
                 formatter: NumberRightFormatter
             }
         ];
-
         this.state = {
             columns: _columns
         };
-
         this.rowGetter.bind(this);
         this.rowCount.bind(this);
         this.handleCellSeceted.bind(this);
-
-        console.log('constructed.');
+        // console.log('constructed.');
     }
     rowGetter = (i: number) => {
         return !this.props.rows
@@ -308,7 +268,6 @@ class CreateFormDataGridComponent extends React.Component<
         if (this.props.autoCompleteOptions !== undefined) {
             autoCompleteOptions = this.props.autoCompleteOptions;
         }
-
         return (
             <div>
                 <ReactDataGrid

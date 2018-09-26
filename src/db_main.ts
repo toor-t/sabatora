@@ -1,7 +1,9 @@
+//
+// db_main
+//
 'use strict';
 import { ipcMain } from 'electron';
 import * as DataStore from 'nedb';
-
 // import { win } from './main';
 
 export namespace DataDocKeys {

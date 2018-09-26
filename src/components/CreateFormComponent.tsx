@@ -1,10 +1,14 @@
-// TODO: 帳票作成画面コンポーネンt
+//
+// CreateFormComponent
+//
 'use strict';
+
 import * as React from 'react';
 import CreateFormDataGridComponent, {
     ICreateFormDataGridComponentProps
 } from './CreateFormDataGridComponent';
 
+// CreateFormComponent
 export interface ICreateFormComponentProps extends ICreateFormDataGridComponentProps {
     // TODO:
     title?: string;
@@ -12,7 +16,6 @@ export interface ICreateFormComponentProps extends ICreateFormDataGridComponentP
 
     // and so on
 }
-
 const CreateFormComponent: React.SFC<ICreateFormComponentProps> = props => {
     // TODO:
     const { title, totalPrice, ...rest } = props;

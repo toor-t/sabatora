@@ -1,12 +1,14 @@
+//
+// CreateFormState
+//
 'use strict';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { CreateFormActions } from '../actions/CreateFormAction';
 import immutabilityHelper from 'immutability-helper';
-
 import { DataDoc, DataDocKeys, updateAutoCompleteOptions } from '../db';
-
 import wrapAsyncWorker from '../wrapAsyncWorker';
 
+// FormDataRowKeys
 export namespace FormDataRowKeys {
     // TODO:
     export const id = 'id'; // : number;
@@ -73,7 +75,7 @@ export interface FormDataRow {
     [FormDataRowKeys.checked]: boolean;
 }
 
-// TODO:
+// CreateFormState
 export interface ICreateFormState {
     dataRows: FormDataRow[];
     title: string;
@@ -86,8 +88,6 @@ export interface ICreateFormState {
     // TODO:
     autoCompleteOptions: { id: number; title: string }[];
 }
-
-// TODO:
 const initialState: ICreateFormState = {
     dataRows: [
         {

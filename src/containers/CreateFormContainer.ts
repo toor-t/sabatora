@@ -1,4 +1,7 @@
 // TODO: 帳票作成画面コンテナ
+//
+// CreateFormContainer
+//
 'use strict';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -18,7 +21,6 @@ function mapStateToProps(appState: IAppState): ICreateFormComponentProps {
         autoCompleteOptions: appState.createFormState.autoCompleteOptions
     };
 }
-
 function mapDispatchToProps(
     dispatch: Dispatch<Action<any>>,
     props: ICreateFormComponentProps
@@ -32,7 +34,6 @@ function mapDispatchToProps(
         addRow: () => dispatch(CreateFormActions.addRow())
     };
 }
-
 export default connect(
     mapStateToProps,
     mapDispatchToProps
