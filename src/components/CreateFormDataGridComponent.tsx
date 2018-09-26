@@ -128,9 +128,11 @@ class CenterFormatter extends React.Component<any> {
 class MyRowRenderer extends React.Component<any> {
     constructor(props: any) {
         super(props);
+
         console.log('props=');
         console.log(props);
     }
+
     row: any;
 
     setScrollLeft = (scrollBy: any) => {
@@ -140,7 +142,7 @@ class MyRowRenderer extends React.Component<any> {
 
     getRowStyle = () => {
         return {
-            color: this.getRowBackground()
+            backgroundColor: this.getRowBackground()
         };
     };
 
@@ -149,11 +151,47 @@ class MyRowRenderer extends React.Component<any> {
     };
 
     render() {
-        // here we are just changing the style
-        // but we could replace this with anything we liked, cards, images, etc
-        // usually though it will just be a matter of wrapping a div, and then calling back through to the grid
+        if (this.props.row.checked) {
+            // TODO: 実験用コード
+            const { row, columns, ...other } = this.props;
+
+            let l_column = {}; // 左端のカラムの情報
+            let width = 0;
+            for (let i = 0; i < columns.length - 1; i = i + 1) {
+                width += columns[i].width;
+            }
+            l_column = Object.assign(
+                l_column,
+                columns[0],
+                { width },
+                { key: 'LabelTotalPrice' },
+                { formatter: NumberRightFormatter }
+            );
+
+            let r_column = {}; // 右端のカラムの情報
+            r_column = Object.assign(
+                r_column,
+                columns[columns.length - 1],
+                { key: 'TotalPrice' },
+                { formatter: NumberRightFormatter }
+            );
+            const _row = { LabelTotalPrice: '合計:', TotalPrice: 10000 };
+            const _columns = [l_column, r_column];
+
+            return (
+                <div>
+                    <ReactDataGrid.Row
+                        ref={node => (this.row = node)}
+                        columns={_columns}
+                        row={_row}
+                        {...other}
+                    />
+                </div>
+            );
+        }
+
         return (
-            <div style={this.getRowStyle()}>
+            <div>
                 <ReactDataGrid.Row ref={node => (this.row = node)} {...this.props} />
             </div>
         );
@@ -244,10 +282,14 @@ class CreateFormDataGridComponent extends React.Component<
         console.log('constructed.');
     }
     rowGetter = (i: number) => {
-        return !this.props.rows ? [] : this.props.rows[i];
+        return !this.props.rows
+            ? []
+            : i === this.props.rows.length
+                ? { checked: true }
+                : this.props.rows[i];
     };
     rowCount = () => {
-        return !this.props.rows ? 0 : this.props.rows.length;
+        return !this.props.rows ? 0 : /*this.props.rows.length*/ this.props.rows.length + 1;
     };
     handleCellSeceted = (col: { rowIdx: number; idx: number }) => {
         // TODO:
