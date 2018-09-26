@@ -3,7 +3,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
-import { updateAutoCompleteOptions } from './db_main';
+import { updateAutoCompleteOptions, makeDummyDB } from './db_main';
 
 let win: BrowserWindow | null;
 
@@ -47,6 +47,9 @@ const createWindow = async () => {
         win = null;
     });
 };
+
+// make dummy db.
+// makeDummyDB();
 
 // TODO:
 ipcMain.on('updateAutoCompleteOptions-request', (event: any, arg: any) => {

@@ -161,6 +161,8 @@ export function makeDummyDB() {
             itemName: `すごいもの ${i + 1}`,
             unitPrice: [(i + 1) * 100, (i + 1) * 100 + 100, (i + 1) * 100 + 200]
         };
-        data_db.insert(doc, (err: Error, newdoc: DataDoc) => {});
+        data_db.insert(doc, (err: Error, newdoc: DataDoc) => {
+            console.log(newdoc);
+        });
     }
 }

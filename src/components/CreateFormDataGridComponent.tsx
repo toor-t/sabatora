@@ -43,35 +43,35 @@ class MyAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
     // TODO:
     autoComplete: any;
 
-    componentWillMount() {
-        console.log(`componentWillMount() this=${this.toString()}`);
-    }
-    componentWillUnmount() {
-        console.log(`componentWillUnmount() this=${this.toString()}`);
-    }
-    componentWillUpdate() {
-        console.log(`componentWillUpdate() this=${this.toString()}`);
-    }
-    componentWillReceiveProps() {
-        console.log(`componentWillReceiveProps() this=${this.toString()}`);
-    }
-    componentDidMount() {
-        console.log(`componentDidMount() this=${this.toString()}`);
-    }
-    componentDidUpdate() {
-        console.log(`componentDidUpdate() this=${this.toString()}`);
-    }
-    componentDidCatch() {
-        console.log(`componentDidCatch() this=${this.toString()}`);
-    }
-    shouldComponentUpdate(nextProps: Readonly<any>, nextState: Readonly<any>, nextContext: any) {
-        console.log(`shouldComponentUpdate(${nextProps.toString()},${nextState.toString()},${nextContext.toString()})
-		 this=${this.toString()}`);
-        return true;
-    }
-    getSnapshotBeforeUpdate() {
-        console.log(`getSnapshotBeforeUpdate() this=${this.toString()}`);
-    }
+    // componentWillMount() {
+    //     console.log(`componentWillMount() this=${this.toString()}`);
+    // }
+    // componentWillUnmount() {
+    //     console.log(`componentWillUnmount() this=${this.toString()}`);
+    // }
+    // componentWillUpdate() {
+    //     console.log(`componentWillUpdate() this=${this.toString()}`);
+    // }
+    // componentWillReceiveProps() {
+    //     console.log(`componentWillReceiveProps() this=${this.toString()}`);
+    // }
+    // componentDidMount() {
+    //     console.log(`componentDidMount() this=${this.toString()}`);
+    // }
+    // componentDidUpdate() {
+    //     console.log(`componentDidUpdate() this=${this.toString()}`);
+    // }
+    // componentDidCatch() {
+    //     console.log(`componentDidCatch() this=${this.toString()}`);
+    // }
+    // shouldComponentUpdate(nextProps: Readonly<any>, nextState: Readonly<any>, nextContext: any) {
+    //     console.log(`shouldComponentUpdate(${nextProps.toString()},${nextState.toString()},${nextContext.toString()})
+    // 	 this=${this.toString()}`);
+    //     return true;
+    // }
+    // getSnapshotBeforeUpdate() {
+    //     console.log(`getSnapshotBeforeUpdate() this=${this.toString()}`);
+    // }
     getValue() {
         console.log('getValue() called!!');
         return this.autoComplete.getValue();
@@ -94,6 +94,68 @@ class MyAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
                 options={getOptions()}
                 {...rest}
             />
+        );
+    }
+}
+
+// TODO: formatter
+class NumberRightFormatter extends React.Component<any> {
+    render() {
+        const formattedValue: string = String(this.props.value).replace(
+            /(\d)(?=(\d\d\d)+(?!\d))/g,
+            '$1,'
+        );
+
+        return (
+            <div title={this.props.value} className="text-right">
+                {formattedValue}
+            </div>
+        );
+    }
+}
+
+class CenterFormatter extends React.Component<any> {
+    render() {
+        return (
+            <div title={this.props.value} className="text-center">
+                {this.props.value}
+            </div>
+        );
+    }
+}
+
+// TODO: row render
+class MyRowRenderer extends React.Component<any> {
+    constructor(props: any) {
+        super(props);
+        console.log('props=');
+        console.log(props);
+    }
+    row: any;
+
+    setScrollLeft = (scrollBy: any) => {
+        // if you want freeze columns to work, you need to make sure you implement this as apass through
+        this.row.setScrollLeft(scrollBy);
+    };
+
+    getRowStyle = () => {
+        return {
+            color: this.getRowBackground()
+        };
+    };
+
+    getRowBackground = () => {
+        return this.props.idx % 2 ? 'green' : 'blue';
+    };
+
+    render() {
+        // here we are just changing the style
+        // but we could replace this with anything we liked, cards, images, etc
+        // usually though it will just be a matter of wrapping a div, and then calling back through to the grid
+        return (
+            <div style={this.getRowStyle()}>
+                <ReactDataGrid.Row ref={node => (this.row = node)} {...this.props} />
+            </div>
         );
     }
 }
@@ -123,7 +185,8 @@ class CreateFormDataGridComponent extends React.Component<
             {
                 key: FormDataRowKeys.id,
                 name: 'No.',
-                width: 64
+                width: 64,
+                formatter: CenterFormatter
             },
             {
                 key: FormDataRowKeys.level_1,
@@ -153,17 +216,20 @@ class CreateFormDataGridComponent extends React.Component<
                 key: FormDataRowKeys.unitPrice,
                 name: '単価',
                 ddKey: DataDocKeys.unitPrice,
-                editor: <MyAutoCompleteEditor getOptions={getOptions(DataDocKeys.unitPrice)} />
+                editor: <MyAutoCompleteEditor getOptions={getOptions(DataDocKeys.unitPrice)} />,
+                formatter: NumberRightFormatter
             },
             {
                 key: FormDataRowKeys.num,
                 name: '個数',
-                editable: true
+                editable: true,
+                formatter: NumberRightFormatter
             },
             {
                 key: FormDataRowKeys.price,
                 name: '価格',
-                editable: false
+                editable: false,
+                formatter: NumberRightFormatter
             }
         ];
 
@@ -215,6 +281,8 @@ class CreateFormDataGridComponent extends React.Component<
                         // tslint:disable-next-line:jsx-no-lambda
                         <Toolbar onAddRow={this.props.addRow} addRowButtonText="行追加" />
                     }
+                    // jikken
+                    rowRenderer={MyRowRenderer}
                 />
                 <br />
             </div>
