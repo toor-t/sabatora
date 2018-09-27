@@ -116,20 +116,30 @@ export const updateAutoCompleteOptions = (query: any, projection: string[] = [])
                         DataDocKeys.level_1,
                         DataDocKeys.level_2,
                         DataDocKeys.level_3,
-                        DataDocKeys.itemName
-                        // DataDocKeys.unitPrice,
+                        DataDocKeys.itemName,
+                        DataDocKeys.unitPrice
                     ];
                 }
                 // console.log('projectionKeys=');
                 // console.log(projectionKeys);
                 let autoCompleteOptions = {};
                 for (const key in projectionKeys) {
-                    const newDocs: string[] = [];
-                    for (let i = 0; i < docs.length; i = i + 1) {
-                        const doc = docs[i];
-                        newDocs.push(doc[projectionKeys[key]]);
+                    let result: string[] = [];
+                    if (projectionKeys[key] !== DataDocKeys.unitPrice) {
+                        const newDocs: string[] = [];
+                        for (let i = 0; i < docs.length; i = i + 1) {
+                            const doc = docs[i];
+                            newDocs.push(doc[projectionKeys[key]]);
+                        }
+                        result = Array.from(new Set(newDocs)).sort();
+                    } else if (projectionKeys[key] === DataDocKeys.unitPrice) {
+                        if (docs.length !== 1) {
+                            // 複数候補がある場合は無視する
+                            continue;
+                        }
+                        result = docs[0][projectionKeys[key]];
                     }
-                    const result = Array.from(new Set(newDocs)).sort();
+
                     const _options: {}[] = [];
                     for (let i = 0; i < result.length; i = i + 1) {
                         _options.push({
