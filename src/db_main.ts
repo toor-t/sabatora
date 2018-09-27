@@ -45,7 +45,7 @@ export const updateAutoCompleteOptions_request = ipcMain.on(
     'updateAutoCompleteOptions-request',
     (event: any, arg: any) => {
         // TODO:
-        console.log(`updateAutoCompleteOptions-request=${arg}`);
+        // console.log(`updateAutoCompleteOptions-request=${arg}`);
         updateAutoCompleteOptions(arg[0], arg[1]).then(
             result => {
                 if (win) {

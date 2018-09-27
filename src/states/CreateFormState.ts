@@ -73,9 +73,32 @@ export interface FormDataRow {
     [FormDataRowKeys.checked]: boolean;
 }
 
+// 合計表示行
+export namespace TotalPriceRowKeys {
+    export const id = 'id';
+    export const labelTotalPrice = 'labelTotalPrice';
+    export const totalPrice = 'totalPrice';
+}
+export interface TotalPriceRow {
+    [TotalPriceRowKeys.id]: number;
+    [TotalPriceRowKeys.labelTotalPrice]: string;
+    [TotalPriceRowKeys.totalPrice]: number;
+}
+
+// 小計表示行
+export namespace SubtotalPriceRowKeys {
+    export const id = 'id';
+    export const labelSubtotalPrice = 'labelSubtotalPrice';
+    export const subtotalPrice = 'subtotalPrice';
+}
+export interface SubtotalPriceRow {
+    [SubtotalPriceRowKeys.id]: number;
+    [SubtotalPriceRowKeys.labelSubtotalPrice]: string;
+    [SubtotalPriceRowKeys.subtotalPrice]: number;
+}
 // CreateFormState
 export interface ICreateFormState {
-    dataRows: FormDataRow[];
+    dataRows: (FormDataRow | SubtotalPriceRow | TotalPriceRow)[];
     title: string;
     isEditting: boolean;
     edittingCell: { rowIdx: number; idx: number };
@@ -89,7 +112,7 @@ export interface ICreateFormState {
 const initialState: ICreateFormState = {
     dataRows: [
         {
-            id: 0,
+            id: 1,
             level_1: '',
             level_1_isValid: false,
             level_1_isEmpty: true,
@@ -111,6 +134,11 @@ const initialState: ICreateFormState = {
             price: 0,
             price_isEmpty: true,
             checked: false
+        },
+        {
+            id: -1,
+            [TotalPriceRowKeys.labelTotalPrice]: '合計:',
+            [TotalPriceRowKeys.totalPrice]: 0
         }
     ],
     title: '無題',
@@ -124,15 +152,26 @@ const initialState: ICreateFormState = {
 };
 
 // 合計計算
-function calcTotalPrice(rows: FormDataRow[]): number {
-    let totalPrice: number = 0;
+function calcTotalPrice(rows: any[]): number {
+    let sumPrice: number = 0;
     for (let i = 0; i < rows.length; i = i + 1) {
-        if (!rows[i][FormDataRowKeys.price_isEmpty]) {
-            totalPrice += rows[i][FormDataRowKeys.price];
+        if (
+            rows[i][FormDataRowKeys.price] !== undefined &&
+            !rows[i][FormDataRowKeys.price_isEmpty]
+        ) {
+            sumPrice += rows[i][FormDataRowKeys.price];
+        }
+        // 小計行
+        if (rows[i][SubtotalPriceRowKeys.subtotalPrice] !== undefined) {
+            rows[i][SubtotalPriceRowKeys.subtotalPrice] = sumPrice;
+        }
+        // 合計行 ※ここでやらないほうが良い？
+        if (rows[i][TotalPriceRowKeys.totalPrice] !== undefined) {
+            rows[i][TotalPriceRowKeys.totalPrice] = sumPrice;
         }
     }
-    console.log(`totalPrice=${totalPrice}`);
-    return totalPrice;
+    // console.log(`totalPrice=${sumPrice}`);
+    return sumPrice;
 }
 
 /* Reducer */
@@ -140,10 +179,11 @@ function calcTotalPrice(rows: FormDataRow[]): number {
 export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(initialState)
     .case(CreateFormActions.addRow, (state, r) => {
         // TODO:
-        console.log('addRow');
+        // console.log('addRow');
         const newDataRows = state.dataRows.slice();
         const rowsCount = newDataRows.length;
-        newDataRows.push({
+
+        newDataRows.splice(/*最終行（合計表示行）の一つ前に追加*/ rowsCount - 1, 0, {
             id: rowsCount, // TODO:  これじゃダメ、どうすべき？
             level_1: '',
             level_1_isEmpty: true,
@@ -202,23 +242,24 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         // tslint:disable-next-line:no-increment-decrement
         for (let i = e.fromRow; i <= e.toRow; i++) {
-            const rowToUpdate = state.dataRows[i];
+            if ((state.dataRows[i] as any)[FormDataRowKeys.price] !== undefined) {
+                const rowToUpdate: FormDataRow = state.dataRows[i] as FormDataRow;
+                // TODO: 価格を計算
+                // console.log(`unitPrice=${e.updated[FormDataRowKeys.unitPrice]}`);
+                // console.log(`num=${e.updated[FormDataRowKeys.num]}`);
+                const _unitPrice = !e.updated[FormDataRowKeys.unitPrice]
+                    ? rowToUpdate[FormDataRowKeys.unitPrice]
+                    : e.updated[FormDataRowKeys.unitPrice];
+                const _num = !e.updated[FormDataRowKeys.num]
+                    ? rowToUpdate[FormDataRowKeys.num]
+                    : e.updated[FormDataRowKeys.num];
 
-            // TODO: 価格を計算
-            console.log(`unitPrice=${e.updated[FormDataRowKeys.unitPrice]}`);
-            console.log(`num=${e.updated[FormDataRowKeys.num]}`);
-            const _unitPrice = !e.updated[FormDataRowKeys.unitPrice]
-                ? rowToUpdate[FormDataRowKeys.unitPrice]
-                : e.updated[FormDataRowKeys.unitPrice];
-            const _num = !e.updated[FormDataRowKeys.num]
-                ? rowToUpdate[FormDataRowKeys.num]
-                : e.updated[FormDataRowKeys.num];
+                e.updated[FormDataRowKeys.price] = _unitPrice * _num;
+                e.updated[FormDataRowKeys.price_isEmpty] = false;
 
-            e.updated[FormDataRowKeys.price] = _unitPrice * _num;
-            e.updated[FormDataRowKeys.price_isEmpty] = false;
-
-            const updatedRow = immutabilityHelper(rowToUpdate, { $merge: e.updated });
-            _rows[i] = updatedRow;
+                const updatedRow = immutabilityHelper(rowToUpdate, { $merge: e.updated });
+                _rows[i] = updatedRow;
+            }
         }
         // 合計を計算
         const totalPrice = calcTotalPrice(_rows);
@@ -259,17 +300,17 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     // })
     .case(CreateFormActions.updateAutoCompleteOptions.started, (state, cell) => {
         // TODO:
-        console.log('CreateFormActions.updateAutoCompleteOptions.started');
+        // console.log('CreateFormActions.updateAutoCompleteOptions.started');
         return state;
     })
     .case(CreateFormActions.updateAutoCompleteOptions.done, (state, done) => {
         // TODO:
-        console.log('CreateFormActions.updateAutoCompleteOptions.done');
-        console.log(done);
+        // console.log('CreateFormActions.updateAutoCompleteOptions.done');
+        // console.log(done);
         return Object.assign({}, state, { autoCompleteOptions: done.result });
     })
     .case(CreateFormActions.updateAutoCompleteOptions.failed, (state, error) => {
         // TODO:
-        console.log('CreateFormActions.updateAutoCompleteOptions.failed');
+        // console.log('CreateFormActions.updateAutoCompleteOptions.failed');
         return state;
     });

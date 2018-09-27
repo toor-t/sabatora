@@ -12,7 +12,7 @@ import CreateFormDataGridComponent, {
 export interface ICreateFormComponentProps extends ICreateFormDataGridComponentProps {
     // TODO:
     title?: string;
-    totalPrice?: number;
+    // totalPrice?: number;
 
     // and so on
 }
@@ -26,7 +26,7 @@ const CreateFormComponent: React.SFC<ICreateFormComponentProps> = props => {
             <br />
             <CreateFormDataGridComponent {...rest} />
             <br />
-            <div>合計: {totalPrice} 円</div>
+            <div>合計: {String(totalPrice).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')} 円</div>
         </div>
     );
 };

@@ -6,7 +6,14 @@
 import * as ReactDataGrid from 'react-data-grid';
 import * as React from 'react';
 import { Toolbar, Editors } from 'react-data-grid-addons';
-import { FormDataRow, FormDataRowKeys } from '../states/CreateFormState';
+import {
+    FormDataRow,
+    FormDataRowKeys,
+    TotalPriceRow,
+    TotalPriceRowKeys,
+    SubtotalPriceRow,
+    SubtotalPriceRowKeys
+} from '../states/CreateFormState';
 import { DataDocKeys } from '../db';
 const { AutoComplete: AutoCompleteEditor } = Editors;
 
@@ -69,6 +76,7 @@ class MyAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
 // TODO: formatter
 class NumberRightFormatter extends React.Component<any> {
     render() {
+        // console.log(`NumberRightFormatter=${String(this.props.value)}`);
         const formattedValue: string = String(this.props.value).replace(
             /(\d)(?=(\d\d\d)+(?!\d))/g,
             '$1,'
@@ -91,19 +99,34 @@ class CenterFormatter extends React.Component<any> {
 }
 
 // TODO: row render
-class MyRowRenderer extends React.Component<any> {
+interface IMyRowRendererStates {
+    grid: CreateFormDataGridComponent;
+}
+class MyRowRenderer extends React.Component<any, IMyRowRendererStates> {
     constructor(props: any) {
         super(props);
 
-        console.log('props=');
-        console.log(props);
+        // console.log('props=');
+        // console.log(props);
+        this.state = {
+            grid: this.props.grid
+        };
     }
 
     row: any;
 
+    shouldComponentUpdate(nextProps: any) {
+        // console.log(`shouldComponentUpdate(${nextProps})`)
+        return this.row.shouldComponentUpdate(nextProps);
+    }
+    forceUpdate() {
+        // console.log('forceUpdate()');
+    }
     setScrollLeft = (scrollBy: any) => {
         // if you want freeze columns to work, you need to make sure you implement this as apass through
-        this.row.setScrollLeft(scrollBy);
+        if (this.row.setScrollLeft) {
+            this.row.setScrollLeft(scrollBy);
+        }
     };
     getRowStyle = () => {
         return {
@@ -114,9 +137,17 @@ class MyRowRenderer extends React.Component<any> {
         return this.props.idx % 2 ? 'green' : 'blue';
     };
     render() {
-        if (this.props.row.checked) {
+        // console.log('MyRowRenderer.render()=');
+        // console.log(this.props);
+
+        const { columns, ...other } = this.props;
+        let _columns = columns;
+
+        if (this.props.row[TotalPriceRowKeys.totalPrice] !== undefined) {
+            // 合計表示
+            // console.log('Rneder TotalPrice=');
+            // console.log(this.props.row.totalPrice);
             // TODO: 実験用コード
-            const { row, columns, ...other } = this.props;
 
             let l_column = {}; // 左端のカラムの情報
             let width = 0;
@@ -127,7 +158,7 @@ class MyRowRenderer extends React.Component<any> {
                 l_column,
                 columns[0],
                 { width },
-                { key: 'LabelTotalPrice' },
+                { key: TotalPriceRowKeys.labelTotalPrice },
                 { formatter: NumberRightFormatter }
             );
 
@@ -135,26 +166,66 @@ class MyRowRenderer extends React.Component<any> {
             r_column = Object.assign(
                 r_column,
                 columns[columns.length - 1],
-                { key: 'TotalPrice' },
+                { key: TotalPriceRowKeys.totalPrice },
                 { formatter: NumberRightFormatter }
             );
-            const _row = { LabelTotalPrice: '合計:', TotalPrice: 10000 };
-            const _columns = [l_column, r_column];
-
+            _columns = [];
+            for (let i = 0; i < columns.length - 1; i = i + 1) {
+                _columns.push(l_column);
+            }
+            _columns.push(r_column);
             return (
                 <div>
                     <ReactDataGrid.Row
                         ref={node => (this.row = node)}
+                        forceUpdate={true}
                         columns={_columns}
-                        row={_row}
                         {...other}
                     />
                 </div>
             );
         }
+        if (this.props.row[SubtotalPriceRowKeys.subtotalPrice]) {
+            // 小計表示
+            // TODO:
+            // TODO: 実験用コード
+
+            let l_column = {}; // 左端のカラムの情報
+            let width = 0;
+            for (let i = 0; i < columns.length - 1; i = i + 1) {
+                width += columns[i].width;
+            }
+            l_column = Object.assign(
+                l_column,
+                columns[0],
+                { width },
+                { key: SubtotalPriceRowKeys.labelSubtotalPrice },
+                { formatter: NumberRightFormatter }
+            );
+
+            let r_column = {}; // 右端のカラムの情報
+            r_column = Object.assign(
+                r_column,
+                columns[columns.length - 1],
+                { key: SubtotalPriceRowKeys.subtotalPrice },
+                { formatter: NumberRightFormatter }
+            );
+            _columns = [l_column, r_column];
+            return (
+                <div>
+                    <ReactDataGrid.Row
+                        ref={node => (this.row = node)}
+                        forceUpdate={true}
+                        columns={_columns}
+                        {...other}
+                    />
+                </div>
+            );
+        }
+        //
         return (
             <div>
-                <ReactDataGrid.Row ref={node => (this.row = node)} {...this.props} />
+                <ReactDataGrid.Row ref={node => (this.row = node)} columns={_columns} {...other} />
             </div>
         );
     }
@@ -172,9 +243,13 @@ export interface ICreateFormDataGridComponentProps {
     autoCompleteOptions?: {};
     updateAutoCompleteOptions?: (col: { rowData: FormDataRow; idx: number }) => void;
     addRow?: () => void;
+    // TODO:
+    totalPrice?: number;
 }
 interface ICreateFormDataGridComponentStates {
     columns: any[];
+    // TODO:
+    totalPrice: number | undefined;
 }
 class CreateFormDataGridComponent extends React.Component<
     ICreateFormDataGridComponentProps,
@@ -235,35 +310,55 @@ class CreateFormDataGridComponent extends React.Component<
             }
         ];
         this.state = {
-            columns: _columns
+            columns: _columns,
+            totalPrice: props.totalPrice
         };
         this.rowGetter.bind(this);
         this.rowCount.bind(this);
         this.handleCellSeceted.bind(this);
+        this.getTotalPrice.bind(this);
         // console.log('constructed.');
     }
+    // ReactDataGridへの参照
+    grid: any = {};
+
     rowGetter = (i: number) => {
-        return !this.props.rows
-            ? []
-            : i === this.props.rows.length
-                ? { checked: true }
-                : this.props.rows[i];
+        return !this.props.rows ? [] : this.props.rows[i];
     };
     rowCount = () => {
-        return !this.props.rows ? 0 : /*this.props.rows.length*/ this.props.rows.length + 1;
+        return !this.props.rows ? 0 : this.props.rows.length;
     };
     handleCellSeceted = (col: { rowIdx: number; idx: number }) => {
         // TODO:
         if (this.props.onSelectedCell) {
             this.props.onSelectedCell(col);
         }
-        if (this.props.updateAutoCompleteOptions && this.props.rows) {
-            this.props.updateAutoCompleteOptions({
-                rowData: this.props.rows[col.rowIdx] as FormDataRow,
-                idx: col.idx
-            });
+        // TODO: updateAutoCompleteOptions
+        if (
+            this.props.rows &&
+            (this.props.rows[col.rowIdx] as FormDataRow)[FormDataRowKeys.price] !== undefined
+        ) {
+            // 通常行のみ。合計行等では更新しない
+            if (this.state.columns[col.idx]['ddKey'] !== undefined) {
+                // DBに対応するデータがあるカラムのみ。
+                if (this.props.updateAutoCompleteOptions) {
+                    this.props.updateAutoCompleteOptions({
+                        rowData: this.props.rows[col.rowIdx] as FormDataRow,
+                        idx: col.idx
+                    });
+                }
+            }
         }
     };
+    // TODO:
+    getTotalPrice = () => {
+        return this.state.totalPrice ? this.state.totalPrice : 0;
+    };
+    // componentDidUpdate = () => {
+    // 	console.log(`this.grid=`);
+    // 	console.log(this.grid);
+    // 	(this.grid as ReactDataGrid<any>).forceUpdate();
+    // }
     render() {
         // TODO:
         if (this.props.autoCompleteOptions !== undefined) {
@@ -272,6 +367,9 @@ class CreateFormDataGridComponent extends React.Component<
         return (
             <div>
                 <ReactDataGrid
+                    ref={node => {
+                        this.grid = node;
+                    }}
                     enableCellSelect={true}
                     columns={this.state.columns}
                     rowGetter={this.rowGetter}
@@ -289,7 +387,6 @@ class CreateFormDataGridComponent extends React.Component<
                         // tslint:disable-next-line:jsx-no-lambda
                         <Toolbar onAddRow={this.props.addRow} addRowButtonText="行追加" />
                     }
-                    // jikken
                     rowRenderer={MyRowRenderer}
                 />
                 <br />
