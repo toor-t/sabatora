@@ -4,7 +4,7 @@
 'use strict';
 import { ipcMain } from 'electron';
 import * as DataStore from 'nedb';
-// import { win } from './main';
+import { win } from './main';
 
 export namespace DataDocKeys {
     export const level_1 = 'level_1';
@@ -40,26 +40,28 @@ export const conf_db: Nedb = new DataStore({
     autoload: true
 });
 
-// // TODO:
-// export const updateAutoCompleteOptions_request =
-// 	ipcMain.on('updateAutoCompleteOptions-request', (event: any, arg: any) => {
-// 		// TODO:
-// 		console.log(`updateAutoCompleteOptions-request=${arg}`)
-// 		updateAutoCompleteOptions(arg[0], arg[1]).then(
-// 			(result) => {
-// 				if (win) {
-// 					win.webContents.send('updateAutoCompleteOptions-result', result);
-// 				};
-// 			},
-// 			(reject) => {
-// 				// TODO:
-// 				if (win) {
-// 					win.webContents.send('updateAutoCompleteOptions-reject', reject);
-// 				}
-// 			}
-// 		)
-// 		event.sender.send('updateAutoCompleteOptions-reply', 'Request received.');
-// 	});
+// TODO:
+export const updateAutoCompleteOptions_request = ipcMain.on(
+    'updateAutoCompleteOptions-request',
+    (event: any, arg: any) => {
+        // TODO:
+        console.log(`updateAutoCompleteOptions-request=${arg}`);
+        updateAutoCompleteOptions(arg[0], arg[1]).then(
+            result => {
+                if (win) {
+                    win.webContents.send('updateAutoCompleteOptions-result', result);
+                }
+            },
+            reject => {
+                // TODO:
+                if (win) {
+                    win.webContents.send('updateAutoCompleteOptions-reject', reject);
+                }
+            }
+        );
+        event.sender.send('updateAutoCompleteOptions-reply', 'Request received.');
+    }
+);
 
 export const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promise<{}> => {
     return new Promise((resolve, reject) => {

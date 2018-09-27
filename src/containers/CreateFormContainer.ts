@@ -10,7 +10,21 @@ import { CreateFormActions } from '../actions/CreateFormAction';
 import CreateFormComponent, { ICreateFormComponentProps } from '../components/CreateFormComponent';
 import { IAppState } from '../store';
 // TODO:
-import { updateAutoCompleteOptionsWorker } from '../states/CreateFormState';
+import { FormDataRow } from '../states/CreateFormState';
+import wrapAsyncWorker from '../wrapAsyncWorker';
+import { updateAutoCompleteOptions } from '../db';
+
+// TODO: 非同期でautoCompleteOptionsを更新する  ※これここに置くべきか？
+export const updateAutoCompleteOptionsWorker = wrapAsyncWorker<
+    { rowData: FormDataRow; idx: number },
+    {},
+    {}
+>(
+    CreateFormActions.updateAutoCompleteOptions,
+    ({ rowData, idx }): Promise<{}> => {
+        return updateAutoCompleteOptions(rowData);
+    }
+);
 
 function mapStateToProps(appState: IAppState): ICreateFormComponentProps {
     // TODO:

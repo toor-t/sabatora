@@ -6,7 +6,6 @@
 import * as ReactDataGrid from 'react-data-grid';
 import * as React from 'react';
 import { Toolbar, Editors } from 'react-data-grid-addons';
-import immutabilityHelper from 'immutability-helper';
 import { FormDataRow, FormDataRowKeys } from '../states/CreateFormState';
 import { DataDocKeys } from '../db';
 const { AutoComplete: AutoCompleteEditor } = Editors;
@@ -162,13 +161,15 @@ class MyRowRenderer extends React.Component<any> {
 }
 
 // CreatFormDataGridComponent
+const ROW_HEIGHT = 35;
+const HEADER_ROW_HEIGHT = 40;
 export interface ICreateFormDataGridComponentProps {
     // TODO:
     rows?: {}[];
     // colmuns?: {}[];
     onGridRowUpdate?: (e: any) => void;
     onSelectedCell?: (col: { rowIdx: number; idx: number }) => void;
-    autoCompleteOptions?: { id: number; title: string }[];
+    autoCompleteOptions?: {};
     updateAutoCompleteOptions?: (col: { rowData: FormDataRow; idx: number }) => void;
     addRow?: () => void;
 }
@@ -275,7 +276,13 @@ class CreateFormDataGridComponent extends React.Component<
                     columns={this.state.columns}
                     rowGetter={this.rowGetter}
                     rowsCount={this.rowCount()}
-                    minHeight={500}
+                    rowHeight={ROW_HEIGHT}
+                    headerRowHeight={HEADER_ROW_HEIGHT}
+                    minHeight={
+                        HEADER_ROW_HEIGHT +
+                        ROW_HEIGHT * (this.rowCount() < 20 ? 20 : this.rowCount()) -
+                        1
+                    }
                     onGridRowsUpdated={this.props.onGridRowUpdate}
                     onCellSelected={this.handleCellSeceted}
                     toolbar={

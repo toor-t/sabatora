@@ -25,6 +25,7 @@ export interface ConfDoc {
     // TODO:
 }
 
+// AutoCompleteOptions 更新
 export const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promise<{}> => {
     return new Promise((resolve, reject) => {
         ipcRenderer.on('updateAutoCompleteOptions-result', (event: any, result: any) => {

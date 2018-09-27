@@ -5,8 +5,6 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { CreateFormActions } from '../actions/CreateFormAction';
 import immutabilityHelper from 'immutability-helper';
-import { DataDoc, DataDocKeys, updateAutoCompleteOptions } from '../db';
-import wrapAsyncWorker from '../wrapAsyncWorker';
 
 // FormDataRowKeys
 export namespace FormDataRowKeys {
@@ -86,7 +84,7 @@ export interface ICreateFormState {
     totalPrice: number;
 
     // TODO:
-    autoCompleteOptions: { id: number; title: string }[];
+    autoCompleteOptions: {};
 }
 const initialState: ICreateFormState = {
     dataRows: [
@@ -122,24 +120,8 @@ const initialState: ICreateFormState = {
     selectedCell: { rowIdx: -1, idx: -1 },
     totalPrice: 0,
     // TODO:
-    autoCompleteOptions: [
-        /* TODO:暫定データ */ { id: 0, title: '残念!!' },
-        { id: 1, title: 'うまくいかないよ。' }
-    ]
+    autoCompleteOptions: {}
 };
-
-// TODO: 非同期でautoCompleteOptionsを更新する  ※これここに置くべきか？
-export const updateAutoCompleteOptionsWorker = wrapAsyncWorker<
-    { rowData: FormDataRow; idx: number },
-    {} /*[]*/,
-    {}
->(
-    CreateFormActions.updateAutoCompleteOptions,
-    ({ rowData, idx }): Promise<{} /*[]*/> => {
-        // return updateAutoCompleteOptions(rowData, idx);
-        return updateAutoCompleteOptions(rowData);
-    }
-);
 
 // 合計計算
 function calcTotalPrice(rows: FormDataRow[]): number {

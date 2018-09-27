@@ -5,11 +5,10 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-import { updateAutoCompleteOptions, makeDummyDB } from './db_main';
+import { updateAutoCompleteOptions_request, makeDummyDB } from './db_main';
 
-let win: BrowserWindow | null;
-
-// const _updateAutoCompleteOptions_request = updateAutoCompleteOptions_request;
+export let win: BrowserWindow | null;
+const _updateAutoCompleteOptions_request = updateAutoCompleteOptions_request;
 
 const installExtensions = async () => {
     const installer = require('electron-devtools-installer');
@@ -50,28 +49,8 @@ const createWindow = async () => {
     });
 };
 
-// make dummy db.
+// ダミーDB作成
 // makeDummyDB();
-
-// TODO:
-ipcMain.on('updateAutoCompleteOptions-request', (event: any, arg: any) => {
-    // TODO:
-    console.log(`updateAutoCompleteOptions-request=${arg}`);
-    updateAutoCompleteOptions(arg[0], arg[1]).then(
-        result => {
-            if (win) {
-                win.webContents.send('updateAutoCompleteOptions-result', result);
-            }
-        },
-        reject => {
-            // TODO:
-            if (win) {
-                win.webContents.send('updateAutoCompleteOptions-reject', reject);
-            }
-        }
-    );
-    event.sender.send('updateAutoCompleteOptions-reply', 'Request received.');
-});
 
 app.on('ready', createWindow);
 
