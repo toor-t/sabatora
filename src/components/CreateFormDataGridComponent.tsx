@@ -119,9 +119,6 @@ class MyRowRenderer extends React.Component<any, IMyRowRendererStates> {
         // console.log(`shouldComponentUpdate(${nextProps})`)
         return this.row.shouldComponentUpdate(nextProps);
     }
-    forceUpdate() {
-        // console.log('forceUpdate()');
-    }
     setScrollLeft = (scrollBy: any) => {
         // if you want freeze columns to work, you need to make sure you implement this as apass through
         if (this.row.setScrollLeft) {
