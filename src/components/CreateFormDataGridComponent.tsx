@@ -198,24 +198,32 @@ class MyRowRenderer extends React.Component<any, IMyRowRendererStates> {
                 </div>
             );
         }
-        if (this.props.row[SubtotalPriceRowKeys.subtotalPrice]) {
+        if (this.props.row[SubtotalPriceRowKeys.subtotalPrice] !== undefined) {
             // 小計表示
             // TODO:
             // TODO: 実験用コード
+            const check_column = columns[0]; // チェックボックスカラム
 
             let l_column = {}; // 左端のカラムの情報
             let width = 0;
-            for (let i = 0; i < columns.length - 1; i = i + 1) {
+            for (let i = 1; i < columns.length - 1; i = i + 1) {
                 width += columns[i].width;
             }
             l_column = Object.assign(
                 l_column,
-                columns[0],
+                columns[1],
                 { width },
                 { key: SubtotalPriceRowKeys.labelSubtotalPrice },
                 { formatter: NumberRightFormatter }
             );
-
+            const dummy_column = Object.assign(
+                {},
+                columns[1],
+                { width },
+                { key: '' },
+                { formatter: undefined },
+                { hidden: true }
+            );
             let r_column = {}; // 右端のカラムの情報
             r_column = Object.assign(
                 r_column,
@@ -223,7 +231,13 @@ class MyRowRenderer extends React.Component<any, IMyRowRendererStates> {
                 { key: SubtotalPriceRowKeys.subtotalPrice },
                 { formatter: NumberRightFormatter }
             );
-            _columns = [l_column, r_column];
+            _columns = [];
+            _columns.push(check_column);
+            for (let i = 1; i < columns.length - 2; i = i + 1) {
+                _columns.push(dummy_column);
+            }
+            _columns.push(l_column);
+            _columns.push(r_column);
             return (
                 <div>
                     <ReactDataGrid.Row
@@ -256,13 +270,15 @@ export interface ICreateFormDataGridComponentProps {
     autoCompleteOptions?: {};
     updateAutoCompleteOptions?: (col: { rowData: FormDataRow; idx: number }) => void;
     addRow?: () => void;
-    deleteRows?: (rows: number[]) => void;
+    deleteRows?: () => void;
+    selectRows?: (rows: { rowIdx: number; row: FormData }[]) => void;
+    deselectRows?: (rows: { rowIdx: number; row: FormData }[]) => void;
     // TODO:
     totalPrice?: number;
+    addSubtotalRow?: () => void;
 }
 interface ICreateFormDataGridComponentStates {
     columns: any[];
-    indexes: number[];
     // TODO:
     totalPrice: number | undefined;
 }
@@ -326,7 +342,6 @@ class CreateFormDataGridComponent extends React.Component<
         ];
         this.state = {
             columns: _columns,
-            indexes: [],
             totalPrice: props.totalPrice
         };
         this.rowGetter.bind(this);
@@ -371,26 +386,25 @@ class CreateFormDataGridComponent extends React.Component<
         }
     };
     onRowsSelected = (rows: any) => {
-        const newIndexes: number[] = this.state.indexes.concat(rows.map((r: any) => r.rowIdx));
-        // 最終行（合計行）は選択できないようにする。
-        const totalPriceIdx = newIndexes.findIndex(
-            (value: number, index, obj) => value === this.rowCount() - 1
-        );
-        if (totalPriceIdx !== -1) {
-            newIndexes.splice(totalPriceIdx, 1);
+        // TODO:
+        if (this.props.selectRows) {
+            this.props.selectRows(rows);
         }
-
-        this.setState({ indexes: newIndexes });
     };
     onRowsDeselected = (rows: any) => {
-        console.log(`onRowsDeselected() rows=${rows}`);
-        const rowIndexes = rows.map((r: any) => r.rowIdx);
-        this.setState({ indexes: this.state.indexes.filter(i => rowIndexes.indexOf(i) === -1) });
-        console.log(this.state.indexes);
+        // TODO:
+        if (this.props.deselectRows) {
+            this.props.deselectRows(rows);
+        }
     };
     handleDeleteBtn = (e: any) => {
         if (this.props.deleteRows) {
-            this.props.deleteRows(this.state.indexes);
+            this.props.deleteRows();
+        }
+    };
+    handleAddSubtotalBtn = (e: any) => {
+        if (this.props.addSubtotalRow) {
+            this.props.addSubtotalRow();
         }
     };
     // TODO:
@@ -415,7 +429,7 @@ class CreateFormDataGridComponent extends React.Component<
                         onRowsSelected: this.onRowsSelected,
                         onRowsDeselected: this.onRowsDeselected,
                         selectBy: {
-                            indexes: this.state.indexes
+                            isSelectedKey: FormDataRowKeys.checked
                         }
                     }}
                     columns={this.state.columns}
@@ -434,6 +448,13 @@ class CreateFormDataGridComponent extends React.Component<
                         <Toolbar onAddRow={this.props.addRow} addRowButtonText="行追加">
                             <button type="button" className="btn" onClick={this.handleDeleteBtn}>
                                 {'行削除'}
+                            </button>
+                            <button
+                                type="button"
+                                className="btn"
+                                onClick={this.handleAddSubtotalBtn}
+                            >
+                                {'小計行追加'}
                             </button>
                         </Toolbar>
                     }

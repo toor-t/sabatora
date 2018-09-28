@@ -151,19 +151,22 @@ const initialState: ICreateFormState = {
     autoCompleteOptions: {}
 };
 
-// 合計計算
+// 合計・小計計算
 function calcTotalPrice(rows: any[]): number {
     let sumPrice: number = 0;
+    let subSumPrice: number = 0;
     for (let i = 0; i < rows.length; i = i + 1) {
         if (
             rows[i][FormDataRowKeys.price] !== undefined &&
             !rows[i][FormDataRowKeys.price_isEmpty]
         ) {
             sumPrice += rows[i][FormDataRowKeys.price];
+            subSumPrice += rows[i][FormDataRowKeys.price];
         }
         // 小計行
         if (rows[i][SubtotalPriceRowKeys.subtotalPrice] !== undefined) {
-            rows[i][SubtotalPriceRowKeys.subtotalPrice] = sumPrice;
+            rows[i][SubtotalPriceRowKeys.subtotalPrice] = subSumPrice;
+            subSumPrice = 0;
         }
         // 合計行 ※ここでやらないほうが良い？
         if (rows[i][TotalPriceRowKeys.totalPrice] !== undefined) {
@@ -177,7 +180,7 @@ function calcTotalPrice(rows: any[]): number {
 /* Reducer */
 // TODO:
 export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(initialState)
-    .case(CreateFormActions.addRow, (state, r) => {
+    .case(CreateFormActions.addRow, state => {
         // TODO:
         // console.log('addRow');
         const newDataRows = state.dataRows.slice();
@@ -209,16 +212,37 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         });
 
         // 合計を計算
-        const totalPrice = calcTotalPrice(state.dataRows);
+        const totalPrice = calcTotalPrice(newDataRows);
 
         return Object.assign({}, state, { totalPrice, dataRows: newDataRows });
     })
-    .case(CreateFormActions.deleteRows, (state, rows) => {
-        // TODO: 範囲チェック等をちゃんとやる必要あり
+    .case(CreateFormActions.addSubtotalRow, state => {
+        // 実験
         const newDataRows = state.dataRows.slice();
-        rows.map<void>((value, index, array) => {
-            newDataRows.splice(value, 1);
+        const rowsCount = newDataRows.length;
+
+        newDataRows.splice(/*最終行（合計表示行）の一つ前に追加*/ rowsCount - 1, 0, {
+            id: -1,
+            labelSubtotalPrice: '小計:',
+            subtotalPrice: 0,
+            checked: false
         });
+
+        // 合計を計算
+        const totalPrice = calcTotalPrice(newDataRows);
+
+        return Object.assign({}, state, { totalPrice, dataRows: newDataRows });
+    })
+    .case(CreateFormActions.deleteRows, state => {
+        // TODO:
+        const newDataRows: (FormDataRow | TotalPriceRow | SubtotalPriceRow)[] = [];
+
+        for (const dataRowIdx in state.dataRows) {
+            if (!(state.dataRows[dataRowIdx] as FormDataRow)[FormDataRowKeys.checked]) {
+                // 残す行
+                newDataRows.push(state.dataRows[dataRowIdx]);
+            }
+        }
 
         // 合計を計算
         const totalPrice = calcTotalPrice(newDataRows);
@@ -289,6 +313,39 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     .case(CreateFormActions.selectRow, (state, r) => {
         // TODO:
         return state;
+    })
+    .case(CreateFormActions.selectRows, (state, rows) => {
+        // TODO:
+        const newDataRows = state.dataRows.map((value, index, array) => {
+            if ((value as TotalPriceRow)[TotalPriceRowKeys.totalPrice] === undefined) {
+                // 合計表示行は選択不能にする
+                for (let i = 0; i < rows.length; i = i + 1) {
+                    if (index === rows[i].rowIdx) {
+                        // 選択された
+                        return Object.assign({}, array[index], { checked: true });
+                    }
+                }
+            }
+            // 選択されてない
+            return Object.assign({}, array[index]);
+        });
+
+        return Object.assign({}, state, { dataRows: newDataRows });
+    })
+    .case(CreateFormActions.deselectRows, (state, rows) => {
+        // TODO:
+        const newDataRows = state.dataRows.map((value, index, array) => {
+            for (let i = 0; i < rows.length; i = i + 1) {
+                if (index === rows[i].rowIdx) {
+                    // 選択解除された
+                    return Object.assign({}, array[index], { checked: false });
+                }
+            }
+            // 選択解除されてない
+            return Object.assign({}, array[index]);
+        });
+
+        return Object.assign({}, state, { dataRows: newDataRows });
     })
     // .case(CreateFormActions.startEdittingCell, (state, cell) => {
     //     // TODO:

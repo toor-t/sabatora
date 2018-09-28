@@ -46,7 +46,12 @@ function mapDispatchToProps(
         onGridRowUpdate: (e: any) => dispatch(CreateFormActions.updateGridRow(e)),
         updateAutoCompleteOptions: (c: any) => updateAutoCompleteOptionsWorker(dispatch, c),
         addRow: () => dispatch(CreateFormActions.addRow()),
-        deleteRows: (rows: number[]) => dispatch(CreateFormActions.deleteRows(rows))
+        deleteRows: () => dispatch(CreateFormActions.deleteRows()),
+        selectRows: (rows: { rowIdx: number; row: FormData }[]) =>
+            dispatch(CreateFormActions.selectRows(rows)),
+        deselectRows: (rows: { rowIdx: number; row: FormData }[]) =>
+            dispatch(CreateFormActions.deselectRows(rows)),
+        addSubtotalRow: () => dispatch(CreateFormActions.addSubtotalRow())
     };
 }
 export default connect(
