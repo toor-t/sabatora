@@ -9,7 +9,7 @@ export interface ICreateFormActions {
     // updateEdittingCellValue: (v: string) => Action<string>;
     // endEdittingCell: (cel: {}) => Action<{}>;
     addRow: () => Action<void>; // TODO:
-    deleteRow: (r: number) => Action<number>; // TODO:
+    deleteRows: (rows: number[]) => Action<number[]>; // TODO:
     insertRow: (r: number) => Action<number>; // TODO:
     updateGridRow: (e: any) => Action<any>; // TODO:
 
@@ -32,7 +32,7 @@ export const CreateFormActions = {
     // updateEdittingCellValue: actionCreator<string>('UPDATE_EDITTING_CELL_VALUE'),
     // endEdittingCell: actionCreator<{}>('END_EDITTING_CELL'),
     addRow: actionCreator<void>('ADD_ROW'),
-    deleteRow: actionCreator<number>('DELETE_ROW'),
+    deleteRows: actionCreator<number[]>('DELETE_ROW'),
     insertRow: actionCreator<number>('INSERT_ROW'),
     updateGridRow: actionCreator<any>('UPDATE_GRID_ROW'),
     startEdittingTitle: actionCreator<void>('START_EDITTING_TITLE'),

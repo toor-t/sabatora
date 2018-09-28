@@ -45,7 +45,8 @@ function mapDispatchToProps(
         onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col)),
         onGridRowUpdate: (e: any) => dispatch(CreateFormActions.updateGridRow(e)),
         updateAutoCompleteOptions: (c: any) => updateAutoCompleteOptionsWorker(dispatch, c),
-        addRow: () => dispatch(CreateFormActions.addRow())
+        addRow: () => dispatch(CreateFormActions.addRow()),
+        deleteRows: (rows: number[]) => dispatch(CreateFormActions.deleteRows(rows))
     };
 }
 export default connect(

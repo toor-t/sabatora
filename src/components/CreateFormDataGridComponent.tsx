@@ -76,7 +76,6 @@ class MyAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
 // TODO: formatter
 class NumberRightFormatter extends React.Component<any> {
     render() {
-        // console.log(`NumberRightFormatter=${String(this.props.value)}`);
         const formattedValue: string = String(this.props.value).replace(
             /(\d)(?=(\d\d\d)+(?!\d))/g,
             '$1,'
@@ -94,6 +93,15 @@ class CenterFormatter extends React.Component<any> {
             <div title={this.props.value} className="text-center">
                 {this.props.value}
             </div>
+        );
+    }
+}
+class BoldNumberRightFormatter extends React.Component<any> {
+    render() {
+        return (
+            <strong>
+                <NumberRightFormatter {...this.props} />
+            </strong>
         );
     }
 }
@@ -156,20 +164,28 @@ class MyRowRenderer extends React.Component<any, IMyRowRendererStates> {
                 columns[0],
                 { width },
                 { key: TotalPriceRowKeys.labelTotalPrice },
-                { formatter: NumberRightFormatter }
+                { formatter: BoldNumberRightFormatter }
             );
-
+            const dummy_column = Object.assign(
+                {},
+                columns[0],
+                { width },
+                { key: '' },
+                { formatter: undefined },
+                { hidden: true }
+            );
             let r_column = {}; // 右端のカラムの情報
             r_column = Object.assign(
                 r_column,
                 columns[columns.length - 1],
                 { key: TotalPriceRowKeys.totalPrice },
-                { formatter: NumberRightFormatter }
+                { formatter: BoldNumberRightFormatter }
             );
             _columns = [];
-            for (let i = 0; i < columns.length - 1; i = i + 1) {
-                _columns.push(l_column);
+            for (let i = 0; i < columns.length - 2; i = i + 1) {
+                _columns.push(dummy_column);
             }
+            _columns.push(l_column);
             _columns.push(r_column);
             return (
                 <div>
@@ -240,11 +256,13 @@ export interface ICreateFormDataGridComponentProps {
     autoCompleteOptions?: {};
     updateAutoCompleteOptions?: (col: { rowData: FormDataRow; idx: number }) => void;
     addRow?: () => void;
+    deleteRows?: (rows: number[]) => void;
     // TODO:
     totalPrice?: number;
 }
 interface ICreateFormDataGridComponentStates {
     columns: any[];
+    indexes: number[];
     // TODO:
     totalPrice: number | undefined;
 }
@@ -308,6 +326,7 @@ class CreateFormDataGridComponent extends React.Component<
         ];
         this.state = {
             columns: _columns,
+            indexes: [],
             totalPrice: props.totalPrice
         };
         this.rowGetter.bind(this);
@@ -336,7 +355,11 @@ class CreateFormDataGridComponent extends React.Component<
             (this.props.rows[col.rowIdx] as FormDataRow)[FormDataRowKeys.price] !== undefined
         ) {
             // 通常行のみ。合計行等では更新しない
-            if (this.state.columns[col.idx]['ddKey'] !== undefined) {
+            if (
+                col.idx > 1 &&
+                this.state.columns[col.idx /* 行選択チェックボックス分 */ - 1]['ddKey'] !==
+                    undefined
+            ) {
                 // DBに対応するデータがあるカラムのみ。
                 if (this.props.updateAutoCompleteOptions) {
                     this.props.updateAutoCompleteOptions({
@@ -347,15 +370,33 @@ class CreateFormDataGridComponent extends React.Component<
             }
         }
     };
+    onRowsSelected = (rows: any) => {
+        const newIndexes: number[] = this.state.indexes.concat(rows.map((r: any) => r.rowIdx));
+        // 最終行（合計行）は選択できないようにする。
+        const totalPriceIdx = newIndexes.findIndex(
+            (value: number, index, obj) => value === this.rowCount() - 1
+        );
+        if (totalPriceIdx !== -1) {
+            newIndexes.splice(totalPriceIdx, 1);
+        }
+
+        this.setState({ indexes: newIndexes });
+    };
+    onRowsDeselected = (rows: any) => {
+        console.log(`onRowsDeselected() rows=${rows}`);
+        const rowIndexes = rows.map((r: any) => r.rowIdx);
+        this.setState({ indexes: this.state.indexes.filter(i => rowIndexes.indexOf(i) === -1) });
+        console.log(this.state.indexes);
+    };
+    handleDeleteBtn = (e: any) => {
+        if (this.props.deleteRows) {
+            this.props.deleteRows(this.state.indexes);
+        }
+    };
     // TODO:
     getTotalPrice = () => {
         return this.state.totalPrice ? this.state.totalPrice : 0;
     };
-    // componentDidUpdate = () => {
-    // 	console.log(`this.grid=`);
-    // 	console.log(this.grid);
-    // 	(this.grid as ReactDataGrid<any>).forceUpdate();
-    // }
     render() {
         // TODO:
         if (this.props.autoCompleteOptions !== undefined) {
@@ -368,6 +409,15 @@ class CreateFormDataGridComponent extends React.Component<
                         this.grid = node;
                     }}
                     enableCellSelect={true}
+                    rowSelection={{
+                        showCheckbox: true,
+                        enableShiftSelect: true,
+                        onRowsSelected: this.onRowsSelected,
+                        onRowsDeselected: this.onRowsDeselected,
+                        selectBy: {
+                            indexes: this.state.indexes
+                        }
+                    }}
                     columns={this.state.columns}
                     rowGetter={this.rowGetter}
                     rowsCount={this.rowCount()}
@@ -381,8 +431,11 @@ class CreateFormDataGridComponent extends React.Component<
                     onGridRowsUpdated={this.props.onGridRowUpdate}
                     onCellSelected={this.handleCellSeceted}
                     toolbar={
-                        // tslint:disable-next-line:jsx-no-lambda
-                        <Toolbar onAddRow={this.props.addRow} addRowButtonText="行追加" />
+                        <Toolbar onAddRow={this.props.addRow} addRowButtonText="行追加">
+                            <button type="button" className="btn" onClick={this.handleDeleteBtn}>
+                                {'行削除'}
+                            </button>
+                        </Toolbar>
                     }
                     rowRenderer={MyRowRenderer}
                 />

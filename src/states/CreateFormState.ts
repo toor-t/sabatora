@@ -213,13 +213,17 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         return Object.assign({}, state, { totalPrice, dataRows: newDataRows });
     })
-    .case(CreateFormActions.deleteRow, (state, r) => {
-        // TODO:
+    .case(CreateFormActions.deleteRows, (state, rows) => {
+        // TODO: 範囲チェック等をちゃんとやる必要あり
+        const newDataRows = state.dataRows.slice();
+        rows.map<void>((value, index, array) => {
+            newDataRows.splice(value, 1);
+        });
 
         // 合計を計算
-        const totalPrice = calcTotalPrice(state.dataRows);
+        const totalPrice = calcTotalPrice(newDataRows);
 
-        return Object.assign({}, state, { totalPrice /* TODO: */ });
+        return Object.assign({}, state, { dataRows: newDataRows }, { totalPrice /* TODO: */ });
     })
     // .case(CreateFormActions.endEdittingCell, (state, cell) => {
     //     // TODO:
