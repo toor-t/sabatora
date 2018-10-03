@@ -6,9 +6,20 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import { updateAutoCompleteOptions_request, makeDummyDB } from './db_main';
+const ElectronStore = require('electron-store');
 
 export let win: BrowserWindow | null;
 const _updateAutoCompleteOptions_request = updateAutoCompleteOptions_request;
+
+// TODO: 設定
+const config = new ElectronStore({
+    defaults: {
+        bounds: {
+            width: 800,
+            height: 600
+        }
+    }
+});
 
 const installExtensions = async () => {
     const installer = require('electron-devtools-installer');
@@ -25,7 +36,8 @@ const createWindow = async () => {
         await installExtensions();
     }
 
-    win = new BrowserWindow({ width: 800, height: 600 });
+    const { width, height, x, y } = config.get('bounds');
+    win = new BrowserWindow({ width, height, x, y });
 
     if (process.env.NODE_ENV !== 'production') {
         win.loadURL(`http://localhost:2003`);
@@ -46,6 +58,17 @@ const createWindow = async () => {
 
     win.on('closed', () => {
         win = null;
+    });
+
+    win.on('resize', (ev: any) => {
+        if (win) {
+            config.set('bounds', win.getBounds());
+        }
+    });
+    win.on('move', (ev: any) => {
+        if (win) {
+            config.set('bounds', win.getBounds());
+        }
     });
 };
 

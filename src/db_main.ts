@@ -2,33 +2,18 @@
 // db_main
 //
 'use strict';
-import { ipcMain } from 'electron';
+import { app, ipcMain } from 'electron';
 import * as DataStore from 'nedb';
 import { win } from './main';
 
-export namespace DataDocKeys {
-    export const level_1 = 'level_1';
-    export const level_2 = 'level_2';
-    export const level_3 = 'level_3';
-    export const itemName = 'itemName';
-    export const unitPrice = 'unitPrice';
-}
+import { DataDocKeys, DataDoc, ConfDoc, UpdateAutoCompleteOptions } from './db';
 
-export interface DataDoc {
-    // TODO:
-    [DataDocKeys.level_1]: string; // 大1
-    [DataDocKeys.level_2]: string; // 中2
-    [DataDocKeys.level_3]: string; // 小3
-    [DataDocKeys.itemName]: string; // 名称
-    [DataDocKeys.unitPrice]: number[]; // 単価
-}
-
-export interface ConfDoc {
-    // TODO:
-}
+const userDataPath = app.getPath('userData');
+// const userDataPath = './db';
+console.log(`userDataPath=${userDataPath}`);
 
 export const data_db: Nedb = new DataStore({
-    filename: './db/data.db', // TODO:  ファイル名
+    filename: `${userDataPath}/data.db`, // TODO:  ファイル名
     autoload: true
     /*
 	afterSerialization: hoge,
@@ -36,30 +21,30 @@ export const data_db: Nedb = new DataStore({
 	*/
 });
 export const conf_db: Nedb = new DataStore({
-    filename: './db/conf.db', // TODO: ファイル名
+    filename: `${userDataPath}/conf.db`, // TODO: ファイル名
     autoload: true
 });
 
 // TODO:
 export const updateAutoCompleteOptions_request = ipcMain.on(
-    'updateAutoCompleteOptions-request',
+    UpdateAutoCompleteOptions.Request,
     (event: any, arg: any) => {
         // TODO:
         // console.log(`updateAutoCompleteOptions-request=${arg}`);
         updateAutoCompleteOptions(arg[0], arg[1]).then(
             result => {
                 if (win) {
-                    win.webContents.send('updateAutoCompleteOptions-result', result);
+                    win.webContents.send(UpdateAutoCompleteOptions.Result, result);
                 }
             },
             reject => {
                 // TODO:
                 if (win) {
-                    win.webContents.send('updateAutoCompleteOptions-reject', reject);
+                    win.webContents.send(UpdateAutoCompleteOptions.Reject, reject);
                 }
             }
         );
-        event.sender.send('updateAutoCompleteOptions-reply', 'Request received.');
+        event.sender.send(UpdateAutoCompleteOptions.Reply, 'Request received.');
     }
 );
 

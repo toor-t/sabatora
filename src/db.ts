@@ -1,8 +1,7 @@
 //
-// db (client)
+// db
 //
 'use strict';
-import { ipcRenderer } from 'electron';
 
 export namespace DataDocKeys {
     export const level_1 = 'level_1';
@@ -25,23 +24,9 @@ export interface ConfDoc {
     // TODO:
 }
 
-// AutoCompleteOptions 更新
-export const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promise<{}> => {
-    return new Promise((resolve, reject) => {
-        ipcRenderer.on('updateAutoCompleteOptions-result', (event: any, result: any) => {
-            // console.log(`updateAutoCompleteOptions-result=${{ ...result }}`);
-            resolve(result);
-        });
-        ipcRenderer.on('updateAutoCompleteOptions-reject', (event: any, error: any) => {
-            // console.log(`updateAutoCompleteOptions-reject=${error}`);
-            reject(error);
-        });
-        ipcRenderer.on('updateAutoCompleteOptions-reply', (event: any, reply: any) => {
-            /* TODO: */
-            // console.log(`updateAutoCompleteOptions-reply = ${reply}`);
-        });
-        //
-        // console.log('Send updateAutoCompleteOptions-request');
-        ipcRenderer.send('updateAutoCompleteOptions-request', [query, projection]);
-    });
-};
+export namespace UpdateAutoCompleteOptions {
+    export const Request = 'updateAutoCompleteOptions-request';
+    export const Result = 'updateAutoCompleteOptions-result';
+    export const Reject = 'updateAutoCompleteOptions-reject';
+    export const Reply = 'updateAutoCompleteOptions-reply';
+}

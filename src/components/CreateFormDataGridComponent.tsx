@@ -423,6 +423,7 @@ class CreateFormDataGridComponent extends React.Component<
                         this.grid = node;
                     }}
                     enableCellSelect={true}
+                    cellNavigationMode="changeRow"
                     rowSelection={{
                         showCheckbox: true,
                         enableShiftSelect: true,

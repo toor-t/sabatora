@@ -12,7 +12,7 @@ import { IAppState } from '../store';
 // TODO:
 import { FormDataRow } from '../states/CreateFormState';
 import wrapAsyncWorker from '../wrapAsyncWorker';
-import { updateAutoCompleteOptions } from '../db';
+import { updateAutoCompleteOptions } from '../db_renderer';
 
 // TODO: 非同期でautoCompleteOptionsを更新する  ※これここに置くべきか？
 export const updateAutoCompleteOptionsWorker = wrapAsyncWorker<
