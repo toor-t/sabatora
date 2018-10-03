@@ -25,8 +25,6 @@ const CreateFormComponent: React.SFC<ICreateFormComponentProps> = props => {
             <h1>{title}</h1>
             <br />
             <CreateFormDataGridComponent {...rest} />
-            <br />
-            <div>合計: {String(totalPrice).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')} 円</div>
         </div>
     );
 };
