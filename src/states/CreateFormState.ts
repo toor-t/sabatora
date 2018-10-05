@@ -217,7 +217,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         return Object.assign({}, state, { totalPrice, dataRows: newDataRows });
     })
     .case(CreateFormActions.addSubtotalRow, state => {
-        // 実験
+        // TODO:
         const newDataRows = state.dataRows.slice();
         const rowsCount = newDataRows.length;
 
@@ -249,21 +249,17 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         return Object.assign({}, state, { dataRows: newDataRows }, { totalPrice /* TODO: */ });
     })
-    // .case(CreateFormActions.endEdittingCell, (state, cell) => {
-    //     // TODO:
-    //     return state;
-    // })
     .case(CreateFormActions.endEdittingTitle, (state, title) => {
         return Object.assign({}, state, { title }, { edittingTitle: false });
     })
-    .case(CreateFormActions.insertRow, (state, r) => {
-        // TODO:
+    // .case(CreateFormActions.insertRow, (state, r) => {
+    //     // TODO:
 
-        // 合計を計算
-        const totalPrice = calcTotalPrice(state.dataRows);
+    //     // 合計を計算
+    //     const totalPrice = calcTotalPrice(state.dataRows);
 
-        return Object.assign({}, state, { totalPrice /* TODO: */ });
-    })
+    //     return Object.assign({}, state, { totalPrice /* TODO: */ });
+    // })
     .case(CreateFormActions.updateGridRow, (state, e) => {
         // TODO:
         const _rows = state.dataRows.slice();
@@ -310,10 +306,6 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         // TODO:
         return Object.assign({}, state, { sellectedCell: col });
     })
-    .case(CreateFormActions.selectRow, (state, r) => {
-        // TODO:
-        return state;
-    })
     .case(CreateFormActions.selectRows, (state, rows) => {
         // TODO:
         const newDataRows = state.dataRows.map((value, index, array) => {
@@ -347,19 +339,11 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         return Object.assign({}, state, { dataRows: newDataRows });
     })
-    // .case(CreateFormActions.startEdittingCell, (state, cell) => {
-    //     // TODO:
-    //     return state;
-    // })
     .case(CreateFormActions.startEdittingTitle, state => {
         // TODO:
 
         return Object.assign({}, state, { edittingTitle: true });
     })
-    // .case(CreateFormActions.updateEdittingCellValue, (state, value) => {
-    //     // TODO:
-    //     return state;
-    // })
     .case(CreateFormActions.updateAutoCompleteOptions.started, (state, cell) => {
         // TODO:
         // console.log('CreateFormActions.updateAutoCompleteOptions.started');

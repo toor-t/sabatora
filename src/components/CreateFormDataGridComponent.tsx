@@ -276,7 +276,7 @@ export interface ICreateFormDataGridComponentStateProps {
 }
 export interface ICreateFormDataGridComponentDispatchProps {
     // TODO:
-    onGridRowUpdate: (e: any) => void;
+    onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) => void;
     onSelectedCell: (col: { rowIdx: number; idx: number }) => void;
     updateAutoCompleteOptions: (col: { rowData: FormDataRow; columnDDKey: string }) => void;
     addRow: () => void;
