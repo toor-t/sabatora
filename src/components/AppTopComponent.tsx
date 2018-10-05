@@ -89,16 +89,21 @@ const styles = (theme: Theme) =>
         }
     });
 
-export interface IAppTopComponentProps {
+export interface IAppTopComponentStateProps {
     // TODO:
-    selected?: number;
-    drawerOpend?: boolean;
-    onOpenDrawer?: () => void;
-    onCloseDrawer?: () => void;
+    selected: number;
+    drawerOpend: boolean;
+}
+export interface IAppTopComponentDispatchProps {
+    // TODO:
+    onOpenDrawer: () => void;
+    onCloseDrawer: () => void;
 }
 
 class AppTopComponent extends React.Component<
-    IAppTopComponentProps & WithStyles<typeof styles> & { theme: Theme }
+    IAppTopComponentStateProps &
+        IAppTopComponentDispatchProps &
+        WithStyles<typeof styles> & { theme: Theme }
 > {
     // handleDrawerOpen = () => {
     // 	this.setState({ open: true });

@@ -8,17 +8,20 @@ import { Dispatch } from 'redux';
 import { Action } from 'typescript-fsa';
 // TODO:
 import { AppTopActions } from '../actions/AppTopAction';
-import AppTopComponent, { IAppTopComponentProps } from '../components/AppTopComponent';
+import AppTopComponent, {
+    IAppTopComponentStateProps,
+    IAppTopComponentDispatchProps
+} from '../components/AppTopComponent';
 import { IAppState } from '../store';
 
-function mapStateToProps(appState: IAppState): IAppTopComponentProps {
+function mapStateToProps(appState: IAppState): IAppTopComponentStateProps {
     // TODO:
     return {
         selected: /* TODO */ 0,
         drawerOpend: appState.appTopState.drawerOpened
     };
 }
-function mapDispatchToProps(dispatch: Dispatch<Action<any>>): IAppTopComponentProps {
+function mapDispatchToProps(dispatch: Dispatch<Action<any>>): IAppTopComponentDispatchProps {
     // TODO:
     return {
         onOpenDrawer: () => dispatch(AppTopActions.openDrawer()),

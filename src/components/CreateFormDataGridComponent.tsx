@@ -267,21 +267,24 @@ class MyRowRenderer extends React.Component<any, IMyRowRendererStates> {
 const ROW_HEIGHT = 35;
 const HEADER_ROW_HEIGHT = 40;
 
-export interface ICreateFormDataGridComponentProps {
+export interface ICreateFormDataGridComponentStateProps {
     // TODO:
-    rows?: {}[];
-    // colmuns?: {}[];
-    onGridRowUpdate?: (e: any) => void;
-    onSelectedCell?: (col: { rowIdx: number; idx: number }) => void;
-    autoCompleteOptions?: {};
-    updateAutoCompleteOptions?: (col: { rowData: FormDataRow; idx: number }) => void;
-    addRow?: () => void;
-    deleteRows?: () => void;
-    selectRows?: (rows: { rowIdx: number; row: FormData }[]) => void;
-    deselectRows?: (rows: { rowIdx: number; row: FormData }[]) => void;
+    rows: {}[];
+    // colmuns: {}[];
+    autoCompleteOptions: {};
     // TODO:
-    totalPrice?: number;
-    addSubtotalRow?: () => void;
+    totalPrice: number;
+}
+export interface ICreateFormDataGridComponentDispatchProps {
+    // TODO:
+    onGridRowUpdate: (e: any) => void;
+    onSelectedCell: (col: { rowIdx: number; idx: number }) => void;
+    updateAutoCompleteOptions: (col: { rowData: FormDataRow; idx: number }) => void;
+    addRow: () => void;
+    deleteRows: () => void;
+    selectRows: (rows: { rowIdx: number; row: FormData }[]) => void;
+    deselectRows: (rows: { rowIdx: number; row: FormData }[]) => void;
+    addSubtotalRow: () => void;
 }
 interface ICreateFormDataGridComponentStates {
     columns: any[];
@@ -289,10 +292,12 @@ interface ICreateFormDataGridComponentStates {
     totalPrice: number | undefined;
 }
 class CreateFormDataGridComponent extends React.Component<
-    ICreateFormDataGridComponentProps,
+    ICreateFormDataGridComponentStateProps & ICreateFormDataGridComponentDispatchProps,
     ICreateFormDataGridComponentStates
 > {
-    constructor(props: ICreateFormDataGridComponentProps) {
+    constructor(
+        props: ICreateFormDataGridComponentStateProps & ICreateFormDataGridComponentDispatchProps
+    ) {
         super(props);
         // カラム定義
         const _columns = [

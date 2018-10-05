@@ -7,7 +7,10 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { Action } from 'typescript-fsa';
 import { CreateFormActions } from '../actions/CreateFormAction';
-import CreateFormComponent, { ICreateFormComponentProps } from '../components/CreateFormComponent';
+import CreateFormComponent, {
+    ICreateFormComponentStateProps,
+    ICreateFormComponentDispatchProps
+} from '../components/CreateFormComponent';
 import { IAppState } from '../store';
 // TODO:
 import { FormDataRow } from '../states/CreateFormState';
@@ -26,22 +29,19 @@ export const updateAutoCompleteOptionsWorker = wrapAsyncWorker<
     }
 );
 
-function mapStateToProps(appState: IAppState): ICreateFormComponentProps {
+function mapStateToProps(appState: IAppState): ICreateFormComponentStateProps {
     // TODO:
     return {
         title: appState.createFormState.title,
         totalPrice: appState.createFormState.totalPrice,
         rows: appState.createFormState.dataRows,
-        autoCompleteOptions: appState.createFormState.autoCompleteOptions
+        autoCompleteOptions: appState.createFormState.autoCompleteOptions,
+        edittingTitle: appState.createFormState.edittingTitle
     };
 }
-function mapDispatchToProps(
-    dispatch: Dispatch<Action<any>>,
-    props: ICreateFormComponentProps
-): ICreateFormComponentProps {
+function mapDispatchToProps(dispatch: Dispatch<Action<any>>): ICreateFormComponentDispatchProps {
     // TODO:
     return {
-        ...props,
         onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col)),
         onGridRowUpdate: (e: any) => dispatch(CreateFormActions.updateGridRow(e)),
         updateAutoCompleteOptions: (c: any) => updateAutoCompleteOptionsWorker(dispatch, c),
@@ -51,7 +51,9 @@ function mapDispatchToProps(
             dispatch(CreateFormActions.selectRows(rows)),
         deselectRows: (rows: { rowIdx: number; row: FormData }[]) =>
             dispatch(CreateFormActions.deselectRows(rows)),
-        addSubtotalRow: () => dispatch(CreateFormActions.addSubtotalRow())
+        addSubtotalRow: () => dispatch(CreateFormActions.addSubtotalRow()),
+        startEdittingTitle: () => dispatch(CreateFormActions.startEdittingTitle()),
+        endEdittingTitle: (title: string) => dispatch(CreateFormActions.endEdittingTitle(title))
     };
 }
 export default connect(

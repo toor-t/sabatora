@@ -100,7 +100,7 @@ export interface SubtotalPriceRow {
 export interface ICreateFormState {
     dataRows: (FormDataRow | SubtotalPriceRow | TotalPriceRow)[];
     title: string;
-    isEditting: boolean;
+    edittingTitle: boolean;
     edittingCell: { rowIdx: number; idx: number };
     selectedRow: number;
     selectedCell: { rowIdx: number; idx: number };
@@ -142,7 +142,7 @@ const initialState: ICreateFormState = {
         }
     ],
     title: '無題',
-    isEditting: false,
+    edittingTitle: false,
     edittingCell: { rowIdx: -1, idx: -1 },
     selectedRow: -1,
     selectedCell: { rowIdx: -1, idx: -1 },
@@ -253,8 +253,8 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     //     // TODO:
     //     return state;
     // })
-    .case(CreateFormActions.endEdittingTitle, (state, _title) => {
-        return Object.assign({}, state, { title: _title });
+    .case(CreateFormActions.endEdittingTitle, (state, title) => {
+        return Object.assign({}, state, { title }, { edittingTitle: false });
     })
     .case(CreateFormActions.insertRow, (state, r) => {
         // TODO:
@@ -351,9 +351,10 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     //     // TODO:
     //     return state;
     // })
-    .case(CreateFormActions.startEdittingTitle, (state, cell) => {
+    .case(CreateFormActions.startEdittingTitle, state => {
         // TODO:
-        return state;
+
+        return Object.assign({}, state, { edittingTitle: true });
     })
     // .case(CreateFormActions.updateEdittingCellValue, (state, value) => {
     //     // TODO:
