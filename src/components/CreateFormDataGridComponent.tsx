@@ -79,65 +79,52 @@ class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
 }
 
 // TODO: Formatter
-class NumberRightFormatter extends React.Component<any> {
-    render() {
-        if (
-            (typeof this.props.value === 'number' && !isNaN(this.props.value)) ||
-            !isNaN(Number(this.props.value))
-        ) {
-            const formattedValue: string = String(this.props.value).replace(
-                /(\d)(?=(\d\d\d)+(?!\d))/g,
-                '$1,'
-            );
-            return (
-                <div title={formattedValue} className="text-right">
-                    {formattedValue}
-                </div>
-            );
-        }
+const NumberRightFormatter: React.SFC<any> = props => {
+    if ((typeof props.value === 'number' && !isNaN(props.value)) || !isNaN(Number(props.value))) {
+        const formattedValue: string = String(props.value).replace(
+            /(\d)(?=(\d\d\d)+(?!\d))/g,
+            '$1,'
+        );
         return (
-            <div title="Invalid Value" className="text-right" style={{ backgroundColor: 'orange' }}>
-                {this.props.value}
+            <div title={formattedValue} className="text-right">
+                {formattedValue}
             </div>
         );
     }
-}
-class RightFormatter extends React.Component<any> {
-    render() {
-        return (
-            <div title={this.props.value} className="text-right">
-                {this.props.value}
-            </div>
-        );
-    }
-}
-class CenterFormatter extends React.Component<any> {
-    render() {
-        return (
-            <div title={this.props.value} className="text-center">
-                {this.props.value}
-            </div>
-        );
-    }
-}
-class BoldNumberRightFormatter extends React.Component<any> {
-    render() {
-        return (
-            <strong>
-                <NumberRightFormatter {...this.props} />
-            </strong>
-        );
-    }
-}
-class BoldRightFormatter extends React.Component<any> {
-    render() {
-        return (
-            <strong>
-                <RightFormatter {...this.props} />
-            </strong>
-        );
-    }
-}
+    return (
+        <div title="Invalid Value" className="text-right" style={{ backgroundColor: 'orange' }}>
+            {props.value}
+        </div>
+    );
+};
+const RightFormatter: React.SFC<any> = props => {
+    return (
+        <div title={props.value} className="text-right">
+            {props.value}
+        </div>
+    );
+};
+const CenterFormatter: React.SFC<any> = props => {
+    return (
+        <div title={props.value} className="text-center">
+            {props.value}
+        </div>
+    );
+};
+const BoldNumberRightFormatter: React.SFC<any> = props => {
+    return (
+        <strong>
+            <NumberRightFormatter {...props} />
+        </strong>
+    );
+};
+const BoldRightFormatter: React.SFC<any> = props => {
+    return (
+        <strong>
+            <RightFormatter {...props} />
+        </strong>
+    );
+};
 
 // TODO: Row render
 interface ICustomRowRendererStates {
@@ -310,7 +297,7 @@ class CreateFormDataGridComponent extends React.Component<
     ) {
         super(props);
         // カラム定義
-        const _columns: (ReactDataGrid.Column<FormDataRow> & { ddKey?: string })[] = [
+        const columns: (ReactDataGrid.Column<FormDataRow> & { ddKey?: string })[] = [
             {
                 key: FormDataRowKeys.id,
                 name: 'No.',
@@ -362,12 +349,11 @@ class CreateFormDataGridComponent extends React.Component<
             }
         ];
         this.state = {
-            columns: _columns
+            columns
         };
         this.rowGetter.bind(this);
         this.rowCount.bind(this);
         this.handleCellSeceted.bind(this);
-        // console.log('constructed.');
     }
     // ReactDataGridへの参照
     grid: any = {};
