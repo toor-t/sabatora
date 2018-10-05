@@ -38,7 +38,7 @@ export namespace FormDataRowKeys {
     export const price = 'price'; // : number; // 価格
     export const price_isEmpty = 'price_isEmpty'; // : boolean;
 
-    export const checked = 'checked'; // : boolean;
+    export const selected = 'selected'; // : boolean;
 }
 export interface FormDataRow {
     [FormDataRowKeys.id]: number;
@@ -70,7 +70,7 @@ export interface FormDataRow {
     [FormDataRowKeys.price]: number; // 価格
     [FormDataRowKeys.price_isEmpty]: boolean;
 
-    [FormDataRowKeys.checked]: boolean;
+    [FormDataRowKeys.selected]: boolean;
 }
 
 // 合計表示行
@@ -133,7 +133,7 @@ const initialState: ICreateFormState = {
             num_isValid: false,
             price: 0,
             price_isEmpty: true,
-            checked: false
+            selected: false
         },
         {
             id: -1,
@@ -208,7 +208,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
             num_isValid: false,
             price: 0,
             price_isEmpty: true,
-            checked: false
+            selected: false
         });
 
         // 合計を計算
@@ -225,7 +225,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
             id: -1,
             labelSubtotalPrice: '小計:',
             subtotalPrice: 0,
-            checked: false
+            selected: false
         });
 
         // 合計を計算
@@ -238,7 +238,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         const newDataRows: (FormDataRow | TotalPriceRow | SubtotalPriceRow)[] = [];
 
         for (const dataRowIdx in state.dataRows) {
-            if (!(state.dataRows[dataRowIdx] as FormDataRow)[FormDataRowKeys.checked]) {
+            if (!(state.dataRows[dataRowIdx] as FormDataRow)[FormDataRowKeys.selected]) {
                 // 残す行
                 newDataRows.push(state.dataRows[dataRowIdx]);
             }
@@ -322,7 +322,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
                 for (let i = 0; i < rows.length; i = i + 1) {
                     if (index === rows[i].rowIdx) {
                         // 選択された
-                        return Object.assign({}, array[index], { checked: true });
+                        return Object.assign({}, array[index], { selected: true });
                     }
                 }
             }
@@ -338,7 +338,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
             for (let i = 0; i < rows.length; i = i + 1) {
                 if (index === rows[i].rowIdx) {
                     // 選択解除された
-                    return Object.assign({}, array[index], { checked: false });
+                    return Object.assign({}, array[index], { selected: false });
                 }
             }
             // 選択解除されてない

@@ -417,7 +417,7 @@ class CreateFormDataGridComponent extends React.Component<
                         onRowsSelected: this.onRowsSelected,
                         onRowsDeselected: this.onRowsDeselected,
                         selectBy: {
-                            isSelectedKey: FormDataRowKeys.checked
+                            isSelectedKey: FormDataRowKeys.selected
                         }
                     }}
                     columns={this.state.columns}
