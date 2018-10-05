@@ -5,13 +5,7 @@
 
 import * as React from 'react';
 import { WithStyles, withStyles, createStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/icons/Menu';
 
 import CreateFormDataGridComponent, {
     ICreateFormDataGridComponentProps
@@ -47,28 +41,11 @@ const CreateFormComponent: React.SFC<
 
     return (
         <div className={classes.root}>
-            <AppBar position="sticky">
-                <Toolbar variant="dense">
-                    <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                        <Menu />
-                    </IconButton>
-                    <Typography
-                        variant="title"
-                        color="inherit"
-                        noWrap={true}
-                        className={classes.grow}
-                    >
-                        帳票作成
-                    </Typography>
-                </Toolbar>
-            </AppBar>
             <main>
                 <div>
-                    <div className="text-center">
-                        <Typography variant="display2" align="center">
-                            {title}
-                        </Typography>
-                    </div>
+                    <Typography variant="display2" align="center">
+                        {title}
+                    </Typography>
                     <br />
                     <CreateFormDataGridComponent {...rest} />
                 </div>
