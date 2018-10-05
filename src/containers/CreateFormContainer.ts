@@ -33,7 +33,6 @@ function mapStateToProps(appState: IAppState): ICreateFormComponentStateProps {
     // TODO:
     return {
         title: appState.createFormState.title,
-        totalPrice: appState.createFormState.totalPrice,
         rows: appState.createFormState.dataRows,
         autoCompleteOptions: appState.createFormState.autoCompleteOptions,
         edittingTitle: appState.createFormState.edittingTitle

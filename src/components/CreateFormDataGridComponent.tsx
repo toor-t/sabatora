@@ -15,7 +15,6 @@ import {
     SubtotalPriceRowKeys
 } from '../states/CreateFormState';
 import { DataDocKeys } from '../db';
-import Delete from '@material-ui/icons/Delete';
 import AddCircle from '@material-ui/icons/AddCircle';
 import AddBox from '@material-ui/icons/AddBox';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
@@ -32,13 +31,13 @@ const getOptions = (ddKey: string): { (): { id: number; title: string } } => {
     };
 };
 
-// MyAutoCompleteEditor
-interface IMyAutoComleteEditorStates {
+// CustomAutoCompleteEditor
+interface ICustomAutoComleteEditorStates {
     // TODO:
 }
-class MyAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
+class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
     any,
-    IMyAutoComleteEditorStates
+    ICustomAutoComleteEditorStates
 > {
     constructor(props: any) {
         super(props);
@@ -48,30 +47,26 @@ class MyAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
         this.getValue.bind(this);
         this.getInputNode.bind(this);
         this.hasResults.bind(this);
-        // console.log('constructor called.');
     }
     autoComplete: any;
 
     getValue() {
-        // console.log('getValue() called!!');
         return this.autoComplete.getValue();
     }
     getInputNode() {
-        // console.log('getInputNode() called!!!');
         return this.autoComplete.getInputNode();
     }
     hasResults() {
-        // console.log('hasResults() called!!!');
         return this.autoComplete.hasResults();
     }
     render() {
         const { ref, options, getOptions, ...rest } = this.props;
-        // console.log(`render called.`);
-        // console.log(this.props);
+        // 選択候補が多すぎる時は表示しない
+        const _options = getOptions().length < 100 ? getOptions() : undefined;
         return (
             <AutoCompleteEditor
                 ref={node => (this.autoComplete = node)}
-                options={getOptions()}
+                options={_options}
                 {...rest}
             />
         );
@@ -111,16 +106,13 @@ class BoldNumberRightFormatter extends React.Component<any> {
     }
 }
 
-// TODO: row render
-interface IMyRowRendererStates {
+// TODO: Row render
+interface ICustomRowRendererStates {
     grid: CreateFormDataGridComponent;
 }
-class MyRowRenderer extends React.Component<any, IMyRowRendererStates> {
+class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
     constructor(props: any) {
         super(props);
-
-        // console.log('props=');
-        // console.log(props);
         this.state = {
             grid: this.props.grid
         };
@@ -129,7 +121,6 @@ class MyRowRenderer extends React.Component<any, IMyRowRendererStates> {
     row: any;
 
     shouldComponentUpdate(nextProps: any) {
-        // console.log(`shouldComponentUpdate(${nextProps})`)
         return this.row.shouldComponentUpdate(nextProps);
     }
     setScrollLeft = (scrollBy: any) => {
@@ -147,18 +138,11 @@ class MyRowRenderer extends React.Component<any, IMyRowRendererStates> {
         return this.props.idx % 2 ? 'green' : 'blue';
     };
     render() {
-        // console.log('MyRowRenderer.render()=');
-        // console.log(this.props);
-
         const { columns, ...other } = this.props;
         let _columns = columns;
 
         if (this.props.row[TotalPriceRowKeys.totalPrice] !== undefined) {
-            // 合計表示
-            // console.log('Rneder TotalPrice=');
-            // console.log(this.props.row.totalPrice);
-            // TODO: 実験用コード
-
+            // TODO: 合計表示
             let l_column = {}; // 左端のカラムの情報
             let width = 0;
             for (let i = 0; i < columns.length - 1; i = i + 1) {
@@ -204,9 +188,7 @@ class MyRowRenderer extends React.Component<any, IMyRowRendererStates> {
             );
         }
         if (this.props.row[SubtotalPriceRowKeys.subtotalPrice] !== undefined) {
-            // 小計表示
-            // TODO:
-            // TODO: 実験用コード
+            // TODO: 小計表示
             const check_column = columns[0]; // チェックボックスカラム
 
             let l_column = {}; // 左端のカラムの情報
@@ -254,7 +236,7 @@ class MyRowRenderer extends React.Component<any, IMyRowRendererStates> {
                 </div>
             );
         }
-        //
+        // 通常行
         return (
             <div>
                 <ReactDataGrid.Row ref={node => (this.row = node)} columns={_columns} {...other} />
@@ -270,10 +252,7 @@ const HEADER_ROW_HEIGHT = 40;
 export interface ICreateFormDataGridComponentStateProps {
     // TODO:
     rows: {}[];
-    // colmuns: {}[];
     autoCompleteOptions: {};
-    // TODO:
-    totalPrice: number;
 }
 export interface ICreateFormDataGridComponentDispatchProps {
     // TODO:
@@ -288,8 +267,6 @@ export interface ICreateFormDataGridComponentDispatchProps {
 }
 interface ICreateFormDataGridComponentStates {
     columns: any[];
-    // TODO:
-    totalPrice: number | undefined;
 }
 class CreateFormDataGridComponent extends React.Component<
     ICreateFormDataGridComponentStateProps & ICreateFormDataGridComponentDispatchProps,
@@ -311,31 +288,31 @@ class CreateFormDataGridComponent extends React.Component<
                 key: FormDataRowKeys.level_1,
                 name: '大分類',
                 ddKey: DataDocKeys.level_1,
-                editor: <MyAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_1)} />
+                editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_1)} />
             },
             {
                 key: FormDataRowKeys.level_2,
                 name: '中分類',
                 ddKey: DataDocKeys.level_2,
-                editor: <MyAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_2)} />
+                editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_2)} />
             },
             {
                 key: FormDataRowKeys.level_3,
                 name: '小分類',
                 ddKey: DataDocKeys.level_3,
-                editor: <MyAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_3)} />
+                editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_3)} />
             },
             {
                 key: FormDataRowKeys.itemName,
                 name: '名称',
                 ddKey: DataDocKeys.itemName,
-                editor: <MyAutoCompleteEditor getOptions={getOptions(DataDocKeys.itemName)} />
+                editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.itemName)} />
             },
             {
                 key: FormDataRowKeys.unitPrice,
                 name: '単価',
                 ddKey: DataDocKeys.unitPrice,
-                editor: <MyAutoCompleteEditor getOptions={getOptions(DataDocKeys.unitPrice)} />,
+                editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.unitPrice)} />,
                 formatter: NumberRightFormatter
             },
             {
@@ -352,13 +329,11 @@ class CreateFormDataGridComponent extends React.Component<
             }
         ];
         this.state = {
-            columns: _columns,
-            totalPrice: props.totalPrice
+            columns: _columns
         };
         this.rowGetter.bind(this);
         this.rowCount.bind(this);
         this.handleCellSeceted.bind(this);
-        this.getTotalPrice.bind(this);
         // console.log('constructed.');
     }
     // ReactDataGridへの参照
@@ -423,10 +398,6 @@ class CreateFormDataGridComponent extends React.Component<
             this.props.addSubtotalRow();
         }
     };
-    // TODO:
-    getTotalPrice = () => {
-        return this.state.totalPrice ? this.state.totalPrice : 0;
-    };
     render() {
         // TODO:
         if (this.props.autoCompleteOptions !== undefined) {
@@ -483,7 +454,7 @@ class CreateFormDataGridComponent extends React.Component<
                             </button>
                         </Toolbar>
                     }
-                    rowRenderer={MyRowRenderer}
+                    rowRenderer={CustomRowRenderer}
                 />
                 <br />
             </div>
