@@ -19,6 +19,7 @@ import Delete from '@material-ui/icons/Delete';
 import AddCircle from '@material-ui/icons/AddCircle';
 import AddBox from '@material-ui/icons/AddBox';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
+import { withStyles } from '@material-ui/core/styles';
 const { AutoComplete: AutoCompleteEditor } = Editors;
 
 // autoCompleteOptions
@@ -265,6 +266,7 @@ class MyRowRenderer extends React.Component<any, IMyRowRendererStates> {
 // CreatFormDataGridComponent
 const ROW_HEIGHT = 35;
 const HEADER_ROW_HEIGHT = 40;
+
 export interface ICreateFormDataGridComponentProps {
     // TODO:
     rows?: {}[];

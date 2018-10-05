@@ -4,7 +4,7 @@
 'use strict';
 
 import * as React from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import { WithStyles, withStyles, createStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -18,6 +18,19 @@ import CreateFormDataGridComponent, {
 } from './CreateFormDataGridComponent';
 
 // CreateFormComponent
+
+const styles = createStyles({
+    root: {
+        flexGrow: 1
+    },
+    grow: {
+        flexGrow: 1
+    },
+    menuButton: {
+        marginLeft: -12,
+        marginRight: 20
+    }
+});
 export interface ICreateFormComponentProps extends ICreateFormDataGridComponentProps {
     // TODO:
     title?: string;
@@ -25,18 +38,26 @@ export interface ICreateFormComponentProps extends ICreateFormDataGridComponentP
 
     // and so on
 }
-const CreateFormComponent: React.SFC<ICreateFormComponentProps> = props => {
+
+const CreateFormComponent: React.SFC<
+    ICreateFormComponentProps & WithStyles<typeof styles>
+> = props => {
     // TODO:
-    const { title, totalPrice, ...rest } = props;
+    const { classes, title, totalPrice, ...rest } = props;
 
     return (
-        <div>
+        <div className={classes.root}>
             <AppBar position="sticky">
                 <Toolbar variant="dense">
-                    <IconButton color="inherit" aria-label="Menu">
+                    <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
                         <Menu />
                     </IconButton>
-                    <Typography variant="title" color="inherit" noWrap={true}>
+                    <Typography
+                        variant="title"
+                        color="inherit"
+                        noWrap={true}
+                        className={classes.grow}
+                    >
                         帳票作成
                     </Typography>
                 </Toolbar>
@@ -56,4 +77,4 @@ const CreateFormComponent: React.SFC<ICreateFormComponentProps> = props => {
     );
 };
 
-export default CreateFormComponent;
+export default withStyles(styles)(CreateFormComponent);
