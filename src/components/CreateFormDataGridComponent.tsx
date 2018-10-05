@@ -18,7 +18,8 @@ import { DataDocKeys } from '../db';
 import AddCircle from '@material-ui/icons/AddCircle';
 import AddBox from '@material-ui/icons/AddBox';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import { withStyles } from '@material-ui/core/styles';
+import * as classNames from 'classnames';
+import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 const { AutoComplete: AutoCompleteEditor } = Editors;
 
 // autoCompleteOptions
@@ -269,6 +270,24 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
 const ROW_HEIGHT = 35;
 const HEADER_ROW_HEIGHT = 40;
 
+const styles = (theme: Theme) =>
+    createStyles({
+        root: {
+            flexGrow: 1,
+            // height: 440,
+            zIndex: 1,
+            overflow: 'hidden',
+            position: 'relative',
+            display: 'flex'
+        },
+        content: {
+            flexGrow: 1,
+            backgroundColor: theme.palette.background.default,
+            overflow: 'visible'
+            // padding: theme.spacing.unit * 3,
+        }
+    });
+
 export interface ICreateFormDataGridComponentStateProps {
     // TODO:
     rows: {}[];
@@ -289,11 +308,15 @@ interface ICreateFormDataGridComponentStates {
     columns: any[];
 }
 class CreateFormDataGridComponent extends React.Component<
-    ICreateFormDataGridComponentStateProps & ICreateFormDataGridComponentDispatchProps,
+    ICreateFormDataGridComponentStateProps &
+        ICreateFormDataGridComponentDispatchProps &
+        WithStyles<typeof styles>,
     ICreateFormDataGridComponentStates
 > {
     constructor(
-        props: ICreateFormDataGridComponentStateProps & ICreateFormDataGridComponentDispatchProps
+        props: ICreateFormDataGridComponentStateProps &
+            ICreateFormDataGridComponentDispatchProps &
+            WithStyles<typeof styles>
     ) {
         super(props);
         // カラム定義
@@ -428,7 +451,7 @@ class CreateFormDataGridComponent extends React.Component<
             autoCompleteOptions = this.props.autoCompleteOptions;
         }
         return (
-            <div>
+            <div className={this.props.classes.content}>
                 <ReactDataGrid
                     ref={node => {
                         this.grid = node;
@@ -486,4 +509,4 @@ class CreateFormDataGridComponent extends React.Component<
     }
 }
 
-export default CreateFormDataGridComponent;
+export default withStyles(styles, { withTheme: true })(CreateFormDataGridComponent);

@@ -20,7 +20,6 @@ const Application: React.SFC = () => {
         <React.Fragment>
             <CssBaseline>
                 <div className="App">
-                    {/* <CreateFormContainer /> */}
                     <AppTopContainer />
                 </div>
             </CssBaseline>
