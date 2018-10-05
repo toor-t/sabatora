@@ -159,7 +159,7 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
                 {},
                 columns[0],
                 { width },
-                { key: '' },
+                { key: undefined },
                 { formatter: undefined },
                 { hidden: true }
             );
@@ -172,7 +172,7 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
             );
             _columns = [];
             for (let i = 0; i < columns.length - 2; i = i + 1) {
-                _columns.push(dummy_column);
+                _columns.push(Object.assign({}, dummy_column, { key: `dummy-${i}` }));
             }
             _columns.push(l_column);
             _columns.push(r_column);
@@ -207,7 +207,7 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
                 {},
                 columns[1],
                 { width },
-                { key: '' },
+                { key: undefined },
                 { formatter: undefined },
                 { hidden: true }
             );
@@ -221,7 +221,7 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
             _columns = [];
             _columns.push(check_column);
             for (let i = 1; i < columns.length - 2; i = i + 1) {
-                _columns.push(dummy_column);
+                _columns.push(Object.assign({}, dummy_column, { key: `dummy-${i}` }));
             }
             _columns.push(l_column);
             _columns.push(r_column);
