@@ -19,13 +19,16 @@ import { updateAutoCompleteOptions } from '../db_renderer';
 
 // TODO: 非同期でautoCompleteOptionsを更新する  ※これここに置くべきか？
 export const updateAutoCompleteOptionsWorker = wrapAsyncWorker<
-    { rowData: FormDataRow; idx: number },
+    { rowData: FormDataRow; columnDDKey: string },
     {},
     {}
 >(
     CreateFormActions.updateAutoCompleteOptions,
-    ({ rowData, idx }): Promise<{}> => {
-        return updateAutoCompleteOptions(rowData);
+    ({ rowData, columnDDKey }): Promise<{}> => {
+        // console.log(columnDDKey);
+        const _rowData = Object.assign({}, rowData, { [columnDDKey]: undefined });
+        // console.log(_rowData);
+        return updateAutoCompleteOptions(_rowData);
     }
 );
 

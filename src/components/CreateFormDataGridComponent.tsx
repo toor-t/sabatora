@@ -278,7 +278,7 @@ export interface ICreateFormDataGridComponentDispatchProps {
     // TODO:
     onGridRowUpdate: (e: any) => void;
     onSelectedCell: (col: { rowIdx: number; idx: number }) => void;
-    updateAutoCompleteOptions: (col: { rowData: FormDataRow; idx: number }) => void;
+    updateAutoCompleteOptions: (col: { rowData: FormDataRow; columnDDKey: string }) => void;
     addRow: () => void;
     deleteRows: () => void;
     selectRows: (rows: { rowIdx: number; row: FormData }[]) => void;
@@ -384,7 +384,12 @@ class CreateFormDataGridComponent extends React.Component<
                 if (this.props.updateAutoCompleteOptions) {
                     this.props.updateAutoCompleteOptions({
                         rowData: this.props.rows[col.rowIdx] as FormDataRow,
-                        idx: col.idx
+                        columnDDKey:
+                            this.state.columns[col.idx - 1 /* チェックボックスの分引く */].ddKey !==
+                            undefined
+                                ? this.state.columns[col.idx - 1 /* チェックボックスの分引く */]
+                                      .ddKey
+                                : ''
                     });
                 }
             }

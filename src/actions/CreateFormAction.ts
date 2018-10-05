@@ -54,8 +54,9 @@ export const CreateFormActions = {
     saveForm: actionCreator<void>('SAVE_FORM'),
     loadFrom: actionCreator<void>('LOAD_FORM'),
     // TODO:  非同期
-    updateAutoCompleteOptions: actionCreator.async<{ rowData: FormDataRow; idx: number }, {}>(
-        'UPDATE_AUTO_COMPLETE_OPTIONS'
-    ),
+    updateAutoCompleteOptions: actionCreator.async<
+        { rowData: FormDataRow; columnDDKey: string },
+        {}
+    >('UPDATE_AUTO_COMPLETE_OPTIONS'),
     addSubtotalRow: actionCreator<void>('ADD_SUBTOTAL_ROW')
 };
