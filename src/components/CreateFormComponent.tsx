@@ -9,6 +9,9 @@ import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/icons/Menu';
 
 import CreateFormDataGridComponent, {
     ICreateFormDataGridComponentProps
@@ -28,15 +31,22 @@ const CreateFormComponent: React.SFC<ICreateFormComponentProps> = props => {
 
     return (
         <div>
-            <AppBar position="static">
-                <Typography variant="title" color="inherit" noWrap={true}>
-                    帳票作成
-                </Typography>
+            <AppBar position="sticky">
+                <Toolbar variant="dense">
+                    <IconButton color="inherit" aria-label="Menu">
+                        <Menu />
+                    </IconButton>
+                    <Typography variant="title" color="inherit" noWrap={true}>
+                        帳票作成
+                    </Typography>
+                </Toolbar>
             </AppBar>
             <main>
                 <div>
                     <div className="text-center">
-                        <h1>{title}</h1>
+                        <Typography variant="display2" align="center">
+                            {title}
+                        </Typography>
                     </div>
                     <br />
                     <CreateFormDataGridComponent {...rest} />

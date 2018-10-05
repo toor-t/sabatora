@@ -15,6 +15,10 @@ import {
     SubtotalPriceRowKeys
 } from '../states/CreateFormState';
 import { DataDocKeys } from '../db';
+import Delete from '@material-ui/icons/Delete';
+import AddCircle from '@material-ui/icons/AddCircle';
+import AddBox from '@material-ui/icons/AddBox';
+import RemoveCircle from '@material-ui/icons/RemoveCircle';
 const { AutoComplete: AutoCompleteEditor } = Editors;
 
 // autoCompleteOptions
@@ -397,6 +401,11 @@ class CreateFormDataGridComponent extends React.Component<
             this.props.deselectRows(rows);
         }
     };
+    handleAddRowBtn = (e: any) => {
+        if (this.props.addRow) {
+            this.props.addRow();
+        }
+    };
     handleDeleteBtn = (e: any) => {
         if (this.props.deleteRows) {
             this.props.deleteRows();
@@ -440,22 +449,30 @@ class CreateFormDataGridComponent extends React.Component<
                     headerRowHeight={HEADER_ROW_HEIGHT}
                     minHeight={
                         HEADER_ROW_HEIGHT +
-                        ROW_HEIGHT * (this.rowCount() < 20 ? 20 : this.rowCount()) -
+                        ROW_HEIGHT *
+                            ((this.rowCount() < 20 ? 20 : this.rowCount()) +
+                                2) /* 下部余白２行分 */ -
                         1
                     }
                     onGridRowsUpdated={this.props.onGridRowUpdate}
                     onCellSelected={this.handleCellSeceted}
                     toolbar={
-                        <Toolbar onAddRow={this.props.addRow} addRowButtonText="行追加">
-                            <button type="button" className="btn" onClick={this.handleDeleteBtn}>
-                                {'行削除'}
+                        <Toolbar>
+                            <button type="button" className="btn" onClick={this.handleAddRowBtn}>
+                                <AddCircle />
+                                {'行追加'}
                             </button>
                             <button
                                 type="button"
                                 className="btn"
                                 onClick={this.handleAddSubtotalBtn}
                             >
+                                <AddBox />
                                 {'小計行追加'}
+                            </button>
+                            <button type="button" className="btn" onClick={this.handleDeleteBtn}>
+                                <RemoveCircle />
+                                {'行削除'}
                             </button>
                         </Toolbar>
                     }
