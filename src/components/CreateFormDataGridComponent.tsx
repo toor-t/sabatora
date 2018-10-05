@@ -198,14 +198,14 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
             _columns.push(l_column);
             _columns.push(r_column);
             return (
-                <div>
-                    <ReactDataGrid.Row
-                        ref={node => (this.row = node)}
-                        forceUpdate={true}
-                        columns={_columns}
-                        {...other}
-                    />
-                </div>
+                // <div>
+                <ReactDataGrid.Row
+                    ref={node => (this.row = node)}
+                    forceUpdate={true}
+                    columns={_columns}
+                    {...other}
+                />
+                // </div>
             );
         }
         if (this.props.row[SubtotalPriceRowKeys.subtotalPrice] !== undefined) {
@@ -247,21 +247,21 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
             _columns.push(l_column);
             _columns.push(r_column);
             return (
-                <div>
-                    <ReactDataGrid.Row
-                        ref={node => (this.row = node)}
-                        forceUpdate={true}
-                        columns={_columns}
-                        {...other}
-                    />
-                </div>
+                // <div>
+                <ReactDataGrid.Row
+                    ref={node => (this.row = node)}
+                    forceUpdate={true}
+                    columns={_columns}
+                    {...other}
+                />
+                // </div>
             );
         }
         // 通常行
         return (
-            <div>
-                <ReactDataGrid.Row ref={node => (this.row = node)} columns={_columns} {...other} />
-            </div>
+            // <div>
+            <ReactDataGrid.Row ref={node => (this.row = node)} columns={_columns} {...other} />
+            // </div>
         );
     }
 }
@@ -451,7 +451,7 @@ class CreateFormDataGridComponent extends React.Component<
             autoCompleteOptions = this.props.autoCompleteOptions;
         }
         return (
-            <div className={this.props.classes.content}>
+            <div id="CreateFormDataGrid" /*className={this.props.classes.content}*/>
                 <ReactDataGrid
                     ref={node => {
                         this.grid = node;

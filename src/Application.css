@@ -1,4 +1,4 @@
-.App {
+/* .App {
     text-align: center;
 }
 
@@ -29,4 +29,22 @@
     to {
         transform: rotate(360deg);
     }
+} */
+
+#CreateFormDataGrid .react-grid-Main {
+    outline: 0px solid #e7eaec;
+}
+
+#CreateFormDataGrid .react-grid-Grid {
+    border: 0px solid #dddddd;
+}
+
+/* #CreateFormDataGrid .react-grid-HeaderRow {
+	border-left: 1px solid #dddddd;
+	border-top: 1px solid #dddddd;
+} */
+
+#CreateFormDataGrid .react-grid-Row {
+    border-left: 1px solid #dddddd;
+    border-top: 1px solid #dddddd;
 }

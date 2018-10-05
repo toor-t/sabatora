@@ -4,7 +4,7 @@
 'use strict';
 import * as React from 'react';
 import './bootstrap.css';
-// import './Application.css';
+import './Application.css';
 
 import AppTopContainer from './containers/AppTopContainer';
 import AboutContainer from './containers/AboutContainer';
