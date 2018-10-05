@@ -9,7 +9,6 @@ import { ICreateFormState, CreateFormStateReducer } from './states/CreateFormSta
 import { IAboutState, AboutStateReducer } from './states/AboutState';
 import { IConfigState, ConfigStateReducer } from './states/ConfigState';
 import { IManageDataState, ManageDataStateReducer } from './states/ManageDataState';
-import { ITextFormState, TextFormStateReducer } from './states/__TextFormState';
 
 export interface IAppState {
     appTopState: IAppTopState;
@@ -17,8 +16,6 @@ export interface IAppState {
     aboutState: IAboutState;
     configState: IConfigState;
     manageDataState: IManageDataState;
-
-    textFormState: ITextFormState;
 }
 
 const store = createStore(
@@ -27,9 +24,7 @@ const store = createStore(
         createFormState: CreateFormStateReducer,
         aboutState: AboutStateReducer,
         configState: ConfigStateReducer,
-        manageDataState: ManageDataStateReducer,
-
-        textFormState: TextFormStateReducer
+        manageDataState: ManageDataStateReducer
     }),
     applyMiddleware(reduxThunk)
 );
