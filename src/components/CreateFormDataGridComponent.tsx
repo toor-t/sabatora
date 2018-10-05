@@ -62,7 +62,12 @@ class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
     render() {
         const { ref, options, getOptions, ...rest } = this.props;
         // 選択候補が多すぎる時は表示しない
-        const _options = getOptions().length < 100 ? getOptions() : undefined;
+        const _options =
+            getOptions() === undefined
+                ? undefined
+                : getOptions().length < 100
+                    ? getOptions()
+                    : undefined;
         return (
             <AutoCompleteEditor
                 ref={node => (this.autoComplete = node)}
@@ -73,16 +78,35 @@ class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
     }
 }
 
-// TODO: formatter
+// TODO: Formatter
 class NumberRightFormatter extends React.Component<any> {
     render() {
-        const formattedValue: string = String(this.props.value).replace(
-            /(\d)(?=(\d\d\d)+(?!\d))/g,
-            '$1,'
+        if (
+            (typeof this.props.value === 'number' && !isNaN(this.props.value)) ||
+            !isNaN(Number(this.props.value))
+        ) {
+            const formattedValue: string = String(this.props.value).replace(
+                /(\d)(?=(\d\d\d)+(?!\d))/g,
+                '$1,'
+            );
+            return (
+                <div title={formattedValue} className="text-right">
+                    {formattedValue}
+                </div>
+            );
+        }
+        return (
+            <div title="Invalid Value" className="text-right" style={{ backgroundColor: 'orange' }}>
+                {this.props.value}
+            </div>
         );
+    }
+}
+class RightFormatter extends React.Component<any> {
+    render() {
         return (
             <div title={this.props.value} className="text-right">
-                {formattedValue}
+                {this.props.value}
             </div>
         );
     }
@@ -101,6 +125,15 @@ class BoldNumberRightFormatter extends React.Component<any> {
         return (
             <strong>
                 <NumberRightFormatter {...this.props} />
+            </strong>
+        );
+    }
+}
+class BoldRightFormatter extends React.Component<any> {
+    render() {
+        return (
+            <strong>
+                <RightFormatter {...this.props} />
             </strong>
         );
     }
@@ -153,7 +186,7 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
                 columns[0],
                 { width },
                 { key: TotalPriceRowKeys.labelTotalPrice },
-                { formatter: BoldNumberRightFormatter }
+                { formatter: BoldRightFormatter }
             );
             const dummy_column = Object.assign(
                 {},
@@ -201,7 +234,7 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
                 columns[1],
                 { width },
                 { key: SubtotalPriceRowKeys.labelSubtotalPrice },
-                { formatter: NumberRightFormatter }
+                { formatter: RightFormatter }
             );
             const dummy_column = Object.assign(
                 {},
@@ -277,11 +310,11 @@ class CreateFormDataGridComponent extends React.Component<
     ) {
         super(props);
         // カラム定義
-        const _columns = [
+        const _columns: (ReactDataGrid.Column<FormDataRow> & { ddKey?: string })[] = [
             {
                 key: FormDataRowKeys.id,
                 name: 'No.',
-                width: 64,
+                width: 48,
                 formatter: CenterFormatter
             },
             {
