@@ -39,6 +39,15 @@ const styles = (theme: Theme) =>
         },
         input: {
             margin: theme.spacing.unit
+        },
+        flexbox: {
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'stretch',
+            textAlign: 'center'
+            // height: 150,
+            // padding: 10,
+            // margin: 20,
         }
     });
 export interface ICreateFormComponentStateProps extends ICreateFormDataGridComponentStateProps {
@@ -81,7 +90,7 @@ const CreateFormComponent: React.SFC<
                         </Typography>
                     ) : (
                         // TODO: タイトル編集中
-                        <div className={classes.container}>
+                        <div className={classes.flexbox}>
                             <Input
                                 autoFocus={true}
                                 className={classes.input}

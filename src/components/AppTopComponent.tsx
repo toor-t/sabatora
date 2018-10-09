@@ -56,25 +56,25 @@ const styles = (theme: Theme) =>
             display: 'none'
         },
         drawerPaper: {
-            position: 'relative',
-            whiteSpace: 'nowrap',
-            width: drawerWidth,
-            transition: theme.transitions.create('width', {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.enteringScreen
-            })
+            position: 'fixed',
+            // whiteSpace: 'nowrap',
+            width: drawerWidth
+            // transition: theme.transitions.create('width', {
+            // 	easing: theme.transitions.easing.sharp,
+            // 	duration: theme.transitions.duration.enteringScreen
+            // })
         },
-        drawerPaperClose: {
-            overflowX: 'hidden',
-            transition: theme.transitions.create('width', {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.leavingScreen
-            }),
-            width: theme.spacing.unit * 7,
-            [theme.breakpoints.up('sm')]: {
-                width: theme.spacing.unit * 9
-            }
-        },
+        // drawerPaperClose: {
+        // 	overflowX: 'hidden',
+        // 	transition: theme.transitions.create('width', {
+        // 		easing: theme.transitions.easing.sharp,
+        // 		duration: theme.transitions.duration.leavingScreen
+        // 	}),
+        // 	width: theme.spacing.unit * 7,
+        // 	[theme.breakpoints.up('sm')]: {
+        // 		width: theme.spacing.unit * 9
+        // 	}
+        // },
         toolbar: {
             display: 'flex',
             alignItems: 'center',
@@ -86,6 +86,7 @@ const styles = (theme: Theme) =>
             flexGrow: 1,
             backgroundColor: theme.palette.background.default,
             padding: theme.spacing.unit * 3
+            // marginLeft: -drawerWidth,
         }
     });
 
@@ -135,14 +136,18 @@ class AppTopComponent extends React.Component<
                     </Toolbar>
                 </AppBar>
                 <Drawer
-                    variant="permanent"
+                    variant="persistent"
+                    // classes={{
+                    // 	paper: classNames(
+                    // 		classes.drawerPaper,
+                    // 		// !this.props.drawerOpend && classes.drawerPaperClose
+                    // 	)
+                    // }}
                     classes={{
-                        paper: classNames(
-                            classes.drawerPaper,
-                            !this.props.drawerOpend && classes.drawerPaperClose
-                        )
+                        paper: classes.drawerPaper
                     }}
                     open={this.props.drawerOpend}
+                    anchor="left"
                 >
                     <div className={classes.toolbar}>
                         <IconButton onClick={this.props.onCloseDrawer}>
@@ -150,8 +155,14 @@ class AppTopComponent extends React.Component<
                         </IconButton>
                     </div>
                     <Divider />
+                    <Typography variant="title">帳票作成</Typography>
+                    <br />
+                    <Typography variant="title">データ管理</Typography>
+                    <br />
+                    <Typography variant="title">設定</Typography>
                     {/* <List>{mailFolderListItems}</List> */}
                     <Divider />
+                    <Typography variant="title">About</Typography>
                     {/* <List>{otherMailFolderListItems}</List> */}
                 </Drawer>
                 <main className={classes.content}>
