@@ -20,7 +20,7 @@ module.exports = merge.smart(baseConfig, {
 					path.resolve(__dirname, 'src')
 				],
 				exclude: [
-					path.resolve(__dirname, 'src', 'main.ts')
+					path.resolve(__dirname, 'src', 'main.ts'),
 				],
 				loader: 'awesome-typescript-loader'
 			},

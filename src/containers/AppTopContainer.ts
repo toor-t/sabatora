@@ -17,7 +17,7 @@ import { IAppState } from '../store';
 function mapStateToProps(appState: IAppState): IAppTopComponentStateProps {
     // TODO:
     return {
-        selected: /* TODO */ 0,
+        selected: appState.appTopState.selected,
         drawerOpend: appState.appTopState.drawerOpened
     };
 }
@@ -25,7 +25,11 @@ function mapDispatchToProps(dispatch: Dispatch<Action<any>>): IAppTopComponentDi
     // TODO:
     return {
         onOpenDrawer: () => dispatch(AppTopActions.openDrawer()),
-        onCloseDrawer: () => dispatch(AppTopActions.closeDrawer())
+        onCloseDrawer: () => dispatch(AppTopActions.closeDrawer()),
+        onSelectCreateForm: () => dispatch(AppTopActions.selectCreateForm()),
+        onSelectManageData: () => dispatch(AppTopActions.selectManageData()),
+        onSelectConfig: () => dispatch(AppTopActions.selectConfig()),
+        onSelectAbout: () => dispatch(AppTopActions.selectAbout())
     };
 }
 export default connect(

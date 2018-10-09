@@ -9,6 +9,8 @@ import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
@@ -19,7 +21,11 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 // tslint:disable-next-line:import-name
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+
 import CreateFormContainer from '../containers/CreateFormContainer';
+import ManageDataContainer from '../containers/ManageDataContainer';
+import ConfigContainer from '../containers/ConfigContainer';
+import AboutContainer from '../containers/AboutContainer';
 
 const drawerWidth = 240;
 
@@ -90,6 +96,17 @@ const styles = (theme: Theme) =>
         }
     });
 
+export namespace AppTopSelected {
+    export const CreateForm = 1;
+    export const ManageData = 2;
+    export const Config = 3;
+    export const About = 4;
+
+    export const CreateFormTitle = '帳票作成';
+    export const ManageDataTitle = 'データ管理';
+    export const ConfigTitle = '設定';
+    export const AboutTitle = 'About';
+}
 export interface IAppTopComponentStateProps {
     // TODO:
     selected: number;
@@ -99,6 +116,10 @@ export interface IAppTopComponentDispatchProps {
     // TODO:
     onOpenDrawer: () => void;
     onCloseDrawer: () => void;
+    onSelectCreateForm: () => void;
+    onSelectManageData: () => void;
+    onSelectConfig: () => void;
+    onSelectAbout: () => void;
 }
 
 class AppTopComponent extends React.Component<
@@ -107,8 +128,34 @@ class AppTopComponent extends React.Component<
         WithStyles<typeof styles> & { theme: Theme }
 > {
     render() {
-        const { classes, theme } = this.props;
+        const { classes, theme, selected } = this.props;
 
+        let Content: any = {};
+        let AppBarTitle: string = '';
+        switch (selected) {
+            case AppTopSelected.CreateForm:
+                // TODO:
+                Content = CreateFormContainer;
+                AppBarTitle = AppTopSelected.CreateFormTitle;
+                break;
+            case AppTopSelected.ManageData:
+                // TODO:
+                Content = ManageDataContainer;
+                AppBarTitle = AppTopSelected.ManageDataTitle;
+                break;
+            case AppTopSelected.Config:
+                // TODO:
+                Content = ConfigContainer;
+                AppBarTitle = AppTopSelected.ConfigTitle;
+                break;
+            case AppTopSelected.About:
+                // TODO:
+                Content = AboutContainer;
+                AppBarTitle = AppTopSelected.AboutTitle;
+                break;
+            default:
+                break;
+        }
         return (
             <div className={classes.root}>
                 <AppBar
@@ -131,7 +178,7 @@ class AppTopComponent extends React.Component<
                             <MenuIcon />
                         </IconButton>
                         <Typography variant="title" color="inherit" noWrap={true}>
-                            帳票作成
+                            {AppBarTitle}
                         </Typography>
                     </Toolbar>
                 </AppBar>
@@ -155,20 +202,28 @@ class AppTopComponent extends React.Component<
                         </IconButton>
                     </div>
                     <Divider />
-                    <Typography variant="title">帳票作成</Typography>
-                    <br />
-                    <Typography variant="title">データ管理</Typography>
-                    <br />
-                    <Typography variant="title">設定</Typography>
-                    {/* <List>{mailFolderListItems}</List> */}
+                    <List component="nav">
+                        <ListItem button={true} onClick={this.props.onSelectCreateForm}>
+                            <ListItemText primary={AppTopSelected.CreateFormTitle} />
+                        </ListItem>
+                        <ListItem button={true} onClick={this.props.onSelectManageData}>
+                            <ListItemText primary={AppTopSelected.ManageDataTitle} />
+                        </ListItem>
+                        <ListItem button={true} onClick={this.props.onSelectConfig}>
+                            <ListItemText primary={AppTopSelected.ConfigTitle} />
+                        </ListItem>
+                    </List>
                     <Divider />
-                    <Typography variant="title">About</Typography>
-                    {/* <List>{otherMailFolderListItems}</List> */}
+                    <List>
+                        <ListItem button={true} onClick={this.props.onSelectAbout}>
+                            <ListItemText primary={AppTopSelected.AboutTitle} />
+                        </ListItem>
+                    </List>
                 </Drawer>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
 
-                    <CreateFormContainer />
+                    <Content />
                 </main>
             </div>
         );
