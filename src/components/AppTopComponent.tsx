@@ -26,12 +26,12 @@ const drawerWidth = 240;
 const styles = (theme: Theme) =>
     createStyles({
         root: {
-            // flexGrow: 1,
+            flexGrow: 1,
             // height: 440,
             zIndex: 1,
             overflow: 'hidden',
-            position: 'relative',
-            display: 'flex'
+            position: 'relative'
+            // display: 'flex'	// 'flex' だとウィンドウの横幅変更に正しく追従しない。なぜ？
         },
         appBar: {
             zIndex: theme.zIndex.drawer + 1,
