@@ -127,6 +127,12 @@ class AppTopComponent extends React.Component<
         IAppTopComponentDispatchProps &
         WithStyles<typeof styles> & { theme: Theme }
 > {
+    handleListButton(callback: () => void): () => void {
+        return () => {
+            callback();
+            this.props.onCloseDrawer();
+        };
+    }
     render() {
         const { classes, theme, selected } = this.props;
 
@@ -203,19 +209,35 @@ class AppTopComponent extends React.Component<
                     </div>
                     <Divider />
                     <List component="nav">
-                        <ListItem button={true} onClick={this.props.onSelectCreateForm}>
+                        <ListItem
+                            button={true}
+                            onClick={this.handleListButton(this.props.onSelectCreateForm)}
+                            selected={this.props.selected === AppTopSelected.CreateForm}
+                        >
                             <ListItemText primary={AppTopSelected.CreateFormTitle} />
                         </ListItem>
-                        <ListItem button={true} onClick={this.props.onSelectManageData}>
+                        <ListItem
+                            button={true}
+                            onClick={this.handleListButton(this.props.onSelectManageData)}
+                            selected={this.props.selected === AppTopSelected.ManageData}
+                        >
                             <ListItemText primary={AppTopSelected.ManageDataTitle} />
                         </ListItem>
-                        <ListItem button={true} onClick={this.props.onSelectConfig}>
+                        <ListItem
+                            button={true}
+                            onClick={this.handleListButton(this.props.onSelectConfig)}
+                            selected={this.props.selected === AppTopSelected.Config}
+                        >
                             <ListItemText primary={AppTopSelected.ConfigTitle} />
                         </ListItem>
                     </List>
                     <Divider />
                     <List>
-                        <ListItem button={true} onClick={this.props.onSelectAbout}>
+                        <ListItem
+                            button={true}
+                            onClick={this.handleListButton(this.props.onSelectAbout)}
+                            selected={this.props.selected === AppTopSelected.About}
+                        >
                             <ListItemText primary={AppTopSelected.AboutTitle} />
                         </ListItem>
                     </List>
