@@ -5,6 +5,9 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { CreateFormActions } from '../actions/CreateFormAction';
 import immutabilityHelper from 'immutability-helper';
+// TODO: 実験中
+import { remote } from 'electron';
+const dialog = remote.dialog;
 
 // FormDataRowKeys
 export namespace FormDataRowKeys {
@@ -292,6 +295,28 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     })
     .case(CreateFormActions.loadFrom, state => {
         // TODO:
+        // TODO: 実験中
+        // ファイル読込ダイアログを表示する
+        dialog.showOpenDialog(
+            remote.getCurrentWindow(),
+            {
+                title: '帳票読込',
+                filters: [
+                    { name: 'Text File', extensions: ['txt'] },
+                    { name: 'All Files', extensions: ['*'] }
+                ]
+            },
+            filename => {
+                if (filename) {
+                    // ファイルオープン
+                    // fs.writeFile(filename, this.state.text, err=>{
+                    //     if(err) {
+                    //         alert(err);
+                    //     }
+                    // });
+                }
+            }
+        );
         return state;
     })
     .case(CreateFormActions.printForm, state => {
@@ -300,6 +325,29 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     })
     .case(CreateFormActions.saveForm, state => {
         // TODO:
+        // TODO: 実験中
+        // ファイル保存ダイアログを表示する
+        dialog.showSaveDialog(
+            remote.getCurrentWindow(),
+            {
+                title: '帳票保存',
+                defaultPath: state.title,
+                filters: [
+                    { name: 'Text File', extensions: ['txt'] },
+                    { name: 'All Files', extensions: ['*'] }
+                ]
+            },
+            filename => {
+                if (filename) {
+                    // ファイルに保存
+                    // fs.writeFile(filename, this.state.text, err=>{
+                    //     if(err) {
+                    //         alert(err);
+                    //     }
+                    // });
+                }
+            }
+        );
         return state;
     })
     .case(CreateFormActions.selectCell, (state, col) => {

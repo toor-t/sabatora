@@ -13,6 +13,8 @@ import AppTopComponent, {
     IAppTopComponentDispatchProps
 } from '../components/AppTopComponent';
 import { IAppState } from '../store';
+// TODO: 実験中
+import { CreateFormActions } from '../actions/CreateFormAction';
 
 function mapStateToProps(appState: IAppState): IAppTopComponentStateProps {
     // TODO:
@@ -29,7 +31,10 @@ function mapDispatchToProps(dispatch: Dispatch<Action<any>>): IAppTopComponentDi
         onSelectCreateForm: () => dispatch(AppTopActions.selectCreateForm()),
         onSelectManageData: () => dispatch(AppTopActions.selectManageData()),
         onSelectConfig: () => dispatch(AppTopActions.selectConfig()),
-        onSelectAbout: () => dispatch(AppTopActions.selectAbout())
+        onSelectAbout: () => dispatch(AppTopActions.selectAbout()),
+        // TODO: 実験中
+        onSaveForm: () => dispatch(CreateFormActions.saveForm()),
+        onOpenForm: () => dispatch(CreateFormActions.loadFrom())
     };
 }
 export default connect(

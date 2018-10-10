@@ -120,6 +120,9 @@ export interface IAppTopComponentDispatchProps {
     onSelectManageData: () => void;
     onSelectConfig: () => void;
     onSelectAbout: () => void;
+    // TODO: 実験中
+    onSaveForm: () => void;
+    onOpenForm: () => void;
 }
 
 class AppTopComponent extends React.Component<
@@ -186,6 +189,15 @@ class AppTopComponent extends React.Component<
                         <Typography variant="title" color="inherit" noWrap={true}>
                             {AppBarTitle}
                         </Typography>
+                        {/* TODO: 実験中 */}
+                        <IconButton
+                            color="inherit"
+                            aria-label="Save Form"
+                            onClick={this.props.onOpenForm}
+                            className={classNames(classes.menuButton)}
+                        >
+                            <MenuIcon />
+                        </IconButton>
                     </Toolbar>
                 </AppBar>
                 <Drawer
