@@ -34,7 +34,7 @@ function mapDispatchToProps(dispatch: Dispatch<Action<any>>): IAppTopComponentDi
         onSelectAbout: () => dispatch(AppTopActions.selectAbout()),
         // TODO: 実験中
         onSaveForm: () => dispatch(CreateFormActions.saveForm()),
-        onOpenForm: () => dispatch(CreateFormActions.loadFrom()),
+        onOpenForm: () => dispatch(CreateFormActions.openForm.started()),
         onPrintForm: () => dispatch(CreateFormActions.printForm())
     };
 }

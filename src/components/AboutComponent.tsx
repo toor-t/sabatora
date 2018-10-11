@@ -1,5 +1,6 @@
 'use strict';
 import * as React from 'react';
+import Typography from '@material-ui/core/Typography';
 
 export interface IAboutComponentProps {
     // TODO:
@@ -12,7 +13,15 @@ const AboutComponent: React.SFC<IAboutComponentProps> = props => {
     const { checked, onChange } = props;
     return (
         <div>
-            <input type="checkbox" checked={checked} onChange={onChange} /> <br />
+            <Typography
+                variant="title"
+                color="inherit"
+                style={{ flexGrow: 1 }}
+                noWrap={true}
+                align="center"
+            >
+                About
+            </Typography>
         </div>
     );
 };

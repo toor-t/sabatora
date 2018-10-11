@@ -182,9 +182,11 @@ function calcTotalPrice(rows: any[]): number {
     return sumPrice;
 }
 
-/* Reducer */
-// TODO:
+/*
+ Reducer 
+ */
 export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(initialState)
+    // 行追加
     .case(CreateFormActions.addRow, state => {
         // TODO:
         // console.log('addRow');
@@ -221,6 +223,8 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         return Object.assign({}, state, { totalPrice, dataRows: newDataRows });
     })
+
+    // 小計行追加
     .case(CreateFormActions.addSubtotalRow, state => {
         // TODO:
         const newDataRows = state.dataRows.slice();
@@ -238,6 +242,8 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         return Object.assign({}, state, { totalPrice, dataRows: newDataRows });
     })
+
+    // 行削除
     .case(CreateFormActions.deleteRows, state => {
         // TODO:
         const newDataRows: (FormDataRow | TotalPriceRow | SubtotalPriceRow)[] = [];
@@ -254,9 +260,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         return Object.assign({}, state, { dataRows: newDataRows }, { totalPrice /* TODO: */ });
     })
-    .case(CreateFormActions.endEdittingTitle, (state, title) => {
-        return Object.assign({}, state, { title }, { edittingTitle: false });
-    })
+
     // .case(CreateFormActions.insertRow, (state, r) => {
     //     // TODO:
 
@@ -265,6 +269,8 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
     //     return Object.assign({}, state, { totalPrice /* TODO: */ });
     // })
+
+    // グリッド行更新
     .case(CreateFormActions.updateGridRow, (state, e) => {
         // TODO:
         const _rows = state.dataRows.slice();
@@ -295,7 +301,9 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         return Object.assign({}, state, { totalPrice, dataRows: _rows });
     })
-    .case(CreateFormActions.loadFrom, state => {
+
+    // 帳票読込 (開始)
+    .case(CreateFormActions.openForm.started, state => {
         // TODO:
         // TODO: 実験中
         // ファイル読込ダイアログを表示する
@@ -322,11 +330,22 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         );
         return state;
     })
-    .case(CreateFormActions.printForm, state => {
+    // 帳票読込 (完了)
+    .case(CreateFormActions.openForm.done, (state, buffer) => {
         // TODO:
-        console.log('printForm');
+        console.log(buffer);
+        const loadState = JSON.parse(buffer.toString());
+        console.log(loadState);
+        return loadState;
+    })
+    // 帳票読込 (失敗)
+    .case(CreateFormActions.openForm.failed, (state, err) => {
+        // TODO:
+        console.log(err);
         return state;
     })
+
+    // 帳票保存
     .case(CreateFormActions.saveForm, state => {
         // TODO:
         // TODO: 実験中
@@ -353,20 +372,40 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
                             alert(err);
                         }
                     });
-                    // fs.writeFile(filename, this.state.text, err=>{
-                    //     if(err) {
-                    //         alert(err);
-                    //     }
-                    // });
                 }
             }
         );
         return state;
     })
+
+    // 帳票印刷
+    .case(CreateFormActions.printForm, state => {
+        // TODO:
+        console.log('printForm');
+        return state;
+    })
+
+    // .case(CreateFormActions.saveForm.started, state => {
+    // 	// TODO:
+    // 	return state;
+    // })
+    // .case(CreateFormActions.saveForm.done, state => {
+    // 	// TODO:
+    // 	return state;
+    // })
+    // .case(CreateFormActions.saveForm.failed, (state, err) => {
+    // 	// TODO:
+    // 	console.log(err);
+    // 	return state;
+    // })
+
+    // セル選択
     .case(CreateFormActions.selectCell, (state, col) => {
         // TODO:
         return Object.assign({}, state, { sellectedCell: col });
     })
+
+    // 行選択
     .case(CreateFormActions.selectRows, (state, rows) => {
         // TODO:
         const newDataRows = state.dataRows.map((value, index, array) => {
@@ -385,6 +424,8 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         return Object.assign({}, state, { dataRows: newDataRows });
     })
+
+    // 行選択解除
     .case(CreateFormActions.deselectRows, (state, rows) => {
         // TODO:
         const newDataRows = state.dataRows.map((value, index, array) => {
@@ -400,22 +441,33 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         return Object.assign({}, state, { dataRows: newDataRows });
     })
+
+    // タイトル編集開始
     .case(CreateFormActions.startEdittingTitle, state => {
         // TODO:
 
         return Object.assign({}, state, { edittingTitle: true });
     })
+
+    // タイトル編集終了
+    .case(CreateFormActions.endEdittingTitle, (state, title) => {
+        return Object.assign({}, state, { title }, { edittingTitle: false });
+    })
+
+    // AutoCompleteOptions更新 (開始)
     .case(CreateFormActions.updateAutoCompleteOptions.started, (state, cell) => {
         // TODO:
         // console.log('CreateFormActions.updateAutoCompleteOptions.started');
         return state;
     })
+    // AutoCompleteOptions更新 (完了)
     .case(CreateFormActions.updateAutoCompleteOptions.done, (state, done) => {
         // TODO:
         // console.log('CreateFormActions.updateAutoCompleteOptions.done');
         // console.log(done);
         return Object.assign({}, state, { autoCompleteOptions: done.result });
     })
+    // AutoCompleteOptions更新 (失敗)
     .case(CreateFormActions.updateAutoCompleteOptions.failed, (state, error) => {
         // TODO:
         // console.log('CreateFormActions.updateAutoCompleteOptions.failed');

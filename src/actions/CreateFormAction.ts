@@ -37,13 +37,17 @@ export interface ICreateFormActions {
     // AutoComplete候補更新
     updateAutoCompleteOptions: any;
 
+    // 帳票印刷
     printForm: () => Action<void>; // TODO:
+    // 帳票保存
     saveForm: () => Action<void>; // TODO:
-    loadFrom: () => Action<void>; // TODO:
+    // 帳票読込
+    openForm: () => Action<void>; // TODO:
 }
 
 const actionCreator = actionCreatorFactory('CREATE_FORM_ACTIONS');
 
+// CreateFormActions
 export const CreateFormActions = {
     selectRows: actionCreator<
         { rowIdx: number; row: FormData | TotalPriceRow | SubtotalPriceRow }[]
@@ -61,7 +65,6 @@ export const CreateFormActions = {
     startEdittingTitle: actionCreator<void>('START_EDITTING_TITLE'),
     endEdittingTitle: actionCreator<string>('END_EDITTING_TITLE'),
 
-    // TODO:  非同期
     updateAutoCompleteOptions: actionCreator.async<
         { rowData: FormDataRow; columnDDKey: string },
         {}
@@ -69,5 +72,6 @@ export const CreateFormActions = {
 
     printForm: actionCreator<void>('PRINT_FORM'),
     saveForm: actionCreator<void>('SAVE_FORM'),
-    loadFrom: actionCreator<void>('LOAD_FORM')
+    // saveForm: actionCreator.async<void, void, {}>('SAVE_FORM'),
+    openForm: actionCreator.async<void, Buffer, {}>('OPEN_FORM')
 };
