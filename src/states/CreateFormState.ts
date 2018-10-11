@@ -321,6 +321,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     })
     .case(CreateFormActions.printForm, state => {
         // TODO:
+        console.log('printForm');
         return state;
     })
     .case(CreateFormActions.saveForm, state => {

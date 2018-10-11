@@ -130,6 +130,7 @@ export interface IAppTopComponentDispatchProps {
     // TODO: 実験中
     onSaveForm: () => void;
     onOpenForm: () => void;
+    onPrintForm: () => void;
 }
 interface IAppTopComponentStates {
     anchorEl?: HTMLElement;
@@ -181,26 +182,56 @@ class AppTopComponent extends React.Component<
 
         let Content: any = {};
         let AppBarTitle: string = '';
+        let MoreVartMenuContent: JSX.Element = <div />;
         switch (selected) {
             case AppTopSelected.CreateForm:
                 // TODO:
                 Content = CreateFormContainer;
                 AppBarTitle = AppTopSelected.CreateFormTitle;
+                MoreVartMenuContent = (
+                    <div style={{ outline: 0 }}>
+                        <MenuItem onClick={this.handleMenuItemButton(this.props.onOpenForm)}>
+                            帳票読込
+                        </MenuItem>
+                        <MenuItem onClick={this.handleMenuItemButton(this.props.onSaveForm)}>
+                            帳票保存
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem onClick={this.handleMenuItemButton(this.props.onPrintForm)}>
+                            帳票印刷
+                        </MenuItem>
+                    </div>
+                );
                 break;
             case AppTopSelected.ManageData:
                 // TODO:
                 Content = ManageDataContainer;
                 AppBarTitle = AppTopSelected.ManageDataTitle;
+                MoreVartMenuContent = (
+                    <div style={{ outline: 0 }}>
+                        <MenuItem>ダミー</MenuItem>
+                    </div>
+                );
                 break;
             case AppTopSelected.Config:
                 // TODO:
                 Content = ConfigContainer;
                 AppBarTitle = AppTopSelected.ConfigTitle;
+                MoreVartMenuContent = (
+                    <div style={{ outline: 0 }}>
+                        <MenuItem>ダミー</MenuItem>
+                    </div>
+                );
                 break;
             case AppTopSelected.About:
                 // TODO:
                 Content = AboutContainer;
                 AppBarTitle = AppTopSelected.AboutTitle;
+                MoreVartMenuContent = (
+                    <div style={{ outline: 0 }}>
+                        <MenuItem>ダミー</MenuItem>
+                    </div>
+                );
                 break;
             default:
                 break;
@@ -223,6 +254,8 @@ class AppTopComponent extends React.Component<
                                 classes.menuButton,
                                 this.props.drawerOpend && classes.hide
                             )}
+                            // tslint:disable-next-line:jsx-no-lambda
+                            onFocus={(e: any) => e.currentTarget.blur()}
                         >
                             <MenuIcon />
                         </IconButton>
@@ -241,6 +274,8 @@ class AppTopComponent extends React.Component<
                                 aria-haspopup="true"
                                 onClick={this.handleMenuOpen}
                                 color="inherit"
+                                // tslint:disable-next-line:jsx-no-lambda
+                                onFocus={(e: any) => e.currentTarget.blur()}
                             >
                                 <MoreVertIcon />
                             </IconButton>
@@ -258,18 +293,7 @@ class AppTopComponent extends React.Component<
                                 open={open}
                                 onClose={this.handleMenuClose}
                             >
-                                <MenuItem
-                                    onClick={this.handleMenuItemButton(this.props.onOpenForm)}
-                                >
-                                    帳票読込
-                                </MenuItem>
-                                <MenuItem
-                                    onClick={this.handleMenuItemButton(this.props.onSaveForm)}
-                                >
-                                    帳票保存
-                                </MenuItem>
-                                <Divider />
-                                <MenuItem>帳票印刷</MenuItem>
+                                {MoreVartMenuContent}
                             </Menu>
                         </div>
                     </Toolbar>
@@ -289,7 +313,11 @@ class AppTopComponent extends React.Component<
                     anchor="left"
                 >
                     <div className={classes.toolbar}>
-                        <IconButton onClick={this.props.onCloseDrawer}>
+                        <IconButton
+                            onClick={this.props.onCloseDrawer}
+                            // tslint:disable-next-line:jsx-no-lambda
+                            onFocus={(e: any) => e.currentTarget.blur()}
+                        >
                             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                         </IconButton>
                     </div>
