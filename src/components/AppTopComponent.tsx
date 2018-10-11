@@ -31,7 +31,6 @@ import CreateFormContainer from '../containers/CreateFormContainer';
 import ManageDataContainer from '../containers/ManageDataContainer';
 import ConfigContainer from '../containers/ConfigContainer';
 import AboutContainer from '../containers/AboutContainer';
-import { NONAME } from 'dns';
 
 const drawerWidth = 240;
 

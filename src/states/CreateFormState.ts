@@ -5,7 +5,10 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { CreateFormActions } from '../actions/CreateFormAction';
 import immutabilityHelper from 'immutability-helper';
+import wrapAsyncWorker from '../wrapAsyncWorker';
+import { updateAutoCompleteOptions } from '../db_renderer';
 // TODO: 実験中
+// import store from '../store';	// dispatchを取得する為にstoreをimportする。良くないのか？
 import { remote } from 'electron';
 import * as fs from 'fs';
 
@@ -101,17 +104,17 @@ export interface SubtotalPriceRow {
     [SubtotalPriceRowKeys.labelSubtotalPrice]: string;
     [SubtotalPriceRowKeys.subtotalPrice]: number;
 }
+
 // CreateFormState
 export interface ICreateFormState {
     dataRows: (FormDataRow | SubtotalPriceRow | TotalPriceRow)[];
     title: string;
     edittingTitle: boolean;
-    edittingCell: { rowIdx: number; idx: number };
-    selectedRow: number;
-    selectedCell: { rowIdx: number; idx: number };
+    // edittingCell: { rowIdx: number; idx: number };
+    // selectedRow: number;
+    // selectedCell: { rowIdx: number; idx: number };
     totalPrice: number;
 
-    // TODO:
     autoCompleteOptions: {};
 }
 const initialState: ICreateFormState = {
@@ -148,11 +151,11 @@ const initialState: ICreateFormState = {
     ],
     title: '無題',
     edittingTitle: false,
-    edittingCell: { rowIdx: -1, idx: -1 },
-    selectedRow: -1,
-    selectedCell: { rowIdx: -1, idx: -1 },
+    // edittingCell: { rowIdx: -1, idx: -1 },
+    // selectedRow: -1,
+    // selectedCell: { rowIdx: -1, idx: -1 },
     totalPrice: 0,
-    // TODO:
+
     autoCompleteOptions: {}
 };
 
@@ -183,7 +186,7 @@ function calcTotalPrice(rows: any[]): number {
 }
 
 /*
- Reducer 
+ Reducer
  */
 export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(initialState)
     // 行追加
@@ -305,43 +308,50 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     // 帳票読込 (開始)
     .case(CreateFormActions.openForm.started, state => {
         // TODO:
-        // TODO: 実験中
-        // ファイル読込ダイアログを表示する
-        dialog.showOpenDialog(
-            remote.getCurrentWindow(),
-            {
-                title: '帳票読込',
-                filters: [
-                    { name: 'JSON File', extensions: ['json'] }, // TODO: 拡張子は仮
-                    { name: 'All Files', extensions: ['*'] }
-                ]
-            },
-            filename => {
-                if (filename[0]) {
-                    console.log(filename[0]);
-                    // ファイルオープン
-                    const data = fs.readFileSync(filename[0]); // TODO: 例外処理とか必要のはず
-                    const loadState = JSON.parse(data.toString());
-                    console.log(loadState);
-                    console.log(state);
-                    return Object.assign({}, state, loadState);
-                }
-            }
-        );
+        // // TODO: 実験中
+        // // ファイル読込ダイアログを表示する
+        // dialog.showOpenDialog(
+        // 	remote.getCurrentWindow(),
+        // 	{
+        // 		title: '帳票読込',
+        // 		filters: [
+        // 			{ name: 'JSON File', extensions: ['json'] }, // TODO: 拡張子は仮
+        // 			{ name: 'All Files', extensions: ['*'] }
+        // 		]
+        // 	},
+        // 	(filename) => {
+        // 		if (filename[0]) {
+        // 			console.log(filename[0]);
+        // 			// ファイルオープン
+        // 			const data = fs.readFile(filename[0], (err, data) => {
+        // 				if (err) {
+        // 					// TODO:
+        // 					alert(err);
+        // 					// TODO: dispatch
+        // 					// store.dispatch(CreateFormActions.openForm.failed({ error: err }));
+        // 				}
+        // 				else {
+        // 					// TODO: dispatch
+        // 					// store.dispatch(CreateFormActions.openForm.done({ result: data }));
+        // 				}
+        // 			});
+        // 		}
+        // 	}
+        // );
         return state;
     })
     // 帳票読込 (完了)
-    .case(CreateFormActions.openForm.done, (state, buffer) => {
+    .case(CreateFormActions.openForm.done, (state, payload) => {
         // TODO:
-        console.log(buffer);
-        const loadState = JSON.parse(buffer.toString());
+        console.log(payload.result);
+        const loadState = JSON.parse(payload.result.toString());
         console.log(loadState);
         return loadState;
     })
     // 帳票読込 (失敗)
-    .case(CreateFormActions.openForm.failed, (state, err) => {
+    .case(CreateFormActions.openForm.failed, (state, payload) => {
         // TODO:
-        console.log(err);
+        console.log(payload.error);
         return state;
     })
 
@@ -473,3 +483,56 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         // console.log('CreateFormActions.updateAutoCompleteOptions.failed');
         return state;
     });
+
+// 非同期でautoCompleteOptionsを更新する
+export const updateAutoCompleteOptionsWorker = wrapAsyncWorker<
+    { rowData: FormDataRow; columnDDKey: string },
+    {},
+    {}
+>(
+    CreateFormActions.updateAutoCompleteOptions,
+    ({ rowData, columnDDKey }): Promise<{}> => {
+        // console.log(columnDDKey);
+        const _rowData = Object.assign({}, rowData, { [columnDDKey]: undefined });
+        // console.log(_rowData);
+        return updateAutoCompleteOptions(_rowData);
+    }
+);
+
+// TODO: 非同期帳票読込
+export const openFormWorker = wrapAsyncWorker<void, Buffer, {}>(
+    CreateFormActions.openForm,
+    (): Promise<Buffer> => {
+        // TODO: 実験中
+        return new Promise((resolve, reject) => {
+            // ファイル読込ダイアログを表示する
+            dialog.showOpenDialog(
+                remote.getCurrentWindow(),
+                {
+                    title: '帳票読込',
+                    filters: [
+                        { name: 'JSON File', extensions: ['json'] }, // TODO: 拡張子は仮
+                        { name: 'All Files', extensions: ['*'] }
+                    ]
+                },
+                filename => {
+                    if (filename[0]) {
+                        console.log(filename[0]);
+                        // ファイルオープン
+                        const data = fs.readFile(filename[0], (err, data) => {
+                            if (err) {
+                                // エラー
+                                // TODO:
+                                reject(err);
+                            } else {
+                                // ファイル読込完了
+                                // TODO: ここでファイル内容の確認が必要か？
+                                resolve(data);
+                            }
+                        });
+                    }
+                }
+            );
+        });
+    }
+);

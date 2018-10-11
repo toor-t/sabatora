@@ -12,57 +12,7 @@ import CreateFormComponent, {
     ICreateFormComponentDispatchProps
 } from '../components/CreateFormComponent';
 import { IAppState } from '../store';
-// TODO:
-import { FormDataRow } from '../states/CreateFormState';
-import wrapAsyncWorker from '../wrapAsyncWorker';
-import { updateAutoCompleteOptions } from '../db_renderer';
-// TODO: ファイル入出力
-import { remote } from 'electron';
-import * as fs from 'fs';
-const dialog = remote.dialog;
-
-// TODO: 非同期でautoCompleteOptionsを更新する  ※これここに置くべきか？
-export const updateAutoCompleteOptionsWorker = wrapAsyncWorker<
-    { rowData: FormDataRow; columnDDKey: string },
-    {},
-    {}
->(
-    CreateFormActions.updateAutoCompleteOptions,
-    ({ rowData, columnDDKey }): Promise<{}> => {
-        // console.log(columnDDKey);
-        const _rowData = Object.assign({}, rowData, { [columnDDKey]: undefined });
-        // console.log(_rowData);
-        return updateAutoCompleteOptions(_rowData);
-    }
-);
-// TODO: 非同期帳票読込
-export const openFormWorker = wrapAsyncWorker<void, Buffer, {}>(
-    CreateFormActions.openForm,
-    (): Promise<Buffer> => {
-        // TODO: 実験中
-        return new Promise((resolve, reject) => {
-            // ファイル読込ダイアログを表示する
-            dialog.showOpenDialog(
-                remote.getCurrentWindow(),
-                {
-                    title: '帳票読込',
-                    filters: [
-                        { name: 'JSON File', extensions: ['json'] }, // TODO: 拡張子は仮
-                        { name: 'All Files', extensions: ['*'] }
-                    ]
-                },
-                filename => {
-                    if (filename[0]) {
-                        console.log(filename[0]);
-                        // ファイルオープン
-                        const data = fs.readFileSync(filename[0]); // TODO: 例外処理とか必要のはず
-                        resolve(data);
-                    }
-                }
-            );
-        });
-    }
-);
+import { updateAutoCompleteOptionsWorker } from '../states/CreateFormState';
 
 function mapStateToProps(appState: IAppState): ICreateFormComponentStateProps {
     // TODO:
