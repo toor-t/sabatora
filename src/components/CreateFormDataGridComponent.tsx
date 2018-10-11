@@ -164,21 +164,28 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
 
         if (this.props.row[TotalPriceRowKeys.totalPrice] !== undefined) {
             // TODO: 合計表示
+            const check_column = Object.assign(
+                {},
+                columns[0],
+                { key: undefined },
+                { formatter: undefined }
+            );
+
             let l_column = {}; // 左端のカラムの情報
             let width = 0;
-            for (let i = 0; i < columns.length - 1; i = i + 1) {
+            for (let i = 1; i < columns.length - 1; i = i + 1) {
                 width += columns[i].width;
             }
             l_column = Object.assign(
                 l_column,
-                columns[0],
+                columns[1],
                 { width },
                 { key: TotalPriceRowKeys.labelTotalPrice },
                 { formatter: BoldRightFormatter }
             );
             const dummy_column = Object.assign(
                 {},
-                columns[0],
+                columns[1],
                 { width },
                 { key: undefined },
                 { formatter: undefined },
@@ -192,7 +199,8 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
                 { formatter: BoldNumberRightFormatter }
             );
             _columns = [];
-            for (let i = 0; i < columns.length - 2; i = i + 1) {
+            _columns.push(check_column);
+            for (let i = 1; i < columns.length - 2; i = i + 1) {
                 _columns.push(Object.assign({}, dummy_column, { key: `dummy-${i}` }));
             }
             _columns.push(l_column);
