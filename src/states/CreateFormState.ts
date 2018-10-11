@@ -373,8 +373,10 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
             },
             filename => {
                 if (filename) {
+                    // TODO:  保存不要なステータスを除去したステータスを用意
+                    const saveState = Object.assign({}, state, { autoCompleteOptions: {} });
                     // ファイルに保存
-                    const fileContent = JSON.stringify(state);
+                    const fileContent = JSON.stringify(saveState);
                     console.log(fileContent);
                     fs.writeFile(filename, fileContent, err => {
                         if (err) {

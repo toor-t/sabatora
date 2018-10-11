@@ -37,7 +37,14 @@ const createWindow = async () => {
     }
 
     const { width, height, x, y } = config.get('bounds');
-    win = new BrowserWindow({ width, height, x, y });
+    win = new BrowserWindow({
+        width,
+        height,
+        x,
+        y,
+        minWidth: 800,
+        minHeight: 400
+    });
 
     if (process.env.NODE_ENV !== 'production') {
         win.loadURL(`http://localhost:2003`);

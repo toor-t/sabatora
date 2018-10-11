@@ -14,7 +14,7 @@ import CreateFormComponent, {
 import { IAppState } from '../store';
 import { updateAutoCompleteOptionsWorker } from '../states/CreateFormState';
 
-function mapStateToProps(appState: IAppState): ICreateFormComponentStateProps {
+function mapStateToProps(appState: IAppState) {
     // TODO:
     return {
         title: appState.createFormState.title,
@@ -23,7 +23,7 @@ function mapStateToProps(appState: IAppState): ICreateFormComponentStateProps {
         edittingTitle: appState.createFormState.edittingTitle
     };
 }
-function mapDispatchToProps(dispatch: Dispatch<Action<any>>): ICreateFormComponentDispatchProps {
+function mapDispatchToProps(dispatch: Dispatch<Action<any>>) {
     // TODO:
     return {
         onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col)),
@@ -40,7 +40,12 @@ function mapDispatchToProps(dispatch: Dispatch<Action<any>>): ICreateFormCompone
         endEdittingTitle: (title: string) => dispatch(CreateFormActions.endEdittingTitle(title))
     };
 }
-export default connect(
+export default connect<
+    ICreateFormComponentStateProps,
+    ICreateFormComponentDispatchProps,
+    {},
+    IAppState
+>(
     mapStateToProps,
     mapDispatchToProps
 )(CreateFormComponent);
