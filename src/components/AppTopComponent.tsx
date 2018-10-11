@@ -14,6 +14,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import MenuList from '@material-ui/core/MenuList';
+import MenuItem from '@material-ui/core/MenuItem';
 
 // tslint:disable-next-line:import-name
 import MenuIcon from '@material-ui/icons/Menu';
@@ -21,11 +24,14 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 // tslint:disable-next-line:import-name
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+// tslint:disable-next-line:import-name
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import CreateFormContainer from '../containers/CreateFormContainer';
 import ManageDataContainer from '../containers/ManageDataContainer';
 import ConfigContainer from '../containers/ConfigContainer';
 import AboutContainer from '../containers/AboutContainer';
+import { NONAME } from 'dns';
 
 const drawerWidth = 240;
 
@@ -56,7 +62,8 @@ const styles = (theme: Theme) =>
         },
         menuButton: {
             marginLeft: 12,
-            marginRight: 36
+            marginRight: 36,
+            outline: 0
         },
         hide: {
             display: 'none'
@@ -124,20 +131,53 @@ export interface IAppTopComponentDispatchProps {
     onSaveForm: () => void;
     onOpenForm: () => void;
 }
-
+interface IAppTopComponentStates {
+    anchorEl?: HTMLElement;
+}
 class AppTopComponent extends React.Component<
     IAppTopComponentStateProps &
         IAppTopComponentDispatchProps &
-        WithStyles<typeof styles> & { theme: Theme }
+        WithStyles<typeof styles> & { theme: Theme },
+    IAppTopComponentStates
 > {
+    constructor(
+        props: IAppTopComponentStateProps &
+            IAppTopComponentDispatchProps &
+            WithStyles<typeof styles> & { theme: Theme }
+    ) {
+        super(props);
+        this.state = {
+            anchorEl: undefined
+        };
+        // this.handleListButton.bind(this);
+        // this.handleMenuOpen.bind(this);
+        // this.handleMenuClose.bind(this);
+        // this.handleMenuItemButton.bind(this);
+    }
     handleListButton(callback: () => void): () => void {
         return () => {
             callback();
             this.props.onCloseDrawer();
         };
     }
+    handleMenuOpen = (event: any) => {
+        // TODO:
+        this.setState({ anchorEl: event.currentTarget });
+    };
+    handleMenuClose = () => {
+        // TODO:
+        this.setState({ anchorEl: undefined });
+    };
+    handleMenuItemButton(callback: () => void): () => void {
+        return () => {
+            this.handleMenuClose();
+            callback();
+        };
+    }
     render() {
         const { classes, theme, selected } = this.props;
+        const { anchorEl } = this.state;
+        const open = Boolean(anchorEl);
 
         let Content: any = {};
         let AppBarTitle: string = '';
@@ -186,18 +226,52 @@ class AppTopComponent extends React.Component<
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant="title" color="inherit" noWrap={true}>
+                        <Typography
+                            variant="title"
+                            color="inherit"
+                            style={{ flexGrow: 1 }}
+                            noWrap={true}
+                        >
                             {AppBarTitle}
                         </Typography>
                         {/* TODO: 実験中 */}
-                        <IconButton
-                            color="inherit"
-                            aria-label="Save Form"
-                            onClick={this.props.onOpenForm}
-                            className={classNames(classes.menuButton)}
-                        >
-                            <MenuIcon />
-                        </IconButton>
+                        <div>
+                            <IconButton
+                                aria-owns={open ? 'menu-appbar' : undefined}
+                                aria-haspopup="true"
+                                onClick={this.handleMenuOpen}
+                                color="inherit"
+                            >
+                                <MoreVertIcon />
+                            </IconButton>
+                            <Menu
+                                id="menu-appbar"
+                                anchorEl={anchorEl}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right'
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right'
+                                }}
+                                open={open}
+                                onClose={this.handleMenuClose}
+                            >
+                                <MenuItem
+                                    onClick={this.handleMenuItemButton(this.props.onOpenForm)}
+                                >
+                                    帳票読込
+                                </MenuItem>
+                                <MenuItem
+                                    onClick={this.handleMenuItemButton(this.props.onSaveForm)}
+                                >
+                                    帳票保存
+                                </MenuItem>
+                                <Divider />
+                                <MenuItem>帳票印刷</MenuItem>
+                            </Menu>
+                        </div>
                     </Toolbar>
                 </AppBar>
                 <Drawer
