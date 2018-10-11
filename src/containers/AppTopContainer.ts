@@ -17,14 +17,14 @@ import { IAppState } from '../store';
 import { CreateFormActions } from '../actions/CreateFormAction';
 import { openFormWorker } from '../states/CreateFormState';
 
-function mapStateToProps(appState: IAppState): IAppTopComponentStateProps {
+function mapStateToProps(appState: IAppState) {
     // TODO:
     return {
         selected: appState.appTopState.selected,
         drawerOpend: appState.appTopState.drawerOpened
     };
 }
-function mapDispatchToProps(dispatch: Dispatch<Action<any>>): IAppTopComponentDispatchProps {
+function mapDispatchToProps(dispatch: Dispatch<Action<any>>) {
     // TODO:
     return {
         onOpenDrawer: () => dispatch(AppTopActions.openDrawer()),
@@ -40,7 +40,7 @@ function mapDispatchToProps(dispatch: Dispatch<Action<any>>): IAppTopComponentDi
         onPrintForm: () => dispatch(CreateFormActions.printForm())
     };
 }
-export default connect(
+export default connect<IAppTopComponentStateProps, IAppTopComponentDispatchProps, {}, IAppState>(
     mapStateToProps,
     mapDispatchToProps
 )(AppTopComponent);
