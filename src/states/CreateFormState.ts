@@ -7,6 +7,8 @@ import { CreateFormActions } from '../actions/CreateFormAction';
 import immutabilityHelper from 'immutability-helper';
 // TODO: 実験中
 import { remote } from 'electron';
+import * as fs from 'fs';
+
 const dialog = remote.dialog;
 
 // FormDataRowKeys
@@ -302,18 +304,19 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
             {
                 title: '帳票読込',
                 filters: [
-                    { name: 'Text File', extensions: ['txt'] },
+                    { name: 'JSON File', extensions: ['json'] }, // TODO: 拡張子は仮
                     { name: 'All Files', extensions: ['*'] }
                 ]
             },
             filename => {
-                if (filename) {
+                if (filename[0]) {
+                    console.log(filename[0]);
                     // ファイルオープン
-                    // fs.writeFile(filename, this.state.text, err=>{
-                    //     if(err) {
-                    //         alert(err);
-                    //     }
-                    // });
+                    const data = fs.readFileSync(filename[0]); // TODO: 例外処理とか必要のはず
+                    const loadState = JSON.parse(data.toString());
+                    console.log(loadState);
+                    console.log(state);
+                    return Object.assign({}, state, loadState);
                 }
             }
         );
@@ -332,15 +335,24 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
             remote.getCurrentWindow(),
             {
                 title: '帳票保存',
-                defaultPath: state.title,
+                defaultPath: `${state.title}.json`, // TODO: 拡張子は仮
+
                 filters: [
-                    { name: 'Text File', extensions: ['txt'] },
+                    { name: 'JSON File', extensions: ['json'] },
                     { name: 'All Files', extensions: ['*'] }
                 ]
             },
             filename => {
                 if (filename) {
                     // ファイルに保存
+                    const fileContent = JSON.stringify(state);
+                    console.log(fileContent);
+                    fs.writeFile(filename, fileContent, err => {
+                        if (err) {
+                            // TODO:
+                            alert(err);
+                        }
+                    });
                     // fs.writeFile(filename, this.state.text, err=>{
                     //     if(err) {
                     //         alert(err);
