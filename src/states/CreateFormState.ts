@@ -11,6 +11,7 @@ import { updateAutoCompleteOptions } from '../db_renderer';
 // import store from '../store';	// dispatchを取得する為にstoreをimportする。良くないのか？
 import { remote } from 'electron';
 import * as fs from 'fs';
+import { openForm } from '../file_io_rederer';
 
 const dialog = remote.dialog;
 
@@ -308,36 +309,6 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     // 帳票読込 (開始)
     .case(CreateFormActions.openForm.started, state => {
         // TODO:
-        // // TODO: 実験中
-        // // ファイル読込ダイアログを表示する
-        // dialog.showOpenDialog(
-        // 	remote.getCurrentWindow(),
-        // 	{
-        // 		title: '帳票読込',
-        // 		filters: [
-        // 			{ name: 'JSON File', extensions: ['json'] }, // TODO: 拡張子は仮
-        // 			{ name: 'All Files', extensions: ['*'] }
-        // 		]
-        // 	},
-        // 	(filename) => {
-        // 		if (filename[0]) {
-        // 			console.log(filename[0]);
-        // 			// ファイルオープン
-        // 			const data = fs.readFile(filename[0], (err, data) => {
-        // 				if (err) {
-        // 					// TODO:
-        // 					alert(err);
-        // 					// TODO: dispatch
-        // 					// store.dispatch(CreateFormActions.openForm.failed({ error: err }));
-        // 				}
-        // 				else {
-        // 					// TODO: dispatch
-        // 					// store.dispatch(CreateFormActions.openForm.done({ result: data }));
-        // 				}
-        // 			});
-        // 		}
-        // 	}
-        // );
         return state;
     })
     // 帳票読込 (完了)
@@ -505,36 +476,6 @@ export const updateAutoCompleteOptionsWorker = wrapAsyncWorker<
 export const openFormWorker = wrapAsyncWorker<void, Buffer, {}>(
     CreateFormActions.openForm,
     (): Promise<Buffer> => {
-        // TODO: 実験中
-        return new Promise((resolve, reject) => {
-            // ファイル読込ダイアログを表示する
-            dialog.showOpenDialog(
-                remote.getCurrentWindow(),
-                {
-                    title: '帳票読込',
-                    filters: [
-                        { name: 'JSON File', extensions: ['json'] }, // TODO: 拡張子は仮
-                        { name: 'All Files', extensions: ['*'] }
-                    ]
-                },
-                filename => {
-                    if (filename[0]) {
-                        console.log(filename[0]);
-                        // ファイルオープン
-                        const data = fs.readFile(filename[0], (err, data) => {
-                            if (err) {
-                                // エラー
-                                // TODO:
-                                reject(err);
-                            } else {
-                                // ファイル読込完了
-                                // TODO: ここでファイル内容の確認が必要か？
-                                resolve(data);
-                            }
-                        });
-                    }
-                }
-            );
-        });
+        return openForm();
     }
 );
