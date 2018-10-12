@@ -1,7 +1,7 @@
 {
 	"name": "sabatora",
-	"version": "0.0.1",
-	"description": "",
+	"version": "0.7.0",
+	"description": "sabatora.",
 	"main": "./dist/main.js",
 	"scripts": {
 		"build-main": "cross-env NODE_ENV=production webpack --config webpack.main.prod.config.js",
@@ -49,7 +49,7 @@
 		}
 	},
 	"build": {
-		"productName": "Sabatora",
+		"productName": "sabatora",
 		"appId": "app.shirohige.sabatora",
 		"mac": {
 			"category": "your.app.category.type"
