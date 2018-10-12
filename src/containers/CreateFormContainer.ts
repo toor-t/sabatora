@@ -11,19 +11,29 @@ import CreateFormComponent, {
     ICreateFormComponentStateProps,
     ICreateFormComponentDispatchProps
 } from '../components/CreateFormComponent';
+import {
+    INotifyComponentStateProps,
+    INotifyComponentDispatchProps
+} from '../components/NotifyComponent';
+
 import { IAppState } from '../store';
 import { updateAutoCompleteOptionsWorker } from '../states/CreateFormState';
 
-function mapStateToProps(appState: IAppState) {
+function mapStateToProps(
+    appState: IAppState
+): ICreateFormComponentStateProps & INotifyComponentStateProps {
     // TODO:
     return {
-        title: appState.createFormState.title,
-        rows: appState.createFormState.dataRows,
+        title: appState.createFormState.formData.title,
+        rows: appState.createFormState.formData.dataRows,
         autoCompleteOptions: appState.createFormState.autoCompleteOptions,
-        edittingTitle: appState.createFormState.edittingTitle
+        edittingTitle: appState.createFormState.edittingTitle,
+        notifyContext: appState.createFormState.notify
     };
 }
-function mapDispatchToProps(dispatch: Dispatch<Action<any>>) {
+function mapDispatchToProps(
+    dispatch: Dispatch<Action<any>>
+): ICreateFormComponentDispatchProps & INotifyComponentDispatchProps {
     // TODO:
     return {
         onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col)),
@@ -37,12 +47,15 @@ function mapDispatchToProps(dispatch: Dispatch<Action<any>>) {
             dispatch(CreateFormActions.deselectRows(rows)),
         addSubtotalRow: () => dispatch(CreateFormActions.addSubtotalRow()),
         startEdittingTitle: () => dispatch(CreateFormActions.startEdittingTitle()),
-        endEdittingTitle: (title: string) => dispatch(CreateFormActions.endEdittingTitle(title))
+        endEdittingTitle: (title: string) => dispatch(CreateFormActions.endEdittingTitle(title)),
+        // TODO:
+        onNotificationClose: () => dispatch(CreateFormActions.closeNotify()),
+        onCloseButtonClick: () => dispatch(CreateFormActions.clickNotifyCloseButton())
     };
 }
 export default connect<
-    ICreateFormComponentStateProps,
-    ICreateFormComponentDispatchProps,
+    ICreateFormComponentStateProps & INotifyComponentStateProps,
+    ICreateFormComponentDispatchProps & INotifyComponentDispatchProps,
     {},
     IAppState
 >(

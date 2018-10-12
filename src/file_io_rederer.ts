@@ -73,6 +73,6 @@ export const saveForm = (): Promise<{}> => {
         // ipcRenderer.send(SaveForm.Request, []);
     });
 };
-export const saveForm_sendState = (state: any) => {
-    ipcRenderer.send(SaveForm.Request, [state]);
+export const saveForm_sendFormData = (formData: any) => {
+    ipcRenderer.send(SaveForm.Request, [formData]);
 };

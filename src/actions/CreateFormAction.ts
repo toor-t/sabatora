@@ -43,6 +43,11 @@ export interface ICreateFormActions {
     saveForm: () => Action<void>; // TODO:
     // 帳票読込
     openForm: () => Action<void>; // TODO:
+
+    // TODO: 通知を閉じた
+    closeNotify: () => Action<void>;
+    // TODO: 通知のCloseボタンがクリックされた
+    clickNotifyCloseButton: () => Action<void>;
 }
 
 const actionCreator = actionCreatorFactory('CREATE_FORM_ACTIONS');
@@ -72,5 +77,8 @@ export const CreateFormActions = {
 
     printForm: actionCreator<void>('PRINT_FORM'),
     saveForm: actionCreator.async<void, {}, {}>('SAVE_FORM'),
-    openForm: actionCreator.async<void, Buffer, {}>('OPEN_FORM')
+    openForm: actionCreator.async<void, Buffer, {}>('OPEN_FORM'),
+    // TODO:
+    closeNotify: actionCreator<void>('CLOSE_NOTIFY'),
+    clickNotifyCloseButton: actionCreator<void>('CLICK_NOTIFY_CLOSE_BUTTON')
 };

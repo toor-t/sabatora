@@ -9,11 +9,13 @@ import wrapAsyncWorker from '../wrapAsyncWorker';
 import { updateAutoCompleteOptions } from '../db_renderer';
 // TODO: 実験中
 // import store from '../store';	// dispatchを取得する為にstoreをimportする。良くないのか？
-import { remote } from 'electron';
-import * as fs from 'fs';
-import { openForm, saveForm, saveForm_sendState } from '../file_io_rederer';
+// import { remote } from 'electron';
+// import * as fs from 'fs';
+import { openForm, saveForm, saveForm_sendFormData } from '../file_io_rederer';
+// TODO: NotifyComponentの実験
+import { NotifyContext } from '../components/NotifyComponent';
 
-const dialog = remote.dialog;
+// const dialog = remote.dialog;
 
 // FormDataRowKeys
 export namespace FormDataRowKeys {
@@ -108,56 +110,64 @@ export interface SubtotalPriceRow {
 
 // CreateFormState
 export interface ICreateFormState {
-    dataRows: (FormDataRow | SubtotalPriceRow | TotalPriceRow)[];
-    title: string;
+    formData: {
+        dataRows: (FormDataRow | SubtotalPriceRow | TotalPriceRow)[];
+        title: string;
+        totalPrice: number;
+    };
     edittingTitle: boolean;
     // edittingCell: { rowIdx: number; idx: number };
     // selectedRow: number;
     // selectedCell: { rowIdx: number; idx: number };
-    totalPrice: number;
 
     autoCompleteOptions: {};
+
+    notify: NotifyContext;
 }
 const initialState: ICreateFormState = {
-    dataRows: [
-        {
-            id: 1,
-            level_1: '',
-            level_1_isValid: false,
-            level_1_isEmpty: true,
-            level_2: '',
-            level_2_isValid: false,
-            level_2_isEmpty: true,
-            level_3: '',
-            level_3_isValid: false,
-            level_3_isEmpty: true,
-            itemName: '',
-            itemName_isEmpty: true,
-            itemName_isValid: false,
-            unitPrice: 0,
-            unitPrice_isEmpty: true,
-            unitPrice_isValid: false,
-            num: 0,
-            num_isEmpty: true,
-            num_isValid: false,
-            price: 0,
-            price_isEmpty: true,
-            selected: false
-        },
-        {
-            id: -1,
-            [TotalPriceRowKeys.labelTotalPrice]: '合計:',
-            [TotalPriceRowKeys.totalPrice]: 0
-        }
-    ],
-    title: '無題',
+    formData: {
+        dataRows: [
+            {
+                id: 1,
+                level_1: '',
+                level_1_isValid: false,
+                level_1_isEmpty: true,
+                level_2: '',
+                level_2_isValid: false,
+                level_2_isEmpty: true,
+                level_3: '',
+                level_3_isValid: false,
+                level_3_isEmpty: true,
+                itemName: '',
+                itemName_isEmpty: true,
+                itemName_isValid: false,
+                unitPrice: 0,
+                unitPrice_isEmpty: true,
+                unitPrice_isValid: false,
+                num: 0,
+                num_isEmpty: true,
+                num_isValid: false,
+                price: 0,
+                price_isEmpty: true,
+                selected: false
+            },
+            {
+                id: -1,
+                [TotalPriceRowKeys.labelTotalPrice]: '合計:',
+                [TotalPriceRowKeys.totalPrice]: 0
+            }
+        ],
+        title: '無題',
+        totalPrice: 0
+    },
     edittingTitle: false,
     // edittingCell: { rowIdx: -1, idx: -1 },
     // selectedRow: -1,
     // selectedCell: { rowIdx: -1, idx: -1 },
-    totalPrice: 0,
 
-    autoCompleteOptions: {}
+    autoCompleteOptions: {},
+
+    notify: NotifyContext.emptyNotify()
 };
 
 // 合計・小計計算
@@ -194,10 +204,10 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     .case(CreateFormActions.addRow, state => {
         // TODO:
         // console.log('addRow');
-        const newDataRows = state.dataRows.slice();
-        const rowsCount = newDataRows.length;
+        const dataRows = state.formData.dataRows.slice();
+        const rowsCount = dataRows.length;
 
-        newDataRows.splice(/*最終行（合計表示行）の一つ前に追加*/ rowsCount - 1, 0, {
+        dataRows.splice(/*最終行（合計表示行）の一つ前に追加*/ rowsCount - 1, 0, {
             id: rowsCount, // TODO:  これじゃダメ、どうすべき？
             level_1: '',
             level_1_isEmpty: true,
@@ -223,18 +233,19 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         });
 
         // 合計を計算
-        const totalPrice = calcTotalPrice(newDataRows);
+        const totalPrice = calcTotalPrice(dataRows);
 
-        return Object.assign({}, state, { totalPrice, dataRows: newDataRows });
+        const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
+        return Object.assign({}, state, { formData });
     })
 
     // 小計行追加
     .case(CreateFormActions.addSubtotalRow, state => {
         // TODO:
-        const newDataRows = state.dataRows.slice();
-        const rowsCount = newDataRows.length;
+        const dataRows = state.formData.dataRows.slice();
+        const rowsCount = dataRows.length;
 
-        newDataRows.splice(/*最終行（合計表示行）の一つ前に追加*/ rowsCount - 1, 0, {
+        dataRows.splice(/*最終行（合計表示行）の一つ前に追加*/ rowsCount - 1, 0, {
             id: -1,
             labelSubtotalPrice: '小計:',
             subtotalPrice: 0,
@@ -242,27 +253,29 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         });
 
         // 合計を計算
-        const totalPrice = calcTotalPrice(newDataRows);
+        const totalPrice = calcTotalPrice(dataRows);
 
-        return Object.assign({}, state, { totalPrice, dataRows: newDataRows });
+        const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
+        return Object.assign({}, state, { formData });
     })
 
     // 行削除
     .case(CreateFormActions.deleteRows, state => {
         // TODO:
-        const newDataRows: (FormDataRow | TotalPriceRow | SubtotalPriceRow)[] = [];
+        const dataRows: (FormDataRow | TotalPriceRow | SubtotalPriceRow)[] = [];
 
-        for (const dataRowIdx in state.dataRows) {
-            if (!(state.dataRows[dataRowIdx] as FormDataRow)[FormDataRowKeys.selected]) {
+        for (const dataRowIdx in state.formData.dataRows) {
+            if (!(state.formData.dataRows[dataRowIdx] as FormDataRow)[FormDataRowKeys.selected]) {
                 // 残す行
-                newDataRows.push(state.dataRows[dataRowIdx]);
+                dataRows.push(state.formData.dataRows[dataRowIdx]);
             }
         }
 
         // 合計を計算
-        const totalPrice = calcTotalPrice(newDataRows);
+        const totalPrice = calcTotalPrice(dataRows);
 
-        return Object.assign({}, state, { dataRows: newDataRows }, { totalPrice /* TODO: */ });
+        const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
+        return Object.assign({}, state, { formData });
     })
 
     // .case(CreateFormActions.insertRow, (state, r) => {
@@ -271,18 +284,18 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     //     // 合計を計算
     //     const totalPrice = calcTotalPrice(state.dataRows);
 
-    //     return Object.assign({}, state, { totalPrice /* TODO: */ });
+    //     return Object.assign({}, state, {formData:{ totalPrice /* TODO: */ }});
     // })
 
     // グリッド行更新
     .case(CreateFormActions.updateGridRow, (state, e) => {
         // TODO:
-        const _rows = state.dataRows.slice();
+        const dataRows = state.formData.dataRows.slice();
 
         // tslint:disable-next-line:no-increment-decrement
         for (let i = e.fromRow; i <= e.toRow; i++) {
-            if ((state.dataRows[i] as any)[FormDataRowKeys.price] !== undefined) {
-                const rowToUpdate: FormDataRow = state.dataRows[i] as FormDataRow;
+            if ((state.formData.dataRows[i] as any)[FormDataRowKeys.price] !== undefined) {
+                const rowToUpdate: FormDataRow = state.formData.dataRows[i] as FormDataRow;
                 // TODO: 価格を計算
                 // console.log(`unitPrice=${e.updated[FormDataRowKeys.unitPrice]}`);
                 // console.log(`num=${e.updated[FormDataRowKeys.num]}`);
@@ -297,13 +310,14 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
                 e.updated[FormDataRowKeys.price_isEmpty] = false;
 
                 const updatedRow = immutabilityHelper(rowToUpdate, { $merge: e.updated });
-                _rows[i] = updatedRow;
+                dataRows[i] = updatedRow;
             }
         }
         // 合計を計算
-        const totalPrice = calcTotalPrice(_rows);
+        const totalPrice = calcTotalPrice(dataRows);
 
-        return Object.assign({}, state, { totalPrice, dataRows: _rows });
+        const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
+        return Object.assign({}, state, { formData });
     })
 
     // 帳票読込 (開始)
@@ -315,23 +329,31 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     .case(CreateFormActions.openForm.done, (state, payload) => {
         // TODO:
         console.log(payload.result);
-        const loadState = JSON.parse(payload.result.toString());
-        console.log(loadState);
-        return loadState;
+        const loadFormData = JSON.parse(payload.result.toString());
+        console.log(loadFormData);
+
+        // TODO: 実験 完了時に通知を出してみる。
+        const notify = NotifyContext.defaultNotify('帳票読込完了');
+
+        return Object.assign({}, state, { formData: loadFormData }, { notify });
     })
     // 帳票読込 (失敗)
     .case(CreateFormActions.openForm.failed, (state, payload) => {
         // TODO:
         console.log(payload.error);
-        return state;
+
+        // TODO: 実験　失敗時に通知を出してみる。
+        const notify = NotifyContext.defaultNotify('帳票読込失敗');
+
+        return Object.assign({}, state, { notify });
     })
 
     // 帳票保存 (開始)
     .case(CreateFormActions.saveForm.started, state => {
         // TODO:
         console.log('CreateFormActions.saveForm.started');
-        // stateを送る
-        saveForm_sendState(state);
+        // FormDataを送る
+        saveForm_sendFormData(state.formData);
 
         return state;
     })
@@ -339,13 +361,19 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     .case(CreateFormActions.saveForm.done, (state, payload) => {
         // TODO:
         console.log('CreateFormActions.saveForm.done');
-        return state;
+        // TODO: 実験 完了時に通知を出してみる。
+        const notify = NotifyContext.defaultNotify('帳票保存完了');
+
+        return Object.assign({}, state, { notify });
     })
     // 帳票保存 (失敗)
     .case(CreateFormActions.saveForm.failed, (state, payload) => {
         // TODO:
         console.log('CreateFormActions.saveForm.failed');
-        return state;
+        // TODO: 実験 失敗時に通知を出してみる。
+        const notify = NotifyContext.defaultNotify('帳票保存失敗');
+
+        return Object.assign({}, state, { notify });
     })
 
     // 帳票印刷
@@ -378,7 +406,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     // 行選択
     .case(CreateFormActions.selectRows, (state, rows) => {
         // TODO:
-        const newDataRows = state.dataRows.map((value, index, array) => {
+        const dataRows = state.formData.dataRows.map((value, index, array) => {
             if ((value as TotalPriceRow)[TotalPriceRowKeys.totalPrice] === undefined) {
                 // 合計表示行は選択不能にする
                 for (let i = 0; i < rows.length; i = i + 1) {
@@ -392,13 +420,14 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
             return Object.assign({}, array[index]);
         });
 
-        return Object.assign({}, state, { dataRows: newDataRows });
+        const formData = Object.assign({}, state.formData, { dataRows });
+        return Object.assign({}, state, { formData });
     })
 
     // 行選択解除
     .case(CreateFormActions.deselectRows, (state, rows) => {
         // TODO:
-        const newDataRows = state.dataRows.map((value, index, array) => {
+        const dataRows = state.formData.dataRows.map((value, index, array) => {
             for (let i = 0; i < rows.length; i = i + 1) {
                 if (index === rows[i].rowIdx) {
                     // 選択解除された
@@ -409,7 +438,8 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
             return Object.assign({}, array[index]);
         });
 
-        return Object.assign({}, state, { dataRows: newDataRows });
+        const formData = Object.assign({}, state.formData, { dataRows });
+        return Object.assign({}, state, { formData });
     })
 
     // タイトル編集開始
@@ -421,7 +451,8 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
     // タイトル編集終了
     .case(CreateFormActions.endEdittingTitle, (state, title) => {
-        return Object.assign({}, state, { title }, { edittingTitle: false });
+        const formData = Object.assign({}, state.formData, { title });
+        return Object.assign({}, state, { formData }, { edittingTitle: false });
     })
 
     // AutoCompleteOptions更新 (開始)
@@ -442,6 +473,19 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         // TODO:
         // console.log('CreateFormActions.updateAutoCompleteOptions.failed');
         return state;
+    })
+
+    // TODO: 通知が閉じられた
+    .case(CreateFormActions.closeNotify, state => {
+        // TODO:
+        const notify = state.notify.closedNotify();
+        return Object.assign({}, state, { notify });
+    })
+    // TODO: 通知のクローズボタンがクリックされた
+    .case(CreateFormActions.clickNotifyCloseButton, state => {
+        // TODO:
+        const notify = state.notify.closedNotify();
+        return Object.assign({}, state, { notify });
     });
 
 // 非同期でautoCompleteOptionsを更新する

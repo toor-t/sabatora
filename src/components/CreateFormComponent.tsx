@@ -15,6 +15,10 @@ import CreateFormDataGridComponent, {
     ICreateFormDataGridComponentStateProps,
     ICreateFormDataGridComponentDispatchProps
 } from './CreateFormDataGridComponent';
+import NotifyComponent, {
+    INotifyComponentStateProps,
+    INotifyComponentDispatchProps
+} from './NotifyComponent';
 
 // CreateFormComponent
 
@@ -67,10 +71,24 @@ export interface ICreateFormComponentDispatchProps
 }
 
 const CreateFormComponent: React.SFC<
-    ICreateFormComponentStateProps & ICreateFormComponentDispatchProps & WithStyles<typeof styles>
+    ICreateFormComponentStateProps &
+        ICreateFormComponentDispatchProps &
+        WithStyles<typeof styles> &
+        INotifyComponentStateProps &
+        INotifyComponentDispatchProps
 > = props => {
     // TODO:
-    const { classes, title, startEdittingTitle, edittingTitle, endEdittingTitle, ...rest } = props;
+    const {
+        classes,
+        title,
+        startEdittingTitle,
+        edittingTitle,
+        endEdittingTitle,
+        notifyContext,
+        onNotificationClose,
+        onCloseButtonClick,
+        ...rest
+    } = props;
 
     return (
         <div className={classes.root}>
@@ -109,6 +127,12 @@ const CreateFormComponent: React.SFC<
                     )}
                     <br />
                     <CreateFormDataGridComponent {...rest} />
+
+                    <NotifyComponent
+                        notifyContext={notifyContext}
+                        onNotificationClose={onNotificationClose}
+                        onCloseButtonClick={onCloseButtonClick}
+                    />
                 </div>
             </main>
         </div>

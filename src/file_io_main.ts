@@ -111,7 +111,7 @@ export const saveForm_request = ipcMain.on(SaveForm.Request, (event: any, arg: a
     });
 });
 
-const saveForm = (state: any): Promise<{}> => {
+const saveForm = (formData: any): Promise<{}> => {
     return new Promise((resolve, reject) => {
         if (win) {
             // ファイル保存ダイアログを表示する
@@ -119,7 +119,7 @@ const saveForm = (state: any): Promise<{}> => {
                 win,
                 {
                     title: '帳票保存',
-                    defaultPath: `${state.title}.json`, // TODO: 拡張子は仮
+                    defaultPath: `${formData.title}.json`, // TODO: 拡張子は仮
 
                     filters: [
                         { name: 'JSON File', extensions: ['json'] },
@@ -129,9 +129,9 @@ const saveForm = (state: any): Promise<{}> => {
                 filename => {
                     if (filename) {
                         // TODO:  保存不要なステータスを除去したステータスを用意
-                        const saveState = Object.assign({}, state, { autoCompleteOptions: {} });
+                        const saveFormData = Object.assign({}, formData);
                         // ファイルに保存
-                        const fileContent = JSON.stringify(saveState);
+                        const fileContent = JSON.stringify(saveFormData);
                         console.log(fileContent);
                         fs.writeFile(filename, fileContent, err => {
                             if (err) {
