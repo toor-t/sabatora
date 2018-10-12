@@ -3,7 +3,7 @@
 //
 'use strict';
 import { ipcRenderer } from 'electron';
-import { OpenForm } from './file_io';
+import { OpenForm, SaveForm } from './file_io';
 
 // OpenForm
 export const openForm = (): Promise<Buffer> => {
@@ -37,4 +37,42 @@ export const openForm = (): Promise<Buffer> => {
         // console.log('Send OpenForm-request');
         ipcRenderer.send(OpenForm.Request, []);
     });
+};
+
+// SaveForm
+export const saveForm = (): Promise<{}> => {
+    return new Promise((resolve, reject) => {
+        const resultListener = (event: any, result: any) => {
+            // console.log(`SaveForm-result=${{ ...result }}`);
+            resolve(result);
+
+            // Remove Listner
+            ipcRenderer.removeListener(SaveForm.Result, resultListener);
+            ipcRenderer.removeListener(SaveForm.Reject, rejectListener);
+        };
+        ipcRenderer.once(SaveForm.Result, resultListener);
+        const rejectListener = (event: any, result: any) => {
+            // console.log(`SaveForm-result=${{ ...result }}`);
+            reject(result);
+
+            // Remove Listner
+            ipcRenderer.removeListener(SaveForm.Reject, rejectListener);
+            ipcRenderer.removeListener(SaveForm.Result, resultListener);
+        };
+        ipcRenderer.once(SaveForm.Reject, rejectListener);
+        const replyListener = (event: any, reply: any) => {
+            /* TODO: */
+            // console.log(`SaveForm-reply = ${reply}`);
+            // Remove Listner
+            ipcRenderer.removeListener(SaveForm.Reply, replyListener);
+        };
+        ipcRenderer.once(SaveForm.Reply, replyListener);
+        //
+        // console.log('Send SaveForm-request');
+        // TODO: ここでは送らない。started アクション処理で送る
+        // ipcRenderer.send(SaveForm.Request, []);
+    });
+};
+export const saveForm_sendState = (state: any) => {
+    ipcRenderer.send(SaveForm.Request, [state]);
 };

@@ -11,7 +11,7 @@ import { updateAutoCompleteOptions } from '../db_renderer';
 // import store from '../store';	// dispatchを取得する為にstoreをimportする。良くないのか？
 import { remote } from 'electron';
 import * as fs from 'fs';
-import { openForm } from '../file_io_rederer';
+import { openForm, saveForm, saveForm_sendState } from '../file_io_rederer';
 
 const dialog = remote.dialog;
 
@@ -326,38 +326,25 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         return state;
     })
 
-    // 帳票保存
-    .case(CreateFormActions.saveForm, state => {
+    // 帳票保存 (開始)
+    .case(CreateFormActions.saveForm.started, state => {
         // TODO:
-        // TODO: 実験中
-        // ファイル保存ダイアログを表示する
-        dialog.showSaveDialog(
-            remote.getCurrentWindow(),
-            {
-                title: '帳票保存',
-                defaultPath: `${state.title}.json`, // TODO: 拡張子は仮
+        console.log('CreateFormActions.saveForm.started');
+        // stateを送る
+        saveForm_sendState(state);
 
-                filters: [
-                    { name: 'JSON File', extensions: ['json'] },
-                    { name: 'All Files', extensions: ['*'] }
-                ]
-            },
-            filename => {
-                if (filename) {
-                    // TODO:  保存不要なステータスを除去したステータスを用意
-                    const saveState = Object.assign({}, state, { autoCompleteOptions: {} });
-                    // ファイルに保存
-                    const fileContent = JSON.stringify(saveState);
-                    console.log(fileContent);
-                    fs.writeFile(filename, fileContent, err => {
-                        if (err) {
-                            // TODO:
-                            alert(err);
-                        }
-                    });
-                }
-            }
-        );
+        return state;
+    })
+    // 帳票保存 (完了)
+    .case(CreateFormActions.saveForm.done, (state, payload) => {
+        // TODO:
+        console.log('CreateFormActions.saveForm.done');
+        return state;
+    })
+    // 帳票保存 (失敗)
+    .case(CreateFormActions.saveForm.failed, (state, payload) => {
+        // TODO:
+        console.log('CreateFormActions.saveForm.failed');
         return state;
     })
 
@@ -477,5 +464,13 @@ export const openFormWorker = wrapAsyncWorker<void, Buffer, {}>(
     CreateFormActions.openForm,
     (): Promise<Buffer> => {
         return openForm();
+    }
+);
+
+// TODO: 非同期帳票保存
+export const saveFormWorker = wrapAsyncWorker<void, {}, {}>(
+    CreateFormActions.saveForm,
+    (): Promise<{}> => {
+        return saveForm();
     }
 );

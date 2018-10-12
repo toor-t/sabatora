@@ -15,7 +15,7 @@ import AppTopComponent, {
 import { IAppState } from '../store';
 // TODO: 実験中
 import { CreateFormActions } from '../actions/CreateFormAction';
-import { openFormWorker } from '../states/CreateFormState';
+import { openFormWorker, saveFormWorker } from '../states/CreateFormState';
 
 function mapStateToProps(appState: IAppState) {
     // TODO:
@@ -34,8 +34,7 @@ function mapDispatchToProps(dispatch: Dispatch<Action<any>>) {
         onSelectConfig: () => dispatch(AppTopActions.selectConfig()),
         onSelectAbout: () => dispatch(AppTopActions.selectAbout()),
         // TODO: 実験中
-        onSaveForm: () => dispatch(CreateFormActions.saveForm()),
-        // onOpenForm: () => dispatch(CreateFormActions.openForm.started()),
+        onSaveForm: () => saveFormWorker(dispatch, void {}),
         onOpenForm: () => openFormWorker(dispatch, void {}),
         onPrintForm: () => dispatch(CreateFormActions.printForm())
     };

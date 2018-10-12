@@ -4,7 +4,7 @@
 'use strict';
 import { app, dialog, ipcMain } from 'electron';
 import { win } from './main';
-import { OpenForm } from './file_io';
+import { OpenForm, SaveForm } from './file_io';
 import * as fs from 'fs';
 
 // setIntervalを使う方法
@@ -30,7 +30,7 @@ function sleep(waitMSec: number, callbackFunc: () => void) {
 export const openForm_request = ipcMain.on(OpenForm.Request, (event: any, arg: any) => {
     // TODO:
     // TODO: 実験：waitしてみる
-    sleep(300, () => {
+    sleep(200, () => {
         openForm().then(
             result => {
                 if (win) {
@@ -82,6 +82,70 @@ const openForm = (): Promise<{}> => {
         } else {
             // TODO:
             reject({});
+        }
+    });
+};
+
+// TODO:
+export const saveForm_request = ipcMain.on(SaveForm.Request, (event: any, arg: any) => {
+    // TODO:
+    console.log('saveForm_request');
+    console.log(event);
+    console.log(arg);
+    // TODO: 実験：waitしてみる
+    sleep(200, () => {
+        saveForm(arg[0]).then(
+            result => {
+                if (win) {
+                    win.webContents.send(SaveForm.Result, result);
+                }
+            },
+            reject => {
+                // TODO:
+                if (win) {
+                    win.webContents.send(SaveForm.Reject, reject);
+                }
+            }
+        );
+        event.sender.send(SaveForm.Reply, 'Request received.');
+    });
+});
+
+const saveForm = (state: any): Promise<{}> => {
+    return new Promise((resolve, reject) => {
+        if (win) {
+            // ファイル保存ダイアログを表示する
+            dialog.showSaveDialog(
+                win,
+                {
+                    title: '帳票保存',
+                    defaultPath: `${state.title}.json`, // TODO: 拡張子は仮
+
+                    filters: [
+                        { name: 'JSON File', extensions: ['json'] },
+                        { name: 'All Files', extensions: ['*'] }
+                    ]
+                },
+                filename => {
+                    if (filename) {
+                        // TODO:  保存不要なステータスを除去したステータスを用意
+                        const saveState = Object.assign({}, state, { autoCompleteOptions: {} });
+                        // ファイルに保存
+                        const fileContent = JSON.stringify(saveState);
+                        console.log(fileContent);
+                        fs.writeFile(filename, fileContent, err => {
+                            if (err) {
+                                // TODO:
+                                alert(err);
+                                reject(err);
+                            } else {
+                                // TODO:
+                                resolve({});
+                            }
+                        });
+                    }
+                }
+            );
         }
     });
 };

@@ -71,7 +71,6 @@ export const CreateFormActions = {
     >('UPDATE_AUTO_COMPLETE_OPTIONS'),
 
     printForm: actionCreator<void>('PRINT_FORM'),
-    saveForm: actionCreator<void>('SAVE_FORM'),
-    // saveForm: actionCreator.async<void, void, {}>('SAVE_FORM'),
+    saveForm: actionCreator.async<void, {}, {}>('SAVE_FORM'),
     openForm: actionCreator.async<void, Buffer, {}>('OPEN_FORM')
 };
