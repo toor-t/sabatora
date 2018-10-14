@@ -1,3 +1,6 @@
+/**
+ * ConfigAction
+ */
 'use strict';
 import { Action, actionCreatorFactory } from 'typescript-fsa';
 

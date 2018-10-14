@@ -1,6 +1,8 @@
-//
-// CreateFormComponent
-//
+/**
+ * CreateFormComponent
+ *
+ * @description 帳票作成コンポーネント
+ */
 'use strict';
 
 import * as React from 'react';
@@ -70,6 +72,10 @@ export interface ICreateFormComponentDispatchProps
     endEdittingTitle: (title: string) => void;
 }
 
+/**
+ * 帳票作成コンポーネント
+ * @abstract 帳票作成コンポーネント
+ */
 const CreateFormComponent: React.SFC<
     ICreateFormComponentStateProps &
         ICreateFormComponentDispatchProps &
@@ -139,4 +145,8 @@ const CreateFormComponent: React.SFC<
     );
 };
 
+/**
+ * 帳票作成コンポーネント
+ * @abstract 帳票作成コンポーネントですよ
+ */
 export default withStyles(styles)(CreateFormComponent);

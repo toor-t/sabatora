@@ -1,6 +1,6 @@
-//
-// CreateFormAction
-//
+/**
+ * CreateFormAction
+ */
 'use strict';
 import { Action, actionCreatorFactory } from 'typescript-fsa';
 import * as ReactDataGrid from 'react-data-grid';
