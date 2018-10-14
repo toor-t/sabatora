@@ -1,6 +1,6 @@
-//
-// AppTopComponent
-//
+/**
+ * AppTopComponent
+ */
 'use strict';
 import * as React from 'react';
 import * as classNames from 'classnames';
