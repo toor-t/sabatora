@@ -1,6 +1,6 @@
-//
-// file_io_main
-//
+/**
+ * file_io_main
+ */
 'use strict';
 import { app, dialog, ipcMain } from 'electron';
 import { win } from './main';
@@ -27,7 +27,7 @@ function sleep(waitMSec: number, callbackFunc: () => void) {
     }, 1);
 }
 // TODO:
-export const openForm_request = ipcMain.on(OpenForm.Request, (event: any, arg: any) => {
+const openForm_request = ipcMain.on(OpenForm.Request, (event: any, arg: any) => {
     // TODO:
     // TODO: 実験：waitしてみる
     sleep(200, () => {
@@ -87,7 +87,7 @@ const openForm = (): Promise<{}> => {
 };
 
 // TODO:
-export const saveForm_request = ipcMain.on(SaveForm.Request, (event: any, arg: any) => {
+const saveForm_request = ipcMain.on(SaveForm.Request, (event: any, arg: any) => {
     // TODO:
     console.log('saveForm_request');
     console.log(event);

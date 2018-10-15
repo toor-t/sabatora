@@ -1,19 +1,16 @@
-//
-// main
-//
+/**
+ * main
+ */
 'use strict';
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-import { updateAutoCompleteOptions_request, makeDummyDB } from './db_main';
-import { openForm_request, saveForm_request } from './file_io_main';
+import './db_main';
+import './file_io_main';
 
 const ElectronStore = require('electron-store');
 
 export let win: BrowserWindow | null;
-const _updateAutoCompleteOptions_request = updateAutoCompleteOptions_request;
-const _openForm_request = openForm_request;
-const _saveForm_request = saveForm_request;
 
 // TODO: 設定
 const config = new ElectronStore({

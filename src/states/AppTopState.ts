@@ -1,11 +1,14 @@
-//
-// AppTopState
-//
+/**
+ * AppTopState
+ */
 'use strict';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { AppTopActions } from '../actions/AppTopAction';
 import { AppTopSelected } from '../components/AppTopComponent';
 
+/**
+ * IAppTopState
+ */
 export interface IAppTopState {
     drawerOpened: boolean;
     selected: number;
@@ -15,6 +18,9 @@ const initialState: IAppTopState = {
     selected: AppTopSelected.CreateForm
 };
 
+/**
+ * AppTopStateReducer
+ */
 export const AppTopStateReducer = reducerWithInitialState<IAppTopState>(initialState)
     .case(AppTopActions.openDrawer, state => {
         // TODO:

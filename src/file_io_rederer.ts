@@ -1,6 +1,6 @@
-//
-// file_io_renderer
-//
+/*
+ * file_io_renderer
+ */
 'use strict';
 import { ipcRenderer } from 'electron';
 import { OpenForm, SaveForm } from './file_io';

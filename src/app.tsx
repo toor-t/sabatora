@@ -1,6 +1,6 @@
-//
-// app
-//
+/**
+ * app
+ */
 'use strict';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';

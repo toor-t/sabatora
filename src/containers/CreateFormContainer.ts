@@ -1,7 +1,6 @@
-// TODO: 帳票作成画面コンテナ
-//
-// CreateFormContainer
-//
+/**
+ * CreateFormContainer
+ */
 'use strict';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';

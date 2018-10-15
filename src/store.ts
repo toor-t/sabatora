@@ -1,6 +1,6 @@
-//
-// store
-//
+/**
+ * store
+ */
 'use strict';
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 // import reduxThunk from 'redux-thunk';
@@ -10,6 +10,9 @@ import { IAboutState, AboutStateReducer } from './states/AboutState';
 import { IConfigState, ConfigStateReducer } from './states/ConfigState';
 import { IManageDataState, ManageDataStateReducer } from './states/ManageDataState';
 
+/**
+ * IAppState
+ */
 export interface IAppState {
     appTopState: IAppTopState;
     createFormState: ICreateFormState;
@@ -18,6 +21,9 @@ export interface IAppState {
     manageDataState: IManageDataState;
 }
 
+/**
+ * store
+ */
 const store = createStore(
     combineReducers<IAppState>({
         appTopState: AppTopStateReducer,

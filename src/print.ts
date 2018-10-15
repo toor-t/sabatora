@@ -1,6 +1,6 @@
-//
-// print
-//
+/**
+ * print
+ */
 'use strict';
 
 // TODO:

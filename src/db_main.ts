@@ -1,6 +1,6 @@
-//
-// db_main
-//
+/**
+ * db_main
+ */
 'use strict';
 import { app, ipcMain } from 'electron';
 import * as DataStore from 'nedb';
@@ -12,7 +12,7 @@ const userDataPath = app.getPath('userData');
 // const userDataPath = './db';
 console.log(`userDataPath=${userDataPath}`);
 
-export const data_db: Nedb = new DataStore({
+const data_db: Nedb = new DataStore({
     filename: `${userDataPath}/data.db`, // TODO:  ファイル名
     autoload: true
     /*
@@ -20,13 +20,13 @@ export const data_db: Nedb = new DataStore({
 	beforeDeserialization: fuga,
 	*/
 });
-export const conf_db: Nedb = new DataStore({
+const conf_db: Nedb = new DataStore({
     filename: `${userDataPath}/conf.db`, // TODO: ファイル名
     autoload: true
 });
 
 // TODO:
-export const updateAutoCompleteOptions_request = ipcMain.on(
+const updateAutoCompleteOptions_request = ipcMain.on(
     UpdateAutoCompleteOptions.Request,
     (event: any, arg: any) => {
         // TODO:
@@ -48,7 +48,7 @@ export const updateAutoCompleteOptions_request = ipcMain.on(
     }
 );
 
-export const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promise<{}> => {
+const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promise<{}> => {
     return new Promise((resolve, reject) => {
         // query生成
         let _query = {};

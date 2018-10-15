@@ -1,6 +1,6 @@
-//
-// print_main
-//
+/**
+ * print_main
+ */
 'use strict';
 import { PrintForm } from './print';
 

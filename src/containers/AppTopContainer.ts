@@ -1,7 +1,6 @@
-// TODO: AppTop画面コンテナ
-//
-// AppTopContainer
-//
+/**
+ * AppTopContainer
+ */
 'use strict';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';

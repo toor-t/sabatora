@@ -1,7 +1,6 @@
-// TODO: ABOUT画面コンテナ　現時点では必要性不明
-//
-// AboutContainer
-//
+/**
+ * AboutContainer
+ */
 'use strict';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';

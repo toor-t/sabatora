@@ -1,6 +1,6 @@
-//
-// db
-//
+/**
+ * db
+ */
 'use strict';
 
 export namespace DataDocKeys {

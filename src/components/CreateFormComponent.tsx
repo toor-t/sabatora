@@ -1,10 +1,7 @@
 /**
  * CreateFormComponent
- *
- * @description 帳票作成コンポーネント
  */
 'use strict';
-
 import * as React from 'react';
 import { WithStyles, withStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';

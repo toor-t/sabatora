@@ -1,21 +1,15 @@
-//
-// CreateFormState
-//
+/**
+ * CreateFormState
+ */
 'use strict';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { CreateFormActions } from '../actions/CreateFormAction';
 import immutabilityHelper from 'immutability-helper';
 import wrapAsyncWorker from '../wrapAsyncWorker';
 import { updateAutoCompleteOptions } from '../db_renderer';
-// TODO: 実験中
-// import store from '../store';	// dispatchを取得する為にstoreをimportする。良くないのか？
-// import { remote } from 'electron';
-// import * as fs from 'fs';
 import { openForm, saveForm, saveForm_sendFormData } from '../file_io_rederer';
 // TODO: NotifyComponentの実験
 import { NotifyContext } from '../components/NotifyComponent';
-
-// const dialog = remote.dialog;
 
 // FormDataRowKeys
 export namespace FormDataRowKeys {
@@ -108,7 +102,9 @@ export interface SubtotalPriceRow {
     [SubtotalPriceRowKeys.subtotalPrice]: number;
 }
 
-// CreateFormState
+/**
+ * ICreateFormState
+ */
 export interface ICreateFormState {
     formData: {
         dataRows: (FormDataRow | SubtotalPriceRow | TotalPriceRow)[];
@@ -170,7 +166,11 @@ const initialState: ICreateFormState = {
     notify: NotifyContext.emptyNotify()
 };
 
-// 合計・小計計算
+/**
+ * 合計・小計計算
+ * @param  {any[]} rows
+ * @returns number
+ */
 function calcTotalPrice(rows: any[]): number {
     let sumPrice: number = 0;
     let subSumPrice: number = 0;
@@ -196,8 +196,8 @@ function calcTotalPrice(rows: any[]): number {
     return sumPrice;
 }
 
-/*
- Reducer
+/**
+ * CreateFormStateReducer
  */
 export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(initialState)
     // 行追加

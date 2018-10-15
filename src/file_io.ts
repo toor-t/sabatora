@@ -1,6 +1,6 @@
-//
-// file_io
-//
+/**
+ * file_io
+ */
 'use strict';
 
 const _request = '-request';

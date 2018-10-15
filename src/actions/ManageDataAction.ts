@@ -2,14 +2,13 @@
  * ManageDataAction
  */
 'use strict';
-import { Action, actionCreatorFactory } from 'typescript-fsa';
-
-export interface IManageDataActions {
-    updateValue: (v: boolean) => Action<boolean>;
-}
+import { actionCreatorFactory } from 'typescript-fsa';
 
 const actionCreator = actionCreatorFactory('MANAGE_DATA');
 
+/**
+ * ManageDataActions
+ */
 export const ManageDataActions = {
     updateValue: actionCreator<boolean>('UPDATE_VALUE')
 };

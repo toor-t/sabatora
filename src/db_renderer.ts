@@ -1,6 +1,6 @@
-//
-// db_renderer
-//
+/**
+ * db_renderer
+ */
 'use strict';
 import { ipcRenderer } from 'electron';
 import { UpdateAutoCompleteOptions } from './db';
