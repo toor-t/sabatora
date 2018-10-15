@@ -129,6 +129,7 @@ export interface IAppTopComponentDispatchProps {
     // TODO: 実験中
     onSaveForm: () => void;
     onOpenForm: () => void;
+    onNewForm: () => void;
     onPrintForm: () => void;
 }
 interface IAppTopComponentStates {
@@ -194,6 +195,9 @@ class AppTopComponent extends React.Component<
                         </MenuItem>
                         <MenuItem onClick={this.handleMenuItemButton(this.props.onSaveForm)}>
                             帳票保存
+                        </MenuItem>
+                        <MenuItem onClick={this.handleMenuItemButton(this.props.onNewForm)}>
+                            新規帳票
                         </MenuItem>
                         <Divider />
                         <MenuItem onClick={this.handleMenuItemButton(this.props.onPrintForm)}>

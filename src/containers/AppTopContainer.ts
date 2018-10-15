@@ -35,6 +35,7 @@ function mapDispatchToProps(dispatch: Dispatch<Action<any>>) {
         // TODO: 実験中
         onSaveForm: () => saveFormWorker(dispatch, void {}),
         onOpenForm: () => openFormWorker(dispatch, void {}),
+        onNewForm: () => dispatch(CreateFormActions.newForm(false)),
         onPrintForm: () => dispatch(CreateFormActions.printForm())
     };
 }

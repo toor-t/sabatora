@@ -113,6 +113,7 @@ export interface ICreateFormState {
         title: string;
         totalPrice: number;
     };
+    formDataEditted: boolean; // 帳票データが編集済みか？
     edittingTitle: boolean;
     // edittingCell: { rowIdx: number; idx: number };
     // selectedRow: number;
@@ -158,6 +159,7 @@ const initialState: ICreateFormState = {
         title: '無題',
         totalPrice: 0
     },
+    formDataEditted: false,
     edittingTitle: false,
     // edittingCell: { rowIdx: -1, idx: -1 },
     // selectedRow: -1,
@@ -332,9 +334,9 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     // 帳票読込 (完了)
     .case(CreateFormActions.openForm.done, (state, payload) => {
         // TODO:
-        console.log(payload.result);
+        // console.log(payload.result);
         const loadFormData = JSON.parse(payload.result.toString());
-        console.log(loadFormData);
+        // console.log(loadFormData);
 
         // TODO: 実験 完了時に通知を出してみる。
         const notify = NotifyContext.defaultNotify('帳票読込完了');
@@ -344,8 +346,12 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     // 帳票読込 (失敗)
     .case(CreateFormActions.openForm.failed, (state, payload) => {
         // TODO:
-        console.log(payload.error);
+        // console.log(payload.error);
 
+        // TODO: キャンセル時
+        if (payload.error === 'CANCELED') {
+            return state;
+        }
         // TODO: 実験　失敗時に通知を出してみる。
         const notify = NotifyContext.defaultNotify('帳票読込失敗');
 
@@ -373,7 +379,11 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     // 帳票保存 (失敗)
     .case(CreateFormActions.saveForm.failed, (state, payload) => {
         // TODO:
-        console.log('CreateFormActions.saveForm.failed');
+        // console.log('CreateFormActions.saveForm.failed');
+        // TODO: キャンセル時
+        if (payload.error === 'CANCELED') {
+            return state;
+        }
         // TODO: 実験 失敗時に通知を出してみる。
         const notify = NotifyContext.defaultNotify('帳票保存失敗');
 
@@ -384,6 +394,27 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     .case(CreateFormActions.printForm, state => {
         // TODO:
         console.log('printForm');
+        return state;
+    })
+
+    // 新規帳票作成
+    .case(CreateFormActions.newForm, (state, force) => {
+        // TODO:
+        if (!state.formDataEditted || force) {
+            // 未編集状態、もしくは強制実行なら直ぐに新規作成
+            // TODO:
+            const formData = initialState.formData;
+            // 編集状態解除
+            const formDataEditted = false;
+
+            // 確認ダイアログが表示されているなら消す
+            // TODO:
+
+            return Object.assign({}, state, { formData, formDataEditted });
+        }
+        // ダイアログでユーザー確認する
+
+        // TODO:
         return state;
     })
 

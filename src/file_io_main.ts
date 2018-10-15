@@ -62,7 +62,8 @@ const openForm = (): Promise<{}> => {
                     ]
                 },
                 filename => {
-                    if (filename[0]) {
+                    console.log(filename);
+                    if (filename && filename[0]) {
                         console.log(filename[0]);
                         // ファイルオープン
                         const data = fs.readFile(filename[0], (err, data) => {
@@ -76,6 +77,10 @@ const openForm = (): Promise<{}> => {
                                 resolve(data);
                             }
                         });
+                    } else {
+                        // キャンセルされた
+                        console.log('Canceled.');
+                        reject('CANCELED'); // TODO:
                     }
                 }
             );
@@ -127,6 +132,7 @@ const saveForm = (formData: any): Promise<{}> => {
                     ]
                 },
                 filename => {
+                    console.log(filename);
                     if (filename) {
                         // TODO:  保存不要なステータスを除去したステータスを用意
                         const saveFormData = Object.assign({}, formData);
@@ -143,6 +149,8 @@ const saveForm = (formData: any): Promise<{}> => {
                                 resolve({});
                             }
                         });
+                    } else {
+                        reject('CANCELED');
                     }
                 }
             );
