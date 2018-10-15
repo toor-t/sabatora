@@ -4,7 +4,7 @@
 'use strict';
 import { actionCreatorFactory } from 'typescript-fsa';
 import * as ReactDataGrid from 'react-data-grid';
-import { NormalDataRow, TotalPriceRow, SubtotalPriceRow } from '../states/CreateFormState';
+import { FormDataRow, NormalDataRow } from '../states/CreateFormState';
 
 const actionCreator = actionCreatorFactory('CREATE_FORM_ACTIONS');
 
@@ -15,15 +15,11 @@ export const CreateFormActions = {
     /**
      * 行選択
      */
-    selectRows: actionCreator<
-        { rowIdx: number; row: FormData | TotalPriceRow | SubtotalPriceRow }[]
-    >('SELECT_ROWS'),
+    selectRows: actionCreator<{ rowIdx: number; row: FormDataRow }[]>('SELECT_ROWS'),
     /**
      * 行選択解除
      */
-    deselectRows: actionCreator<
-        { rowIdx: number; row: FormData | TotalPriceRow | SubtotalPriceRow }[]
-    >('DESELECT_ROWS'),
+    deselectRows: actionCreator<{ rowIdx: number; row: FormDataRow }[]>('DESELECT_ROWS'),
     /**
      * セル選択
      */
@@ -75,6 +71,10 @@ export const CreateFormActions = {
      * 帳票読込
      */
     openForm: actionCreator.async<void, Buffer, {}>('OPEN_FORM'),
+    /**
+     * 新規帳票作成
+     */
+    newForm: actionCreator<boolean>('NEW_FORM'),
 
     // TODO:
     /**

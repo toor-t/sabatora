@@ -12,7 +12,8 @@ import {
     TotalPriceRow,
     TotalPriceRowKeys,
     SubtotalPriceRow,
-    SubtotalPriceRowKeys
+    SubtotalPriceRowKeys,
+    FormDataRow
 } from '../states/CreateFormState';
 import { DataDocKeys } from '../db';
 import AddCircle from '@material-ui/icons/AddCircle';
@@ -308,8 +309,8 @@ export interface ICreateFormDataGridComponentDispatchProps {
     updateAutoCompleteOptions: (col: { rowData: NormalDataRow; columnDDKey: string }) => void;
     addRow: () => void;
     deleteRows: () => void;
-    selectRows: (rows: { rowIdx: number; row: FormData }[]) => void;
-    deselectRows: (rows: { rowIdx: number; row: FormData }[]) => void;
+    selectRows: (rows: { rowIdx: number; row: FormDataRow }[]) => void;
+    deselectRows: (rows: { rowIdx: number; row: FormDataRow }[]) => void;
     addSubtotalRow: () => void;
 }
 interface ICreateFormDataGridComponentStates {
@@ -461,7 +462,7 @@ class CreateFormDataGridComponent extends React.Component<
         return (
             <div id="CreateFormDataGrid" /*className={this.props.classes.content}*/>
                 <ReactDataGrid
-                    ref={node => {
+                    ref={(node: ReactDataGrid<{}> | null) => {
                         this.grid = node;
                     }}
                     enableCellSelect={true}

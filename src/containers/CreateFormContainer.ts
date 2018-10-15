@@ -16,7 +16,7 @@ import {
 } from '../components/NotifyComponent';
 
 import { IAppState } from '../store';
-import { updateAutoCompleteOptionsWorker } from '../states/CreateFormState';
+import { updateAutoCompleteOptionsWorker, FormDataRow } from '../states/CreateFormState';
 
 function mapStateToProps(
     appState: IAppState
@@ -40,9 +40,9 @@ function mapDispatchToProps(
         updateAutoCompleteOptions: (c: any) => updateAutoCompleteOptionsWorker(dispatch, c),
         addRow: () => dispatch(CreateFormActions.addRow()),
         deleteRows: () => dispatch(CreateFormActions.deleteRows()),
-        selectRows: (rows: { rowIdx: number; row: FormData }[]) =>
+        selectRows: (rows: { rowIdx: number; row: FormDataRow }[]) =>
             dispatch(CreateFormActions.selectRows(rows)),
-        deselectRows: (rows: { rowIdx: number; row: FormData }[]) =>
+        deselectRows: (rows: { rowIdx: number; row: FormDataRow }[]) =>
             dispatch(CreateFormActions.deselectRows(rows)),
         addSubtotalRow: () => dispatch(CreateFormActions.addSubtotalRow()),
         startEdittingTitle: () => dispatch(CreateFormActions.startEdittingTitle()),

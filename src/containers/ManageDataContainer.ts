@@ -8,18 +8,19 @@ import { Dispatch } from 'redux';
 import { Action } from 'typescript-fsa';
 // TODO:
 import { ManageDataActions } from '../actions/ManageDataAction';
-import ManageDataComponent, { IManageDataComponentProps } from '../components/ManageDataComponent';
+import ManageDataComponent, {
+    IManageDataComponentStateProps,
+    IManageDataComponentDispatchProps
+} from '../components/ManageDataComponent';
 import { IAppState } from '../store';
 
-function mapStateToProps(appState: IAppState): IManageDataComponentProps {
+function mapStateToProps(appState: IAppState): IManageDataComponentStateProps {
     // TODO:
-    return { checked: appState.manageDataState.checked };
+    return {};
 }
-function mapDispatchToProps(dispatch: Dispatch<Action<any>>): IManageDataComponentProps {
+function mapDispatchToProps(dispatch: Dispatch<Action<any>>): IManageDataComponentDispatchProps {
     // TODO:
-    return {
-        onChange: (e: any) => dispatch(ManageDataActions.updateValue(e.target.checked))
-    };
+    return {};
 }
 export default connect(
     mapStateToProps,
