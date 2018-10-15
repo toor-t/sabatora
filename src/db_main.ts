@@ -6,7 +6,7 @@ import { app, ipcMain } from 'electron';
 import * as DataStore from 'nedb';
 import { win } from './main';
 
-import { DataDocKeys, DataDoc, ConfDoc, UpdateAutoCompleteOptions } from './db';
+import { DataDocKeys, DataDoc, ConfDoc, UpdateAutoCompleteOptions, QueryDb } from './db';
 
 const userDataPath = app.getPath('userData');
 // const userDataPath = './db';
@@ -24,6 +24,75 @@ const conf_db: Nedb = new DataStore({
     filename: `${userDataPath}/conf.db`, // TODO: ファイル名
     autoload: true
 });
+
+// TODO:
+const queryDb_request = ipcMain.on(QueryDb.Request, (event: any, arg: any) => {
+    // TODO:
+    queryDb(arg[0], arg[1]).then(
+        result => {
+            if (win) {
+                win.webContents.send(QueryDb.Result, result);
+            }
+        },
+        reject => {
+            // TODO:
+            if (win) {
+                win.webContents.send(QueryDb.Reject, reject);
+            }
+        }
+    );
+    event.sender.send(QueryDb.Reply, 'Request received.');
+});
+const queryDb = (query: any, projection: string[] = []): Promise<{}> => {
+    return new Promise((resolve, reject) => {
+        // query生成
+        let _query = {};
+        for (const key in query) {
+            switch (key) {
+                case DataDocKeys.level_1:
+                case DataDocKeys.level_2:
+                case DataDocKeys.level_3:
+                case DataDocKeys.itemName:
+                    if (query[key] !== '') {
+                        _query = Object.assign(_query, { [key]: query[key] });
+                    }
+                    break;
+                case DataDocKeys.unitPrice:
+                    // TODO: 何もしないで良いか？
+                    break;
+                default:
+                    // 何もしない
+                    break;
+            }
+        }
+        // console.log('_query=');
+        // console.log(_query);
+        // projection生成
+        let _projection = {};
+        for (const key in projection) {
+            switch (projection[key]) {
+                case DataDocKeys.level_1:
+                case DataDocKeys.level_2:
+                case DataDocKeys.level_3:
+                case DataDocKeys.itemName:
+                case DataDocKeys.unitPrice:
+                    _projection = Object.assign(_projection, { [projection[key]]: 1 });
+                    break;
+                default:
+                    break;
+            }
+        }
+        // console.log('_projection');
+        // console.log(_projection);
+        data_db.find(_query, _projection, (err, docs: any[]) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(docs);
+            }
+        });
+    });
+};
 
 // TODO:
 const updateAutoCompleteOptions_request = ipcMain.on(

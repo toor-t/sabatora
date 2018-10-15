@@ -5,7 +5,7 @@
 import { actionCreatorFactory } from 'typescript-fsa';
 import * as ReactDataGrid from 'react-data-grid';
 import * as ManageDataState from '../states/ManageDataState';
-
+import * as db from '../db';
 const actionCreator = actionCreatorFactory('MANAGE_DATA');
 
 /**
@@ -39,6 +39,11 @@ export const ManageDataActions = {
      * グリッド行更新
      */
     updateGridRow: actionCreator<ReactDataGrid.GridRowsUpdatedEvent>('UPDATE_GRID_ROW'),
+    /**
+     * データベースクエリー
+     */
+    queryDb: actionCreator.async<{ query: db.DataDoc; projection: any[] }, {}, {}>('QUERY_DB'),
+
     // TODO:
     /**
      * 通知が閉じられた

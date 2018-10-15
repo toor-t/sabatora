@@ -5,6 +5,8 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { ManageDataActions } from '../actions/ManageDataAction';
 import * as db from '../db';
+import wrapAsyncWorker from '../wrapAsyncWorker';
+import { queryDb } from '../db_renderer';
 
 // DBDataRowKeys
 export namespace DBDataRowKeys {
@@ -35,19 +37,38 @@ export interface DBDataRow {
  * IManageDataState
  */
 export interface IManageDataState {
-    checked: boolean;
+    dbDataRows: db.DataDoc[];
 }
 const initialState: IManageDataState = {
-    checked: true
+    dbDataRows: []
 };
 
 /**
  * ManageDataStateReducer
  */
-export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(initialState);
-// .case(
-// 	ManageDataActions.updateValue,
-// 	(state, checked) => {
-// 		return Object.assign({}, state, { checked });
-// 	}
-// );
+export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(initialState)
+    // デーベースクエリー (開始)
+    .case(ManageDataActions.queryDb.started, (state, param) => {
+        // TODO:
+        console.log('ManageDataActions.queryDb.started');
+        return state;
+    })
+    // データベースクエリー (完了)
+    .case(ManageDataActions.queryDb.done, (state, payload) => {
+        // TODO:
+        console.log('ManageDataActions.queryDb.done');
+        return Object.assign({}, state, { dbDataRows: payload.result });
+    })
+    // データベースクエリー (失敗)
+    .case(ManageDataActions.queryDb.failed, (state, payload) => {
+        // TODO:
+        console.log('ManageDataActions.queryDb.failed');
+        return state;
+    });
+
+export const queryDbWorker = wrapAsyncWorker<{ query: db.DataDoc; projection: any[] }, {}, {}>(
+    ManageDataActions.queryDb,
+    ({ query, projection }): Promise<{}> => {
+        return queryDb(query, projection);
+    }
+);

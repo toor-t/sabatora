@@ -30,3 +30,10 @@ export namespace UpdateAutoCompleteOptions {
     export const Reject = 'updateAutoCompleteOptions-reject';
     export const Reply = 'updateAutoCompleteOptions-reply';
 }
+
+export namespace QueryDb {
+    export const Request = 'queryDb-request';
+    export const Result = 'queryDb-result';
+    export const Reject = 'queryDb-reject';
+    export const Reply = 'queryDb-reply';
+}

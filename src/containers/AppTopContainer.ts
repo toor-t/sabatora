@@ -15,6 +15,8 @@ import { IAppState } from '../store';
 // TODO: 実験中
 import { CreateFormActions } from '../actions/CreateFormAction';
 import { openFormWorker, saveFormWorker } from '../states/CreateFormState';
+import { queryDbWorker } from '../states/ManageDataState';
+import { DataDoc } from '../db';
 
 function mapStateToProps(appState: IAppState) {
     // TODO:
@@ -36,7 +38,9 @@ function mapDispatchToProps(dispatch: Dispatch<Action<any>>) {
         onSaveForm: () => saveFormWorker(dispatch, void {}),
         onOpenForm: () => openFormWorker(dispatch, void {}),
         onNewForm: () => dispatch(CreateFormActions.newForm(false)),
-        onPrintForm: () => dispatch(CreateFormActions.printForm())
+        onPrintForm: () => dispatch(CreateFormActions.printForm()),
+        // TODO: 実験用
+        queryDb: () => queryDbWorker(dispatch, { query: <DataDoc>{}, projection: [] })
     };
 }
 export default connect<IAppTopComponentStateProps, IAppTopComponentDispatchProps, {}, IAppState>(

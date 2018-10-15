@@ -64,6 +64,7 @@ export interface IManageDataComponentStateProps extends IManageDataDataGridCompo
 export interface IManageDataComponentDispatchProps
     extends IManageDataDataGridComponentDispatchProps {
     // TODO:
+    queryDb: () => void;
     // startEdittingTitle: () => void;
     // endEdittingTitle: (title: string) => void;
 }
@@ -84,14 +85,19 @@ const ManageDataComponent: React.SFC<
     return (
         <div className={classes.root}>
             <main>
-                <div>
+                <div
+                    // tslint:disable-next-line:jsx-no-lambda
+                    onLoad={(e: any) => {
+                        props.queryDb();
+                    }}
+                >
                     <ManageDataDataGridComponent {...rest} />
 
-                    <NotifyComponent
-                        notifyContext={notifyContext}
-                        onNotificationClose={onNotificationClose}
-                        onCloseButtonClick={onCloseButtonClick}
-                    />
+                    {/* <NotifyComponent
+							notifyContext={notifyContext}
+							onNotificationClose={onNotificationClose}
+							onCloseButtonClick={onCloseButtonClick}
+						/> */}
                 </div>
             </main>
         </div>

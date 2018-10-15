@@ -16,12 +16,13 @@ import {
     SubtotalPriceRow,
     SubtotalPriceRowKeys
 } from '../states/CreateFormState';
-import { DataDocKeys } from '../db';
+import { DataDocKeys, DataDoc } from '../db';
 import AddCircle from '@material-ui/icons/AddCircle';
 import AddBox from '@material-ui/icons/AddBox';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
 import * as classNames from 'classnames';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { DBDataRowKeys, DBDataRow } from '../states/ManageDataState';
 
 // TODO: Formatter
 const NumberRightFormatter: React.SFC<any> = props => {
@@ -71,152 +72,152 @@ const BoldRightFormatter: React.SFC<any> = props => {
     );
 };
 
-// TODO: Row render
-interface ICustomRowRendererStates {
-    grid: ManageDataDataGridComponent;
-}
-class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            grid: this.props.grid
-        };
-    }
+// // TODO: Row render
+// interface ICustomRowRendererStates {
+// 	grid: ManageDataDataGridComponent;
+// }
+// class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
+// 	constructor(props: any) {
+// 		super(props);
+// 		this.state = {
+// 			grid: this.props.grid
+// 		};
+// 	}
 
-    row: any;
+// 	row: any;
 
-    shouldComponentUpdate(nextProps: any) {
-        return this.row.shouldComponentUpdate(nextProps);
-    }
-    setScrollLeft = (scrollBy: any) => {
-        // if you want freeze columns to work, you need to make sure you implement this as apass through
-        if (this.row.setScrollLeft) {
-            this.row.setScrollLeft(scrollBy);
-        }
-    };
-    getRowStyle = () => {
-        return {
-            backgroundColor: this.getRowBackground()
-        };
-    };
-    getRowBackground = () => {
-        return this.props.idx % 2 ? 'green' : 'blue';
-    };
-    render() {
-        const { columns, ...other } = this.props;
-        let _columns = columns;
+// 	shouldComponentUpdate(nextProps: any) {
+// 		return this.row.shouldComponentUpdate(nextProps);
+// 	}
+// 	setScrollLeft = (scrollBy: any) => {
+// 		// if you want freeze columns to work, you need to make sure you implement this as apass through
+// 		if (this.row.setScrollLeft) {
+// 			this.row.setScrollLeft(scrollBy);
+// 		}
+// 	};
+// 	getRowStyle = () => {
+// 		return {
+// 			backgroundColor: this.getRowBackground()
+// 		};
+// 	};
+// 	getRowBackground = () => {
+// 		return this.props.idx % 2 ? 'green' : 'blue';
+// 	};
+// 	render() {
+// 		const { columns, ...other } = this.props;
+// 		let _columns = columns;
 
-        if (this.props.row[TotalPriceRowKeys.totalPrice] !== undefined) {
-            // TODO: 合計表示
-            const check_column = Object.assign(
-                {},
-                columns[0],
-                { key: undefined },
-                { formatter: undefined }
-            );
+// 		if (this.props.row[TotalPriceRowKeys.totalPrice] !== undefined) {
+// 			// TODO: 合計表示
+// 			const check_column = Object.assign(
+// 				{},
+// 				columns[0],
+// 				{ key: undefined },
+// 				{ formatter: undefined }
+// 			);
 
-            let l_column = {}; // 左端のカラムの情報
-            let width = 0;
-            for (let i = 1; i < columns.length - 1; i = i + 1) {
-                width += columns[i].width;
-            }
-            l_column = Object.assign(
-                l_column,
-                columns[1],
-                { width },
-                { key: TotalPriceRowKeys.labelTotalPrice },
-                { formatter: BoldRightFormatter }
-            );
-            const dummy_column = Object.assign(
-                {},
-                columns[1],
-                { width },
-                { key: undefined },
-                { formatter: undefined },
-                { hidden: true }
-            );
-            let r_column = {}; // 右端のカラムの情報
-            r_column = Object.assign(
-                r_column,
-                columns[columns.length - 1],
-                { key: TotalPriceRowKeys.totalPrice },
-                { formatter: BoldNumberRightFormatter }
-            );
-            _columns = [];
-            _columns.push(check_column);
-            for (let i = 1; i < columns.length - 2; i = i + 1) {
-                _columns.push(Object.assign({}, dummy_column, { key: `dummy-${i}` }));
-            }
-            _columns.push(l_column);
-            _columns.push(r_column);
-            return (
-                // <div>
-                <ReactDataGrid.Row
-                    ref={node => (this.row = node)}
-                    forceUpdate={true}
-                    columns={_columns}
-                    {...other}
-                />
-                // </div>
-            );
-        }
-        if (this.props.row[SubtotalPriceRowKeys.subtotalPrice] !== undefined) {
-            // TODO: 小計表示
-            const check_column = columns[0]; // チェックボックスカラム
+// 			let l_column = {}; // 左端のカラムの情報
+// 			let width = 0;
+// 			for (let i = 1; i < columns.length - 1; i = i + 1) {
+// 				width += columns[i].width;
+// 			}
+// 			l_column = Object.assign(
+// 				l_column,
+// 				columns[1],
+// 				{ width },
+// 				{ key: TotalPriceRowKeys.labelTotalPrice },
+// 				{ formatter: BoldRightFormatter }
+// 			);
+// 			const dummy_column = Object.assign(
+// 				{},
+// 				columns[1],
+// 				{ width },
+// 				{ key: undefined },
+// 				{ formatter: undefined },
+// 				{ hidden: true }
+// 			);
+// 			let r_column = {}; // 右端のカラムの情報
+// 			r_column = Object.assign(
+// 				r_column,
+// 				columns[columns.length - 1],
+// 				{ key: TotalPriceRowKeys.totalPrice },
+// 				{ formatter: BoldNumberRightFormatter }
+// 			);
+// 			_columns = [];
+// 			_columns.push(check_column);
+// 			for (let i = 1; i < columns.length - 2; i = i + 1) {
+// 				_columns.push(Object.assign({}, dummy_column, { key: `dummy-${i}` }));
+// 			}
+// 			_columns.push(l_column);
+// 			_columns.push(r_column);
+// 			return (
+// 				// <div>
+// 				<ReactDataGrid.Row
+// 					ref={node => (this.row = node)}
+// 					forceUpdate={true}
+// 					columns={_columns}
+// 					{...other}
+// 				/>
+// 				// </div>
+// 			);
+// 		}
+// 		if (this.props.row[SubtotalPriceRowKeys.subtotalPrice] !== undefined) {
+// 			// TODO: 小計表示
+// 			const check_column = columns[0]; // チェックボックスカラム
 
-            let l_column = {}; // 左端のカラムの情報
-            let width = 0;
-            for (let i = 1; i < columns.length - 1; i = i + 1) {
-                width += columns[i].width;
-            }
-            l_column = Object.assign(
-                l_column,
-                columns[1],
-                { width },
-                { key: SubtotalPriceRowKeys.labelSubtotalPrice },
-                { formatter: RightFormatter }
-            );
-            const dummy_column = Object.assign(
-                {},
-                columns[1],
-                { width },
-                { key: undefined },
-                { formatter: undefined },
-                { hidden: true }
-            );
-            let r_column = {}; // 右端のカラムの情報
-            r_column = Object.assign(
-                r_column,
-                columns[columns.length - 1],
-                { key: SubtotalPriceRowKeys.subtotalPrice },
-                { formatter: NumberRightFormatter }
-            );
-            _columns = [];
-            _columns.push(check_column);
-            for (let i = 1; i < columns.length - 2; i = i + 1) {
-                _columns.push(Object.assign({}, dummy_column, { key: `dummy-${i}` }));
-            }
-            _columns.push(l_column);
-            _columns.push(r_column);
-            return (
-                // <div>
-                <ReactDataGrid.Row
-                    ref={node => (this.row = node)}
-                    forceUpdate={true}
-                    columns={_columns}
-                    {...other}
-                />
-                // </div>
-            );
-        }
-        // 通常行
-        return (
-            // <div>
-            <ReactDataGrid.Row ref={node => (this.row = node)} columns={_columns} {...other} />
-            // </div>
-        );
-    }
-}
+// 			let l_column = {}; // 左端のカラムの情報
+// 			let width = 0;
+// 			for (let i = 1; i < columns.length - 1; i = i + 1) {
+// 				width += columns[i].width;
+// 			}
+// 			l_column = Object.assign(
+// 				l_column,
+// 				columns[1],
+// 				{ width },
+// 				{ key: SubtotalPriceRowKeys.labelSubtotalPrice },
+// 				{ formatter: RightFormatter }
+// 			);
+// 			const dummy_column = Object.assign(
+// 				{},
+// 				columns[1],
+// 				{ width },
+// 				{ key: undefined },
+// 				{ formatter: undefined },
+// 				{ hidden: true }
+// 			);
+// 			let r_column = {}; // 右端のカラムの情報
+// 			r_column = Object.assign(
+// 				r_column,
+// 				columns[columns.length - 1],
+// 				{ key: SubtotalPriceRowKeys.subtotalPrice },
+// 				{ formatter: NumberRightFormatter }
+// 			);
+// 			_columns = [];
+// 			_columns.push(check_column);
+// 			for (let i = 1; i < columns.length - 2; i = i + 1) {
+// 				_columns.push(Object.assign({}, dummy_column, { key: `dummy-${i}` }));
+// 			}
+// 			_columns.push(l_column);
+// 			_columns.push(r_column);
+// 			return (
+// 				// <div>
+// 				<ReactDataGrid.Row
+// 					ref={node => (this.row = node)}
+// 					forceUpdate={true}
+// 					columns={_columns}
+// 					{...other}
+// 				/>
+// 				// </div>
+// 			);
+// 		}
+// 		// 通常行
+// 		return (
+// 			// <div>
+// 			<ReactDataGrid.Row ref={node => (this.row = node)} columns={_columns} {...other} />
+// 			// </div>
+// 		);
+// 	}
+// }
 
 // ManageDataDataGridComponent
 const ROW_HEIGHT = 35;
@@ -242,7 +243,7 @@ const styles = (theme: Theme) =>
 
 export interface IManageDataDataGridComponentStateProps {
     // TODO:
-    // rows: {}[];
+    rows: DataDoc[];
     // autoCompleteOptions: {};
 }
 export interface IManageDataDataGridComponentDispatchProps {
@@ -274,51 +275,51 @@ class ManageDataDataGridComponent extends React.Component<
         // カラム定義
         const columns: (ReactDataGrid.Column<NormalDataRow> & { ddKey?: string })[] = [
             {
-                key: NormalDataRowKeys.id,
+                key: DBDataRowKeys.id,
                 name: 'No.',
                 width: 48,
                 formatter: CenterFormatter
             },
             {
-                key: NormalDataRowKeys.level_1,
+                key: DBDataRowKeys.level_1,
                 name: '大分類',
                 ddKey: DataDocKeys.level_1,
                 editable: true
             },
             {
-                key: NormalDataRowKeys.level_2,
+                key: DBDataRowKeys.level_2,
                 name: '中分類',
                 ddKey: DataDocKeys.level_2,
                 editable: true
             },
             {
-                key: NormalDataRowKeys.level_3,
+                key: DBDataRowKeys.level_3,
                 name: '小分類',
                 ddKey: DataDocKeys.level_3,
                 editable: true
             },
             {
-                key: NormalDataRowKeys.itemName,
+                key: DBDataRowKeys.itemName,
                 name: '名称',
                 ddKey: DataDocKeys.itemName,
                 editable: true
             },
             {
-                key: NormalDataRowKeys.unitPrice,
+                key: DBDataRowKeys.unitPrice_1,
                 name: '単価 1',
                 ddKey: DataDocKeys.unitPrice,
                 editable: true,
                 formatter: NumberRightFormatter
             },
             {
-                key: NormalDataRowKeys.unitPrice,
+                key: DBDataRowKeys.unitPrice_2,
                 name: '単価 2',
                 ddKey: DataDocKeys.unitPrice,
                 editable: true,
                 formatter: NumberRightFormatter
             },
             {
-                key: NormalDataRowKeys.unitPrice,
+                key: DBDataRowKeys.unitPrice_3,
                 name: '単価 3',
                 ddKey: DataDocKeys.unitPrice,
                 editable: true,
@@ -328,19 +329,27 @@ class ManageDataDataGridComponent extends React.Component<
         this.state = {
             columns
         };
-        // this.rowGetter.bind(this);
-        // this.rowCount.bind(this);
+        this.rowGetter.bind(this);
+        this.rowCount.bind(this);
         // this.handleCellSeceted.bind(this);
     }
     // ReactDataGridへの参照
     grid: any = {};
 
-    // rowGetter = (i: number) => {
-    // 	return !this.props.rows ? [] : this.props.rows[i];
-    // };
-    // rowCount = () => {
-    // 	return !this.props.rows ? 0 : this.props.rows.length;
-    // };
+    rowGetter = (i: number) => {
+        const row = this.props.rows[i];
+        const unitPrice_1 = row[DataDocKeys.unitPrice][0];
+        const unitPrice_2 = row[DataDocKeys.unitPrice][1];
+        const unitPrice_3 = row[DataDocKeys.unitPrice][2];
+        return Object.assign({}, row, {
+            [DBDataRowKeys.unitPrice_1]: unitPrice_1,
+            [DBDataRowKeys.unitPrice_2]: unitPrice_2,
+            [DBDataRowKeys.unitPrice_3]: unitPrice_3
+        });
+    };
+    rowCount = () => {
+        return this.props.rows.length;
+    };
     // handleCellSeceted = (col: { rowIdx: number; idx: number }) => {
     // 	// TODO:
     // 	if (this.props.onSelectedCell) {
@@ -420,20 +429,11 @@ class ManageDataDataGridComponent extends React.Component<
                     // }}
                     columns={this.state.columns}
                     // tslint:disable-next-line:jsx-no-lambda
-                    rowGetter={(i: number) => {
-                        {
-                        }
-                    }}
-                    rowsCount={/*this.rowCount()*/ 0}
+                    rowGetter={this.rowGetter}
+                    rowsCount={this.rowCount()}
                     rowHeight={ROW_HEIGHT}
                     headerRowHeight={HEADER_ROW_HEIGHT}
-                    // minHeight={
-                    // 	HEADER_ROW_HEIGHT +
-                    // 	ROW_HEIGHT *
-                    // 	((this.rowCount() < 20 ? 20 : this.rowCount()) +
-                    // 		2) /* 下部余白２行分 */ -
-                    // 	1
-                    // }
+                    minHeight={600}
                     // onGridRowsUpdated={this.props.onGridRowUpdate}
                     // onCellSelected={this.handleCellSeceted}
                     // toolbar={
@@ -456,7 +456,7 @@ class ManageDataDataGridComponent extends React.Component<
                     // 		</button>
                     // 	</Toolbar>
                     // }
-                    rowRenderer={CustomRowRenderer}
+                    // rowRenderer={CustomRowRenderer}
                 />
                 <br />
             </div>
