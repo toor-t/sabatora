@@ -11,8 +11,8 @@ import { openForm, saveForm, saveForm_sendFormData } from '../file_io_rederer';
 // TODO: NotifyComponentの実験
 import { NotifyContext } from '../components/NotifyComponent';
 
-// FormDataRowKeys
-export namespace FormDataRowKeys {
+// NormalDataRowKeys
+export namespace NormalDataRowKeys {
     // TODO:
     export const id = 'id'; // : number;
 
@@ -45,37 +45,37 @@ export namespace FormDataRowKeys {
 
     export const selected = 'selected'; // : boolean;
 }
-export interface FormDataRow {
-    [FormDataRowKeys.id]: number;
+export interface NormalDataRow {
+    [NormalDataRowKeys.id]: number;
 
-    [FormDataRowKeys.level_1]: string; // 大項目
-    [FormDataRowKeys.level_1_isValid]: boolean;
-    [FormDataRowKeys.level_1_isEmpty]: boolean;
+    [NormalDataRowKeys.level_1]: string; // 大項目
+    [NormalDataRowKeys.level_1_isValid]: boolean;
+    [NormalDataRowKeys.level_1_isEmpty]: boolean;
 
-    [FormDataRowKeys.level_2]: string; // 中項目
-    [FormDataRowKeys.level_2_isValid]: boolean;
-    [FormDataRowKeys.level_2_isEmpty]: boolean;
+    [NormalDataRowKeys.level_2]: string; // 中項目
+    [NormalDataRowKeys.level_2_isValid]: boolean;
+    [NormalDataRowKeys.level_2_isEmpty]: boolean;
 
-    [FormDataRowKeys.level_3]: string; // 小項目
-    [FormDataRowKeys.level_3_isValid]: boolean;
-    [FormDataRowKeys.level_3_isEmpty]: boolean;
+    [NormalDataRowKeys.level_3]: string; // 小項目
+    [NormalDataRowKeys.level_3_isValid]: boolean;
+    [NormalDataRowKeys.level_3_isEmpty]: boolean;
 
-    [FormDataRowKeys.itemName]: string; // 名称
-    [FormDataRowKeys.itemName_isValid]: boolean;
-    [FormDataRowKeys.itemName_isEmpty]: boolean;
+    [NormalDataRowKeys.itemName]: string; // 名称
+    [NormalDataRowKeys.itemName_isValid]: boolean;
+    [NormalDataRowKeys.itemName_isEmpty]: boolean;
 
-    [FormDataRowKeys.unitPrice]: number; // 単価 TODO: データをどのように持たすか？
-    [FormDataRowKeys.unitPrice_isValid]: boolean;
-    [FormDataRowKeys.unitPrice_isEmpty]: boolean;
+    [NormalDataRowKeys.unitPrice]: number; // 単価 TODO: データをどのように持たすか？
+    [NormalDataRowKeys.unitPrice_isValid]: boolean;
+    [NormalDataRowKeys.unitPrice_isEmpty]: boolean;
 
-    [FormDataRowKeys.num]: number; // 個数
-    [FormDataRowKeys.num_isValid]: boolean;
-    [FormDataRowKeys.num_isEmpty]: boolean;
+    [NormalDataRowKeys.num]: number; // 個数
+    [NormalDataRowKeys.num_isValid]: boolean;
+    [NormalDataRowKeys.num_isEmpty]: boolean;
 
-    [FormDataRowKeys.price]: number; // 価格
-    [FormDataRowKeys.price_isEmpty]: boolean;
+    [NormalDataRowKeys.price]: number; // 価格
+    [NormalDataRowKeys.price_isEmpty]: boolean;
 
-    [FormDataRowKeys.selected]: boolean;
+    [NormalDataRowKeys.selected]: boolean;
 }
 
 // 合計表示行
@@ -102,12 +102,14 @@ export interface SubtotalPriceRow {
     [SubtotalPriceRowKeys.subtotalPrice]: number;
 }
 
+export type FormDataRow = NormalDataRow | SubtotalPriceRow | TotalPriceRow;
+
 /**
  * ICreateFormState
  */
 export interface ICreateFormState {
     formData: {
-        dataRows: (FormDataRow | SubtotalPriceRow | TotalPriceRow)[];
+        dataRows: FormDataRow[];
         title: string;
         totalPrice: number;
     };
@@ -176,11 +178,11 @@ function calcTotalPrice(rows: any[]): number {
     let subSumPrice: number = 0;
     for (let i = 0; i < rows.length; i = i + 1) {
         if (
-            rows[i][FormDataRowKeys.price] !== undefined &&
-            !rows[i][FormDataRowKeys.price_isEmpty]
+            rows[i][NormalDataRowKeys.price] !== undefined &&
+            !rows[i][NormalDataRowKeys.price_isEmpty]
         ) {
-            sumPrice += rows[i][FormDataRowKeys.price];
-            subSumPrice += rows[i][FormDataRowKeys.price];
+            sumPrice += rows[i][NormalDataRowKeys.price];
+            subSumPrice += rows[i][NormalDataRowKeys.price];
         }
         // 小計行
         if (rows[i][SubtotalPriceRowKeys.subtotalPrice] !== undefined) {
@@ -262,10 +264,12 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     // 行削除
     .case(CreateFormActions.deleteRows, state => {
         // TODO:
-        const dataRows: (FormDataRow | TotalPriceRow | SubtotalPriceRow)[] = [];
+        const dataRows: (NormalDataRow | TotalPriceRow | SubtotalPriceRow)[] = [];
 
         for (const dataRowIdx in state.formData.dataRows) {
-            if (!(state.formData.dataRows[dataRowIdx] as FormDataRow)[FormDataRowKeys.selected]) {
+            if (
+                !(state.formData.dataRows[dataRowIdx] as NormalDataRow)[NormalDataRowKeys.selected]
+            ) {
                 // 残す行
                 dataRows.push(state.formData.dataRows[dataRowIdx]);
             }
@@ -294,20 +298,20 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         // tslint:disable-next-line:no-increment-decrement
         for (let i = e.fromRow; i <= e.toRow; i++) {
-            if ((state.formData.dataRows[i] as any)[FormDataRowKeys.price] !== undefined) {
-                const rowToUpdate: FormDataRow = state.formData.dataRows[i] as FormDataRow;
+            if ((state.formData.dataRows[i] as any)[NormalDataRowKeys.price] !== undefined) {
+                const rowToUpdate: NormalDataRow = state.formData.dataRows[i] as NormalDataRow;
                 // TODO: 価格を計算
                 // console.log(`unitPrice=${e.updated[FormDataRowKeys.unitPrice]}`);
                 // console.log(`num=${e.updated[FormDataRowKeys.num]}`);
-                const _unitPrice = !e.updated[FormDataRowKeys.unitPrice]
-                    ? rowToUpdate[FormDataRowKeys.unitPrice]
-                    : e.updated[FormDataRowKeys.unitPrice];
-                const _num = !e.updated[FormDataRowKeys.num]
-                    ? rowToUpdate[FormDataRowKeys.num]
-                    : e.updated[FormDataRowKeys.num];
+                const _unitPrice = !e.updated[NormalDataRowKeys.unitPrice]
+                    ? rowToUpdate[NormalDataRowKeys.unitPrice]
+                    : e.updated[NormalDataRowKeys.unitPrice];
+                const _num = !e.updated[NormalDataRowKeys.num]
+                    ? rowToUpdate[NormalDataRowKeys.num]
+                    : e.updated[NormalDataRowKeys.num];
 
-                e.updated[FormDataRowKeys.price] = _unitPrice * _num;
-                e.updated[FormDataRowKeys.price_isEmpty] = false;
+                e.updated[NormalDataRowKeys.price] = _unitPrice * _num;
+                e.updated[NormalDataRowKeys.price_isEmpty] = false;
 
                 const updatedRow = immutabilityHelper(rowToUpdate, { $merge: e.updated });
                 dataRows[i] = updatedRow;
@@ -490,7 +494,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
 // 非同期でautoCompleteOptionsを更新する
 export const updateAutoCompleteOptionsWorker = wrapAsyncWorker<
-    { rowData: FormDataRow; columnDDKey: string },
+    { rowData: NormalDataRow; columnDDKey: string },
     {},
     {}
 >(

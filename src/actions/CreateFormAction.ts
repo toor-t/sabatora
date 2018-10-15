@@ -4,7 +4,7 @@
 'use strict';
 import { actionCreatorFactory } from 'typescript-fsa';
 import * as ReactDataGrid from 'react-data-grid';
-import { FormDataRow, TotalPriceRow, SubtotalPriceRow } from '../states/CreateFormState';
+import { NormalDataRow, TotalPriceRow, SubtotalPriceRow } from '../states/CreateFormState';
 
 const actionCreator = actionCreatorFactory('CREATE_FORM_ACTIONS');
 
@@ -59,7 +59,7 @@ export const CreateFormActions = {
      * オートコンプリート候補更新
      */
     updateAutoCompleteOptions: actionCreator.async<
-        { rowData: FormDataRow; columnDDKey: string },
+        { rowData: NormalDataRow; columnDDKey: string },
         {}
     >('UPDATE_AUTO_COMPLETE_OPTIONS'),
 

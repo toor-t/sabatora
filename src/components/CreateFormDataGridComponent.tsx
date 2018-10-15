@@ -7,8 +7,8 @@ import * as ReactDataGrid from 'react-data-grid';
 import * as React from 'react';
 import { Toolbar, Editors } from 'react-data-grid-addons';
 import {
-    FormDataRow,
-    FormDataRowKeys,
+    NormalDataRow,
+    NormalDataRowKeys,
     TotalPriceRow,
     TotalPriceRowKeys,
     SubtotalPriceRow,
@@ -305,7 +305,7 @@ export interface ICreateFormDataGridComponentDispatchProps {
     // TODO:
     onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) => void;
     onSelectedCell: (col: { rowIdx: number; idx: number }) => void;
-    updateAutoCompleteOptions: (col: { rowData: FormDataRow; columnDDKey: string }) => void;
+    updateAutoCompleteOptions: (col: { rowData: NormalDataRow; columnDDKey: string }) => void;
     addRow: () => void;
     deleteRows: () => void;
     selectRows: (rows: { rowIdx: number; row: FormData }[]) => void;
@@ -328,52 +328,52 @@ class CreateFormDataGridComponent extends React.Component<
     ) {
         super(props);
         // カラム定義
-        const columns: (ReactDataGrid.Column<FormDataRow> & { ddKey?: string })[] = [
+        const columns: (ReactDataGrid.Column<NormalDataRow> & { ddKey?: string })[] = [
             {
-                key: FormDataRowKeys.id,
+                key: NormalDataRowKeys.id,
                 name: 'No.',
                 width: 48,
                 formatter: CenterFormatter
             },
             {
-                key: FormDataRowKeys.level_1,
+                key: NormalDataRowKeys.level_1,
                 name: '大分類',
                 ddKey: DataDocKeys.level_1,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_1)} />
             },
             {
-                key: FormDataRowKeys.level_2,
+                key: NormalDataRowKeys.level_2,
                 name: '中分類',
                 ddKey: DataDocKeys.level_2,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_2)} />
             },
             {
-                key: FormDataRowKeys.level_3,
+                key: NormalDataRowKeys.level_3,
                 name: '小分類',
                 ddKey: DataDocKeys.level_3,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_3)} />
             },
             {
-                key: FormDataRowKeys.itemName,
+                key: NormalDataRowKeys.itemName,
                 name: '名称',
                 ddKey: DataDocKeys.itemName,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.itemName)} />
             },
             {
-                key: FormDataRowKeys.unitPrice,
+                key: NormalDataRowKeys.unitPrice,
                 name: '単価',
                 ddKey: DataDocKeys.unitPrice,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.unitPrice)} />,
                 formatter: NumberRightFormatter
             },
             {
-                key: FormDataRowKeys.num,
+                key: NormalDataRowKeys.num,
                 name: '個数',
                 editable: true,
                 formatter: NumberRightFormatter
             },
             {
-                key: FormDataRowKeys.price,
+                key: NormalDataRowKeys.price,
                 name: '価格',
                 editable: false,
                 formatter: NumberRightFormatter
@@ -403,7 +403,7 @@ class CreateFormDataGridComponent extends React.Component<
         // TODO: updateAutoCompleteOptions
         if (
             this.props.rows &&
-            (this.props.rows[col.rowIdx] as FormDataRow)[FormDataRowKeys.price] !== undefined
+            (this.props.rows[col.rowIdx] as NormalDataRow)[NormalDataRowKeys.price] !== undefined
         ) {
             // 通常行のみ。合計行等では更新しない
             if (
@@ -414,7 +414,7 @@ class CreateFormDataGridComponent extends React.Component<
                 // DBに対応するデータがあるカラムのみ。
                 if (this.props.updateAutoCompleteOptions) {
                     this.props.updateAutoCompleteOptions({
-                        rowData: this.props.rows[col.rowIdx] as FormDataRow,
+                        rowData: this.props.rows[col.rowIdx] as NormalDataRow,
                         columnDDKey:
                             this.state.columns[col.idx - 1 /* チェックボックスの分引く */].ddKey !==
                             undefined
@@ -472,7 +472,7 @@ class CreateFormDataGridComponent extends React.Component<
                         onRowsSelected: this.onRowsSelected,
                         onRowsDeselected: this.onRowsDeselected,
                         selectBy: {
-                            isSelectedKey: FormDataRowKeys.selected
+                            isSelectedKey: NormalDataRowKeys.selected
                         }
                     }}
                     columns={this.state.columns}
