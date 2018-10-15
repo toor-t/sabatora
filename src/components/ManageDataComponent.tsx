@@ -63,8 +63,6 @@ export interface IManageDataComponentStateProps extends IManageDataDataGridCompo
 
 export interface IManageDataComponentDispatchProps
     extends IManageDataDataGridComponentDispatchProps {
-    // TODO:
-    queryDb: () => void;
     // startEdittingTitle: () => void;
     // endEdittingTitle: (title: string) => void;
 }

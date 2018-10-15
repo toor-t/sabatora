@@ -243,10 +243,12 @@ const styles = (theme: Theme) =>
 
 export interface IManageDataDataGridComponentStateProps {
     // TODO:
-    rows: DataDoc[];
+    rows?: DataDoc[];
     // autoCompleteOptions: {};
 }
 export interface IManageDataDataGridComponentDispatchProps {
+    // TODO:
+    queryDb: () => void;
     // TODO:
     // onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) => void;
     // onSelectedCell: (col: { rowIdx: number; idx: number }) => void;
@@ -259,6 +261,8 @@ export interface IManageDataDataGridComponentDispatchProps {
 }
 interface IManageDataDataGridComponentStates {
     columns: any[];
+    // TODO: 実験
+    rows: DataDoc[] | null;
 }
 class ManageDataDataGridComponent extends React.Component<
     IManageDataDataGridComponentStateProps &
@@ -327,7 +331,8 @@ class ManageDataDataGridComponent extends React.Component<
             }
         ];
         this.state = {
-            columns
+            columns,
+            rows: null
         };
         this.rowGetter.bind(this);
         this.rowCount.bind(this);
@@ -336,8 +341,19 @@ class ManageDataDataGridComponent extends React.Component<
     // ReactDataGridへの参照
     grid: any = {};
 
+    // TODO:  実験
+    componentWillReceiveProps() {
+        console.log('componentWillReceiveProps');
+        if (this.props.rows) {
+            this.setState({ rows: this.props.rows });
+        }
+    }
     rowGetter = (i: number) => {
-        const row = this.props.rows[i];
+        if (this.state.rows === null) {
+            // TODO: 通常呼ばれないはずだが念のため
+            return {};
+        }
+        const row = this.state.rows[i];
         const unitPrice_1 = row[DataDocKeys.unitPrice][0];
         const unitPrice_2 = row[DataDocKeys.unitPrice][1];
         const unitPrice_3 = row[DataDocKeys.unitPrice][2];
@@ -348,7 +364,14 @@ class ManageDataDataGridComponent extends React.Component<
         });
     };
     rowCount = () => {
-        return this.props.rows.length;
+        if (this.state.rows === null) {
+            // TODO: 実験中　データロード
+            this.props.queryDb();
+            // // TODO: この時点でstate.rowsに空データを代入しておく
+            // this.setState({ rows: [] });
+            return 0;
+        }
+        return this.state.rows.length;
     };
     // handleCellSeceted = (col: { rowIdx: number; idx: number }) => {
     // 	// TODO:

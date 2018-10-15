@@ -22,6 +22,10 @@ import RemoveCircle from '@material-ui/icons/RemoveCircle';
 import * as classNames from 'classnames';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 const { AutoComplete: AutoCompleteEditor } = Editors;
+// TODO:実験
+const {
+    Menu: { ContextMenu, MenuItem, SubMenu }
+} = require('react-data-grid-addons');
 
 // autoCompleteOptions
 let autoCompleteOptions: any;
@@ -461,6 +465,31 @@ class CreateFormDataGridComponent extends React.Component<
             this.props.addSubtotalRow();
         }
     };
+    // TODO: 実験中
+    deleteRow = (e: any, { rowIdx }: { rowIdx: number; idx: number }) => {
+        this.props.rows.splice(rowIdx, 1);
+        // this.setState({ rows: this.state.rows });
+    };
+
+    insertRowAbove = (e: any, { rowIdx }: { rowIdx: number; idx: number }) => {
+        this.insertRow(rowIdx);
+    };
+
+    insertRowBelow = (e: any, { rowIdx }: { rowIdx: number; idx: number }) => {
+        this.insertRow(rowIdx + 1);
+    };
+
+    insertRow = (rowIdx: number) => {
+        // const newRow = {
+        // 	id: 0,
+        // 	title: 'New at ' + (rowIdx + 1),
+        // 	count: 0
+        // };
+        // let rows = [...this.state.rows];
+        // rows.splice(rowIdx, 0, newRow);
+        // this.setState({ rows });
+    };
+
     render() {
         // TODO:
         if (this.props.autoCompleteOptions !== undefined) {
@@ -518,9 +547,70 @@ class CreateFormDataGridComponent extends React.Component<
                         </Toolbar>
                     }
                     rowRenderer={CustomRowRenderer}
+                    contextMenu={
+                        <MyContextMenu
+                            id="customizedContextMenu"
+                            onRowDelete={this.deleteRow}
+                            onRowInsertAbove={this.insertRowAbove}
+                            onRowInsertBelow={this.insertRowBelow}
+                        />
+                    }
                 />
                 <br />
             </div>
+        );
+    }
+}
+
+// TODO: 実験
+interface IMyContextMenuSteteProps {
+    rowIdx?: number;
+    idx?: number;
+    id: string;
+}
+interface IMyContextMenuDispatchProps {
+    onRowDelete: (e: any, data: any) => void;
+    onRowInsertAbove: (e: any, data: any) => void;
+    onRowInsertBelow: (e: any, data: any) => void;
+}
+class MyContextMenu extends React.Component<
+    IMyContextMenuSteteProps & IMyContextMenuDispatchProps
+> {
+    onRowDelete = (e: any, data: any) => {
+        if (typeof this.props.onRowDelete === 'function') {
+            this.props.onRowDelete(e, data);
+        }
+    };
+
+    onRowInsertAbove = (e: any, data: any) => {
+        if (typeof this.props.onRowInsertAbove === 'function') {
+            this.props.onRowInsertAbove(e, data);
+        }
+    };
+
+    onRowInsertBelow = (e: any, data: any) => {
+        if (typeof this.props.onRowInsertBelow === 'function') {
+            this.props.onRowInsertBelow(e, data);
+        }
+    };
+
+    render() {
+        const { idx, id, rowIdx } = this.props;
+
+        return (
+            <ContextMenu id={id}>
+                <MenuItem data={{ rowIdx, idx }} onClick={this.onRowDelete}>
+                    行削除
+                </MenuItem>
+                <SubMenu title="行挿入">
+                    <MenuItem data={{ rowIdx, idx }} onClick={this.onRowInsertAbove}>
+                        上
+                    </MenuItem>
+                    <MenuItem data={{ rowIdx, idx }} onClick={this.onRowInsertBelow}>
+                        下
+                    </MenuItem>
+                </SubMenu>
+            </ContextMenu>
         );
     }
 }
