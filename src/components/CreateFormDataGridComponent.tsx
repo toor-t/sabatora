@@ -340,29 +340,34 @@ class CreateFormDataGridComponent extends React.Component<
                 key: NormalDataRowKeys.level_1,
                 name: '大分類',
                 ddKey: DataDocKeys.level_1,
-                editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_1)} />
+                editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_1)} />,
+                resizable: true
             },
             {
                 key: NormalDataRowKeys.level_2,
                 name: '中分類',
                 ddKey: DataDocKeys.level_2,
+                resizable: true,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_2)} />
             },
             {
                 key: NormalDataRowKeys.level_3,
                 name: '小分類',
+                resizable: true,
                 ddKey: DataDocKeys.level_3,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_3)} />
             },
             {
                 key: NormalDataRowKeys.itemName,
                 name: '名称',
+                resizable: true,
                 ddKey: DataDocKeys.itemName,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.itemName)} />
             },
             {
                 key: NormalDataRowKeys.unitPrice,
                 name: '単価',
+                resizable: true,
                 ddKey: DataDocKeys.unitPrice,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.unitPrice)} />,
                 formatter: NumberRightFormatter
@@ -371,12 +376,14 @@ class CreateFormDataGridComponent extends React.Component<
                 key: NormalDataRowKeys.num,
                 name: '個数',
                 editable: true,
+                resizable: true,
                 formatter: NumberRightFormatter
             },
             {
                 key: NormalDataRowKeys.price,
                 name: '価格',
                 editable: false,
+                resizable: true,
                 formatter: NumberRightFormatter
             }
         ];
