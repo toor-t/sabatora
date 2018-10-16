@@ -56,6 +56,7 @@ const styles = (theme: Theme) =>
 export interface ICreateFormComponentStateProps extends ICreateFormDataGridComponentStateProps {
     title: string;
     edittingTitle: boolean;
+    formDataEditted: boolean;
 }
 
 export interface ICreateFormComponentDispatchProps

@@ -207,7 +207,7 @@ function calcTotalPrice(rows: any[]): number {
 }
 
 // TODO: 選択行の数と先頭から数えて最初の選択行のインデックスを取得
-const getSlecetedRowsCount = (rows: FormDataRow[]): { count: number; firstIdx: number } => {
+const getSlecetedRowsInfo = (rows: FormDataRow[]): { count: number; firstIdx: number } => {
     let count: number = 0;
     let firstIdx: number = -1;
     for (let idx = 0; idx < rows.length - 1 /* 合計行は無視 */; idx += 1) {
@@ -281,14 +281,20 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
 
+        // TODO: 編集済みフラグセット
+        const formDataEditted = true;
+
         // TODO:  選択行の数等のチェック
-        const ret = getSlecetedRowsCount(formData.dataRows);
+        const rowsInfo = getSlecetedRowsInfo(formData.dataRows);
 
         return Object.assign(
             {},
             state,
-            { formData },
-            { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
+            { formData, formDataEditted },
+            {
+                formDataSelectedRowsCount: rowsInfo.count,
+                formDataFirstSelectedRowIdx: rowsInfo.firstIdx
+            }
         );
     })
 
@@ -328,13 +334,16 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
 
+        // TODO: 編集済みフラグセット
+        const formDataEditted = true;
+
         // TODO:  選択行の数等のチェック
-        const ret = getSlecetedRowsCount(formData.dataRows);
+        const ret = getSlecetedRowsInfo(formData.dataRows);
 
         return Object.assign(
             {},
             state,
-            { formData },
+            { formData, formDataEditted },
             { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
         );
     })
@@ -358,13 +367,16 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
 
+        // TODO: 編集済みフラグセット
+        const formDataEditted = true;
+
         // TODO:  選択行の数等のチェック
-        const ret = getSlecetedRowsCount(formData.dataRows);
+        const ret = getSlecetedRowsInfo(formData.dataRows);
 
         return Object.assign(
             {},
             state,
-            { formData },
+            { formData, formDataEditted },
             { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
         );
     })
@@ -407,8 +419,11 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         // 合計を計算
         const totalPrice = calcTotalPrice(dataRows);
 
+        // TODO: 編集済みフラグセット
+        const formDataEditted = true;
+
         const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
-        return Object.assign({}, state, { formData });
+        return Object.assign({}, state, { formData, formDataEditted });
     })
 
     // 帳票読込 (開始)
@@ -427,13 +442,16 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         const notify = NotifyContext.defaultNotify('帳票読込完了');
 
         // TODO:  選択行の数等のチェック (てか、ロード時は全部解除すべきか？)
-        const ret = getSlecetedRowsCount(loadFormData.dataRows);
+        const ret = getSlecetedRowsInfo(loadFormData.dataRows);
+
+        // TODO: 編集済みフラグリセット
+        const formDataEditted = false;
 
         return Object.assign(
             {},
             state,
             { formData: loadFormData },
-            { notify },
+            { notify, formDataEditted },
             { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
         );
     })
@@ -468,7 +486,10 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         // TODO: 実験 完了時に通知を出してみる。
         const notify = NotifyContext.defaultNotify('帳票保存完了');
 
-        return Object.assign({}, state, { notify });
+        // TODO: 編集済みフラグリセット
+        const formDataEditted = false;
+
+        return Object.assign({}, state, { notify, formDataEditted });
     })
     // 帳票保存 (失敗)
     .case(CreateFormActions.saveForm.failed, (state, payload) => {
@@ -552,7 +573,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         const formData = Object.assign({}, state.formData, { dataRows });
 
         // TODO:  選択行の数等のチェック
-        const ret = getSlecetedRowsCount(formData.dataRows);
+        const ret = getSlecetedRowsInfo(formData.dataRows);
 
         return Object.assign(
             {},
@@ -579,7 +600,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         const formData = Object.assign({}, state.formData, { dataRows });
 
         // TODO:  選択行の数等のチェック
-        const ret = getSlecetedRowsCount(formData.dataRows);
+        const ret = getSlecetedRowsInfo(formData.dataRows);
 
         return Object.assign(
             {},
@@ -599,7 +620,11 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     // タイトル編集終了
     .case(CreateFormActions.endEdittingTitle, (state, title) => {
         const formData = Object.assign({}, state.formData, { title });
-        return Object.assign({}, state, { formData }, { edittingTitle: false });
+
+        // TODO: 編集済みフラグセット
+        const formDataEditted = true;
+
+        return Object.assign({}, state, { formData, formDataEditted }, { edittingTitle: false });
     })
 
     // AutoCompleteOptions更新 (開始)
