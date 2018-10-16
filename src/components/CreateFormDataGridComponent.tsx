@@ -5,12 +5,8 @@
 
 import * as ReactDataGrid from 'react-data-grid';
 import * as React from 'react';
-import { Toolbar, Editors, Menu } from 'react-data-grid-addons';
+import { Toolbar, Editors } from 'react-data-grid-addons';
 const { AutoComplete: AutoCompleteEditor } = Editors;
-// // TODO:実験
-// const {
-// 	ContextMenu, MenuItem, SubMenu, MenuHeader
-// } = Menu;
 import {
     NormalDataRow,
     NormalDataRowKeys,
@@ -26,7 +22,6 @@ import AddBox from '@material-ui/icons/AddBox';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
 import * as classNames from 'classnames';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
-// import { Paper } from '@material-ui/core';
 
 // autoCompleteOptions
 let autoCompleteOptions: any;
@@ -185,29 +180,38 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
             l_column = Object.assign(
                 l_column,
                 columns[1],
+                { name: 'LabelTotalPrice' },
                 { width },
                 { key: TotalPriceRowKeys.labelTotalPrice },
-                { formatter: BoldRightFormatter }
+                { formatter: BoldRightFormatter },
+                { editable: false },
+                { editor: undefined }
             );
+            // console.log(l_column);
             const dummy_column = Object.assign(
                 {},
                 columns[1],
                 { width },
                 { key: undefined },
                 { formatter: undefined },
-                { hidden: true }
+                { hidden: true },
+                { editable: false },
+                { editor: undefined }
             );
             let r_column = {}; // 右端のカラムの情報
             r_column = Object.assign(
                 r_column,
                 columns[columns.length - 1],
+                { name: 'TotalPrice' },
                 { key: TotalPriceRowKeys.totalPrice },
                 { formatter: BoldNumberRightFormatter }
             );
             _columns = [];
             _columns.push(check_column);
             for (let i = 1; i < columns.length - 2; i = i + 1) {
-                _columns.push(Object.assign({}, dummy_column, { key: `dummy-${i}` }));
+                _columns.push(
+                    Object.assign({}, dummy_column, { key: `dummy-${i}`, name: `dummy-${i}` })
+                );
             }
             _columns.push(l_column);
             _columns.push(r_column);
@@ -234,29 +238,38 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
             l_column = Object.assign(
                 l_column,
                 columns[1],
+                { name: 'LabelSubtotalPrice' },
                 { width },
                 { key: SubtotalPriceRowKeys.labelSubtotalPrice },
-                { formatter: RightFormatter }
+                { formatter: RightFormatter },
+                { editable: false },
+                { editor: undefined }
             );
+            // console.log(l_column);
             const dummy_column = Object.assign(
                 {},
                 columns[1],
                 { width },
                 { key: undefined },
                 { formatter: undefined },
-                { hidden: true }
+                { hidden: true },
+                { editable: false },
+                { editor: undefined }
             );
             let r_column = {}; // 右端のカラムの情報
             r_column = Object.assign(
                 r_column,
                 columns[columns.length - 1],
+                { name: 'SubtotalPrice' },
                 { key: SubtotalPriceRowKeys.subtotalPrice },
                 { formatter: NumberRightFormatter }
             );
             _columns = [];
             _columns.push(check_column);
             for (let i = 1; i < columns.length - 2; i = i + 1) {
-                _columns.push(Object.assign({}, dummy_column, { key: `dummy-${i}` }));
+                _columns.push(
+                    Object.assign({}, dummy_column, { key: `dummy-${i}`, name: `dummy-${i}` })
+                );
             }
             _columns.push(l_column);
             _columns.push(r_column);
@@ -412,9 +425,7 @@ class CreateFormDataGridComponent extends React.Component<
     };
     handleCellSeceted = (col: { rowIdx: number; idx: number }) => {
         // TODO:
-        if (this.props.onSelectedCell) {
-            this.props.onSelectedCell(col);
-        }
+        this.props.onSelectedCell(col);
         // TODO: updateAutoCompleteOptions
         if (
             this.props.rows &&
@@ -427,72 +438,32 @@ class CreateFormDataGridComponent extends React.Component<
                     undefined
             ) {
                 // DBに対応するデータがあるカラムのみ。
-                if (this.props.updateAutoCompleteOptions) {
-                    this.props.updateAutoCompleteOptions({
-                        rowData: this.props.rows[col.rowIdx] as NormalDataRow,
-                        columnDDKey:
-                            this.state.columns[col.idx - 1 /* チェックボックスの分引く */].ddKey !==
-                            undefined
-                                ? this.state.columns[col.idx - 1 /* チェックボックスの分引く */]
-                                      .ddKey
-                                : ''
-                    });
-                }
+                this.props.updateAutoCompleteOptions({
+                    rowData: this.props.rows[col.rowIdx] as NormalDataRow,
+                    columnDDKey:
+                        this.state.columns[col.idx - 1 /* チェックボックスの分引く */].ddKey !==
+                        undefined
+                            ? this.state.columns[col.idx - 1 /* チェックボックスの分引く */].ddKey
+                            : ''
+                });
             }
         }
     };
     onRowsSelected = (rows: any) => {
-        // TODO:
-        if (this.props.selectRows) {
-            this.props.selectRows(rows);
-        }
+        this.props.selectRows(rows);
     };
     onRowsDeselected = (rows: any) => {
-        // TODO:
-        if (this.props.deselectRows) {
-            this.props.deselectRows(rows);
-        }
+        this.props.deselectRows(rows);
     };
     handleAddRowBtn = (e: any) => {
-        if (this.props.addRow) {
-            this.props.addRow();
-        }
+        this.props.addRow();
     };
     handleDeleteBtn = (e: any) => {
-        if (this.props.deleteRows) {
-            this.props.deleteRows();
-        }
+        this.props.deleteRows();
     };
     handleAddSubtotalBtn = (e: any) => {
-        if (this.props.addSubtotalRow) {
-            this.props.addSubtotalRow();
-        }
+        this.props.addSubtotalRow();
     };
-    // // TODO: 実験中
-    // deleteRow = (e: any, { rowIdx }: { rowIdx: number; idx: number }) => {
-    // 	this.props.rows.splice(rowIdx, 1);
-    // 	// this.setState({ rows: this.state.rows });
-    // };
-
-    // insertRowAbove = (e: any, { rowIdx }: { rowIdx: number; idx: number }) => {
-    // 	this.insertRow(rowIdx);
-    // };
-
-    // insertRowBelow = (e: any, { rowIdx }: { rowIdx: number; idx: number }) => {
-    // 	this.insertRow(rowIdx + 1);
-    // };
-
-    // insertRow = (rowIdx: number) => {
-    // 	// const newRow = {
-    // 	// 	id: 0,
-    // 	// 	title: 'New at ' + (rowIdx + 1),
-    // 	// 	count: 0
-    // 	// };
-    // 	// let rows = [...this.state.rows];
-    // 	// rows.splice(rowIdx, 0, newRow);
-    // 	// this.setState({ rows });
-    // };
-
     render() {
         // TODO:
         if (this.props.autoCompleteOptions !== undefined) {
@@ -504,14 +475,6 @@ class CreateFormDataGridComponent extends React.Component<
                     ref={(node: ReactDataGrid<{}> | null) => {
                         this.grid = node;
                     }}
-                    // contextMenu={
-                    // 	<MyContextMenu
-                    // 		id="customizedContextMenu"
-                    // 		onRowDelete={this.deleteRow}
-                    // 		onRowInsertAbove={this.insertRowAbove}
-                    // 		onRowInsertBelow={this.insertRowBelow}
-                    // 	/>
-                    // }
                     enableCellSelect={true}
                     cellNavigationMode="changeRow"
                     rowSelection={{
@@ -539,12 +502,7 @@ class CreateFormDataGridComponent extends React.Component<
                     onCellSelected={this.handleCellSeceted}
                     toolbar={
                         <Toolbar>
-                            <button
-                                type="button"
-                                className="btn"
-                                onClick={this.handleAddRowBtn}
-                                // disabled={(this.props.selectedRowsCount > 1) ? true : false}
-                            >
+                            <button type="button" className="btn" onClick={this.handleAddRowBtn}>
                                 <AddCircle />
                                 {this.props.selectedRowsCount === 1 ? '行挿入' : '行追加'}
                             </button>
@@ -552,7 +510,6 @@ class CreateFormDataGridComponent extends React.Component<
                                 type="button"
                                 className="btn"
                                 onClick={this.handleAddSubtotalBtn}
-                                // disabled={(this.props.selectedRowsCount > 1) ? true : false}
                             >
                                 <AddBox />
                                 {this.props.selectedRowsCount === 1 ? '小計行挿入' : '小計行追加'}
@@ -570,67 +527,9 @@ class CreateFormDataGridComponent extends React.Component<
                     }
                     rowRenderer={CustomRowRenderer}
                 />
-                <br />
             </div>
         );
     }
 }
-
-// // TODO: 実験
-// interface IMyContextMenuSteteProps {
-// 	rowIdx?: number;
-// 	idx?: number;
-// 	id: string;
-// }
-// interface IMyContextMenuDispatchProps {
-// 	onRowDelete: (e: any, data: any) => void;
-// 	onRowInsertAbove: (e: any, data: any) => void;
-// 	onRowInsertBelow: (e: any, data: any) => void;
-// }
-// class MyContextMenu extends React.Component<
-// 	IMyContextMenuSteteProps & IMyContextMenuDispatchProps
-// 	> {
-// 	onRowDelete = (e: any, data: any) => {
-// 		if (typeof this.props.onRowDelete === 'function') {
-// 			this.props.onRowDelete(e, data);
-// 		}
-// 	};
-
-// 	onRowInsertAbove = (e: any, data: any) => {
-// 		if (typeof this.props.onRowInsertAbove === 'function') {
-// 			this.props.onRowInsertAbove(e, data);
-// 		}
-// 	};
-
-// 	onRowInsertBelow = (e: any, data: any) => {
-// 		if (typeof this.props.onRowInsertBelow === 'function') {
-// 			this.props.onRowInsertBelow(e, data);
-// 		}
-// 	};
-
-// 	render() {
-// 		const { idx, id, rowIdx } = this.props;
-
-// 		return (
-// 			<ContextMenu id={id}>
-// 				<Paper style={{ zIndex: 10000 }}>
-// 					<MenuItem data={{ rowIdx, idx }} onClick={this.onRowDelete}>
-// 						行削除
-//                 	</MenuItem>
-// 					<SubMenu title="行挿入">
-// 						<Paper>
-// 							<MenuItem data={{ rowIdx, idx }} onClick={this.onRowInsertAbove}>
-// 								上
-//                     	</MenuItem>
-// 							<MenuItem data={{ rowIdx, idx }} onClick={this.onRowInsertBelow}>
-// 								下
-//                     	</MenuItem>
-// 						</Paper>
-// 					</SubMenu>
-// 				</Paper>
-// 			</ContextMenu>
-// 		);
-// 	}
-// }
 
 export default withStyles(styles, { withTheme: true })(CreateFormDataGridComponent);

@@ -26,6 +26,22 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 // tslint:disable-next-line:import-name
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+// tslint:disable-next-line:import-name
+import SettingsIcon from '@material-ui/icons/Settings';
+// tslint:disable-next-line:import-name
+import DescriptionIcon from '@material-ui/icons/Description';
+// tslint:disable-next-line:import-name
+import DashboardIcon from '@material-ui/icons/Dashboard';
+// tslint:disable-next-line:import-name
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+// tslint:disable-next-line:import-name
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
+// tslint:disable-next-line:import-name
+import PrintIcon from '@material-ui/icons/Print';
+// tslint:disable-next-line:import-name
+import NewIcon from '@material-ui/icons/DescriptionOutlined';
+// tslint:disable-next-line:import-name
+import InfoIcon from '@material-ui/icons/InfoOutlined';
 
 import CreateFormContainer from '../containers/CreateFormContainer';
 import ManageDataContainer from '../containers/ManageDataContainer';
@@ -202,16 +218,20 @@ class AppTopComponent extends React.Component<
                 MoreVartMenuContent = (
                     <div style={{ outline: 0 }}>
                         <MenuItem onClick={this.handleMenuItemButton(this.props.onOpenForm)}>
+                            <OpenInNewIcon />
                             帳票読込
                         </MenuItem>
                         <MenuItem onClick={this.handleMenuItemButton(this.props.onSaveForm)}>
+                            <SaveAltIcon />
                             帳票保存
                         </MenuItem>
                         <MenuItem onClick={this.handleMenuItemButton(this.props.onNewForm)}>
+                            <NewIcon />
                             新規帳票
                         </MenuItem>
                         <Divider />
                         <MenuItem onClick={this.handleMenuItemButton(this.props.onPrintForm)}>
+                            <PrintIcon />
                             帳票印刷
                         </MenuItem>
                     </div>
@@ -347,6 +367,7 @@ class AppTopComponent extends React.Component<
                             )}
                             selected={this.props.selected === AppTopSelected.CreateForm}
                         >
+                            <DescriptionIcon />
                             <ListItemText primary={AppTopSelected.CreateFormTitle} />
                         </ListItem>
                         <ListItem
@@ -357,6 +378,7 @@ class AppTopComponent extends React.Component<
                             )}
                             selected={this.props.selected === AppTopSelected.ManageData}
                         >
+                            <DashboardIcon />
                             <ListItemText primary={AppTopSelected.ManageDataTitle} />
                         </ListItem>
                         <ListItem
@@ -367,6 +389,7 @@ class AppTopComponent extends React.Component<
                             )}
                             selected={this.props.selected === AppTopSelected.Config}
                         >
+                            <SettingsIcon />
                             <ListItemText primary={AppTopSelected.ConfigTitle} />
                         </ListItem>
                     </List>
@@ -380,6 +403,7 @@ class AppTopComponent extends React.Component<
                             )}
                             selected={this.props.selected === AppTopSelected.About}
                         >
+                            <InfoIcon />
                             <ListItemText primary={AppTopSelected.AboutTitle} />
                         </ListItem>
                     </List>
