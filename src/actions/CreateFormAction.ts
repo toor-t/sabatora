@@ -25,11 +25,11 @@ export const CreateFormActions = {
      */
     selectCell: actionCreator<{ rowIdx: number; idx: number }>('SELECT_CELL'),
     /**
-     * 行追加
+     * 行追加 (または挿入)
      */
     addRow: actionCreator<void>('ADD_ROW'),
     /**
-     * 小計行追加
+     * 小計行追加 (または挿入)
      */
     addSubtotalRow: actionCreator<void>('ADD_SUBTOTAL_ROW'),
     /**

@@ -7,7 +7,7 @@
 
 import * as ReactDataGrid from 'react-data-grid';
 import * as React from 'react';
-import { Toolbar, Editors } from 'react-data-grid-addons';
+import { Toolbar, Editors, Menu } from 'react-data-grid-addons';
 import {
     NormalDataRow,
     NormalDataRowKeys,
@@ -17,10 +17,11 @@ import {
     SubtotalPriceRowKeys
 } from '../states/CreateFormState';
 import { DataDocKeys, DataDoc } from '../db';
-import AddCircle from '@material-ui/icons/AddCircle';
-import AddBox from '@material-ui/icons/AddBox';
-import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import * as classNames from 'classnames';
+// import AddCircle from '@material-ui/icons/AddCircle';
+// import AddBox from '@material-ui/icons/AddBox';
+// import RemoveCircle from '@material-ui/icons/RemoveCircle';
+// import * as classNames from 'classnames';
+import { Paper, MenuList, MenuItem } from '@material-ui/core';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { DBDataRowKeys, DBDataRow } from '../states/ManageDataState';
 
@@ -458,7 +459,7 @@ class ManageDataDataGridComponent extends React.Component<
     render() {
         // TODO:
         return (
-            <div id="CreateFormDataGrid" /*className={this.props.classes.content}*/>
+            <div id="ManageDataDataGrid" /*className={this.props.classes.content}*/>
                 <ReactDataGrid
                     ref={node => {
                         this.grid = node;
@@ -481,6 +482,17 @@ class ManageDataDataGridComponent extends React.Component<
                     rowHeight={ROW_HEIGHT}
                     headerRowHeight={HEADER_ROW_HEIGHT}
                     minHeight={600}
+                    contextMenu={
+                        <Menu.ContextMenu>
+                            <Paper>
+                                <MenuList>
+                                    <MenuItem>hige</MenuItem>
+                                    <MenuItem>hoge</MenuItem>
+                                    <MenuItem>mushi</MenuItem>
+                                </MenuList>
+                            </Paper>
+                        </Menu.ContextMenu>
+                    }
                     // onGridRowsUpdated={this.props.onGridRowUpdate}
                     // onCellSelected={this.handleCellSeceted}
                     // toolbar={

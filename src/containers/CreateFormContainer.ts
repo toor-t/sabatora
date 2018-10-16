@@ -27,7 +27,10 @@ function mapStateToProps(
         rows: appState.createFormState.formData.dataRows,
         autoCompleteOptions: appState.createFormState.autoCompleteOptions,
         edittingTitle: appState.createFormState.edittingTitle,
-        notifyContext: appState.createFormState.notify
+        notifyContext: appState.createFormState.notify,
+        // TODO:
+        selectedRowsCount: appState.createFormState.formDataSelectedRowsCount,
+        firstSelectedRowIdx: appState.createFormState.formDataFirstSelectedRowIdx
     };
 }
 function mapDispatchToProps(

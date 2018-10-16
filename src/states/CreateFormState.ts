@@ -115,6 +115,10 @@ export interface ICreateFormState {
     };
     formDataEditted: boolean; // 帳票データが編集済みか？
     edittingTitle: boolean;
+
+    formDataSelectedRowsCount: number; // TODO:  選択行の数
+    formDataFirstSelectedRowIdx: number; // TODO: 先頭から最初の選択行のインデックス
+
     // edittingCell: { rowIdx: number; idx: number };
     // selectedRow: number;
     // selectedCell: { rowIdx: number; idx: number };
@@ -161,6 +165,8 @@ const initialState: ICreateFormState = {
     },
     formDataEditted: false,
     edittingTitle: false,
+    formDataSelectedRowsCount: 0,
+    formDataFirstSelectedRowIdx: -1,
     // edittingCell: { rowIdx: -1, idx: -1 },
     // selectedRow: -1,
     // selectedCell: { rowIdx: -1, idx: -1 },
@@ -200,6 +206,22 @@ function calcTotalPrice(rows: any[]): number {
     return sumPrice;
 }
 
+// TODO: 選択行の数と先頭から数えて最初の選択行のインデックスを取得
+const getSlecetedRowsCount = (rows: FormDataRow[]): { count: number; firstIdx: number } => {
+    let count: number = 0;
+    let firstIdx: number = -1;
+    for (let idx = 0; idx < rows.length - 1 /* 合計行は無視 */; idx += 1) {
+        const row: NormalDataRow = rows[idx] as NormalDataRow;
+        if (row[NormalDataRowKeys.selected]) {
+            count += 1;
+            if (firstIdx === -1) {
+                firstIdx = idx;
+            }
+        }
+    }
+    console.log(`count=${count}, firstIdx=${firstIdx}`);
+    return { count, firstIdx };
+};
 /**
  * CreateFormStateReducer
  */
@@ -210,37 +232,64 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         // console.log('addRow');
         const dataRows = state.formData.dataRows.slice();
         const rowsCount = dataRows.length;
+        let insertIdx = -1;
+        // TODO:
+        if (state.formDataSelectedRowsCount !== 1) {
+            // デフォルトは最終行（合計表示行）の一つ前に追加
+            insertIdx = rowsCount - 1;
+        } else if (
+            state.formDataFirstSelectedRowIdx > -1 &&
+            state.formDataFirstSelectedRowIdx < rowsCount
+        ) {
+            // TODO: 選択行の前に挿入する
+            insertIdx = state.formDataFirstSelectedRowIdx;
+        }
 
-        dataRows.splice(/*最終行（合計表示行）の一つ前に追加*/ rowsCount - 1, 0, {
-            id: rowsCount, // TODO:  これじゃダメ、どうすべき？
-            level_1: '',
-            level_1_isEmpty: true,
-            level_1_isValid: false,
-            level_2: '',
-            level_2_isEmpty: true,
-            level_2_isValid: false,
-            level_3: '',
-            level_3_isEmpty: true,
-            level_3_isValid: false,
-            itemName: '',
-            itemName_isEmpty: true,
-            itemName_isValid: false,
-            unitPrice: 0,
-            unitPrice_isEmpty: true,
-            unitPrice_isValid: false,
-            num: 0,
-            num_isEmpty: true,
-            num_isValid: false,
-            price: 0,
-            price_isEmpty: true,
-            selected: false
-        });
+        if (insertIdx > -1) {
+            dataRows.splice(insertIdx, 0, {
+                id: rowsCount, // TODO:  これじゃダメ、どうすべき？
+                level_1: '',
+                level_1_isEmpty: true,
+                level_1_isValid: false,
+                level_2: '',
+                level_2_isEmpty: true,
+                level_2_isValid: false,
+                level_3: '',
+                level_3_isEmpty: true,
+                level_3_isValid: false,
+                itemName: '',
+                itemName_isEmpty: true,
+                itemName_isValid: false,
+                unitPrice: 0,
+                unitPrice_isEmpty: true,
+                unitPrice_isValid: false,
+                num: 0,
+                num_isEmpty: true,
+                num_isValid: false,
+                price: 0,
+                price_isEmpty: true,
+                selected: false
+            });
+        } else {
+            // 何もせずリターン (通常来ない)
+            console.log(`ABNORMAL firstIdx=${state.formDataFirstSelectedRowIdx}`);
+            return state;
+        }
 
         // 合計を計算
         const totalPrice = calcTotalPrice(dataRows);
 
         const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
-        return Object.assign({}, state, { formData });
+
+        // TODO:  選択行の数等のチェック
+        const ret = getSlecetedRowsCount(formData.dataRows);
+
+        return Object.assign(
+            {},
+            state,
+            { formData },
+            { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
+        );
     })
 
     // 小計行追加
@@ -248,19 +297,46 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         // TODO:
         const dataRows = state.formData.dataRows.slice();
         const rowsCount = dataRows.length;
+        let insertIdx = -1;
+        // TODO:
+        if (state.formDataSelectedRowsCount !== 1) {
+            // デフォルトは最終行（合計表示行）の一つ前に追加
+            insertIdx = rowsCount - 1;
+        } else if (
+            state.formDataFirstSelectedRowIdx > -1 &&
+            state.formDataFirstSelectedRowIdx < rowsCount
+        ) {
+            // TODO: 選択行の前に挿入する
+            insertIdx = state.formDataFirstSelectedRowIdx;
+        }
 
-        dataRows.splice(/*最終行（合計表示行）の一つ前に追加*/ rowsCount - 1, 0, {
-            id: -1,
-            labelSubtotalPrice: '小計:',
-            subtotalPrice: 0,
-            selected: false
-        });
+        if (insertIdx > -1) {
+            dataRows.splice(insertIdx, 0, {
+                id: -1,
+                labelSubtotalPrice: '小計:',
+                subtotalPrice: 0,
+                selected: false
+            });
+        } else {
+            // 何もせずリターン (通常来ない)
+            console.log(`ABNORMAL firstIdx=${state.formDataFirstSelectedRowIdx}`);
+            return state;
+        }
 
         // 合計を計算
         const totalPrice = calcTotalPrice(dataRows);
 
         const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
-        return Object.assign({}, state, { formData });
+
+        // TODO:  選択行の数等のチェック
+        const ret = getSlecetedRowsCount(formData.dataRows);
+
+        return Object.assign(
+            {},
+            state,
+            { formData },
+            { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
+        );
     })
 
     // 行削除
@@ -281,7 +357,16 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         const totalPrice = calcTotalPrice(dataRows);
 
         const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
-        return Object.assign({}, state, { formData });
+
+        // TODO:  選択行の数等のチェック
+        const ret = getSlecetedRowsCount(formData.dataRows);
+
+        return Object.assign(
+            {},
+            state,
+            { formData },
+            { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
+        );
     })
 
     // .case(CreateFormActions.insertRow, (state, r) => {
@@ -341,7 +426,16 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         // TODO: 実験 完了時に通知を出してみる。
         const notify = NotifyContext.defaultNotify('帳票読込完了');
 
-        return Object.assign({}, state, { formData: loadFormData }, { notify });
+        // TODO:  選択行の数等のチェック (てか、ロード時は全部解除すべきか？)
+        const ret = getSlecetedRowsCount(loadFormData.dataRows);
+
+        return Object.assign(
+            {},
+            state,
+            { formData: loadFormData },
+            { notify },
+            { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
+        );
     })
     // 帳票読込 (失敗)
     .case(CreateFormActions.openForm.failed, (state, payload) => {
@@ -456,7 +550,16 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         });
 
         const formData = Object.assign({}, state.formData, { dataRows });
-        return Object.assign({}, state, { formData });
+
+        // TODO:  選択行の数等のチェック
+        const ret = getSlecetedRowsCount(formData.dataRows);
+
+        return Object.assign(
+            {},
+            state,
+            { formData },
+            { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
+        );
     })
 
     // 行選択解除
@@ -474,7 +577,16 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         });
 
         const formData = Object.assign({}, state.formData, { dataRows });
-        return Object.assign({}, state, { formData });
+
+        // TODO:  選択行の数等のチェック
+        const ret = getSlecetedRowsCount(formData.dataRows);
+
+        return Object.assign(
+            {},
+            state,
+            { formData },
+            { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
+        );
     })
 
     // タイトル編集開始

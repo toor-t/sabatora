@@ -35,6 +35,14 @@
     outline: 0px solid #e7eaec;
 }
 
+#CreateFormDataGrid .react-grid-Viewport {
+    overflow: visible;
+}
+#CreateFormDataGrid .react-grid-Canvas {
+    overflow: visible;
+    overflow-y: visible;
+}
+
 /* #CreateFormDataGrid .react-grid-Grid {
     border: 0px solid #dddddd;
 } */
