@@ -25,15 +25,12 @@ function mapStateToProps(appState: IAppState) {
         drawerOpend: appState.appTopState.drawerOpened
     };
 }
-function mapDispatchToProps(dispatch: Dispatch<Action<any>>) {
+function mapDispatchToProps(dispatch: Dispatch<Action<any>>): IAppTopComponentDispatchProps {
     // TODO:
     return {
         onOpenDrawer: () => dispatch(AppTopActions.openDrawer()),
         onCloseDrawer: () => dispatch(AppTopActions.closeDrawer()),
-        onSelectCreateForm: () => dispatch(AppTopActions.selectCreateForm()),
-        onSelectManageData: () => dispatch(AppTopActions.selectManageData()),
-        onSelectConfig: () => dispatch(AppTopActions.selectConfig()),
-        onSelectAbout: () => dispatch(AppTopActions.selectAbout()),
+        onSelectMenuItem: (selected: number) => dispatch(AppTopActions.selectMenuItem(selected)),
         // TODO: 実験中
         onSaveForm: () => saveFormWorker(dispatch, void {}),
         onOpenForm: () => openFormWorker(dispatch, void {}),

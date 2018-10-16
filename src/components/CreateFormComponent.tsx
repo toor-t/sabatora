@@ -54,17 +54,12 @@ const styles = (theme: Theme) =>
         }
     });
 export interface ICreateFormComponentStateProps extends ICreateFormDataGridComponentStateProps {
-    // TODO:
     title: string;
     edittingTitle: boolean;
-    // totalPrice?: number;
-
-    // and so on
 }
 
 export interface ICreateFormComponentDispatchProps
     extends ICreateFormDataGridComponentDispatchProps {
-    // TODO:
     startEdittingTitle: () => void;
     endEdittingTitle: (title: string) => void;
 }
@@ -80,7 +75,6 @@ const CreateFormComponent: React.SFC<
         INotifyComponentStateProps &
         INotifyComponentDispatchProps
 > = props => {
-    // TODO:
     const {
         classes,
         title,
@@ -110,7 +104,7 @@ const CreateFormComponent: React.SFC<
                             </IconButton>
                         </Typography>
                     ) : (
-                        // TODO: タイトル編集中
+                        // TODO: タイトル編集中 編集終了ボタンが欲しい？
                         <div className={classes.flexbox}>
                             <Input
                                 autoFocus={true}

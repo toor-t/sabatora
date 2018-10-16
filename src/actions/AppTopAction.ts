@@ -19,19 +19,7 @@ export const AppTopActions = {
      */
     closeDrawer: actionCreator<void>('CLOSE_DRAWER'),
     /**
-     * 帳票作成選択
+     * ドロワーメニュー項目選択
      */
-    selectCreateForm: actionCreator<void>('SELECT_CREATE_FORM'),
-    /**
-     * データ管理選択
-     */
-    selectManageData: actionCreator<void>('SELECT_MANAGE_DATA'),
-    /**
-     * 設定選択
-     */
-    selectConfig: actionCreator<void>('SELECT_CONFIG'),
-    /**
-     * About選択
-     */
-    selectAbout: actionCreator<void>('SELECT_ABOUT')
+    selectMenuItem: actionCreator<number>('SELECT_MENU_ITEM')
 };

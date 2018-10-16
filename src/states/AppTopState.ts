@@ -30,19 +30,7 @@ export const AppTopStateReducer = reducerWithInitialState<IAppTopState>(initialS
         // TODO:
         return Object.assign({}, state, { drawerOpened: false });
     })
-    .case(AppTopActions.selectCreateForm, state => {
-        // TODO:
-        return Object.assign({}, state, { selected: AppTopSelected.CreateForm });
-    })
-    .case(AppTopActions.selectManageData, state => {
-        // TODO:
-        return Object.assign({}, state, { selected: AppTopSelected.ManageData });
-    })
-    .case(AppTopActions.selectConfig, state => {
-        // TODO:
-        return Object.assign({}, state, { selected: AppTopSelected.Config });
-    })
-    .case(AppTopActions.selectAbout, state => {
-        // TODO:
-        return Object.assign({}, state, { selected: AppTopSelected.About });
+    // ドロワーメニュー項目選択
+    .case(AppTopActions.selectMenuItem, (state, selected) => {
+        return Object.assign({}, state, { selected });
     });

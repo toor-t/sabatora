@@ -114,25 +114,35 @@ export namespace AppTopSelected {
     export const AboutTitle = 'About';
 }
 export interface IAppTopComponentStateProps {
-    // TODO:
+    /**
+     * ドロワーメニューで選択された項目のインデックス
+     */
     selected: number;
+    /**
+     * ドロワー開閉状態
+     */
     drawerOpend: boolean;
 }
 export interface IAppTopComponentDispatchProps {
-    // TODO:
+    /**
+     * ドロワーオープン
+     */
     onOpenDrawer: () => void;
+    /**
+     * ドロワークローズ
+     */
     onCloseDrawer: () => void;
-    onSelectCreateForm: () => void;
-    onSelectManageData: () => void;
-    onSelectConfig: () => void;
-    onSelectAbout: () => void;
+    /**
+     * ドロワーメニュー項目選択
+     */
+    onSelectMenuItem: (selected: number) => void;
     // TODO: 実験中
     onSaveForm: () => void;
     onOpenForm: () => void;
     onNewForm: () => void;
     onPrintForm: () => void;
 
-    // TODO: 実験
+    // TODO: 実験　要削除
     queryDb: () => void;
 }
 interface IAppTopComponentStates {
@@ -158,18 +168,16 @@ class AppTopComponent extends React.Component<
         // this.handleMenuClose.bind(this);
         // this.handleMenuItemButton.bind(this);
     }
-    handleListButton(callback: () => void): () => void {
+    handleListButton(selected: number, callback: (selected: number) => void): () => void {
         return () => {
-            callback();
+            callback(selected);
             this.props.onCloseDrawer();
         };
     }
     handleMenuOpen = (event: any) => {
-        // TODO:
         this.setState({ anchorEl: event.currentTarget });
     };
     handleMenuClose = () => {
-        // TODO:
         this.setState({ anchorEl: undefined });
     };
     handleMenuItemButton(callback: () => void): () => void {
@@ -275,7 +283,7 @@ class AppTopComponent extends React.Component<
                         >
                             {AppBarTitle}
                         </Typography>
-                        {/* TODO: 実験中 */}
+                        {/* TODO: */}
                         <div>
                             <IconButton
                                 aria-owns={open ? 'menu-appbar' : undefined}
@@ -333,21 +341,30 @@ class AppTopComponent extends React.Component<
                     <List component="nav">
                         <ListItem
                             button={true}
-                            onClick={this.handleListButton(this.props.onSelectCreateForm)}
+                            onClick={this.handleListButton(
+                                AppTopSelected.CreateForm,
+                                this.props.onSelectMenuItem
+                            )}
                             selected={this.props.selected === AppTopSelected.CreateForm}
                         >
                             <ListItemText primary={AppTopSelected.CreateFormTitle} />
                         </ListItem>
                         <ListItem
                             button={true}
-                            onClick={this.handleListButton(this.props.onSelectManageData)}
+                            onClick={this.handleListButton(
+                                AppTopSelected.ManageData,
+                                this.props.onSelectMenuItem
+                            )}
                             selected={this.props.selected === AppTopSelected.ManageData}
                         >
                             <ListItemText primary={AppTopSelected.ManageDataTitle} />
                         </ListItem>
                         <ListItem
                             button={true}
-                            onClick={this.handleListButton(this.props.onSelectConfig)}
+                            onClick={this.handleListButton(
+                                AppTopSelected.Config,
+                                this.props.onSelectMenuItem
+                            )}
                             selected={this.props.selected === AppTopSelected.Config}
                         >
                             <ListItemText primary={AppTopSelected.ConfigTitle} />
@@ -357,7 +374,10 @@ class AppTopComponent extends React.Component<
                     <List>
                         <ListItem
                             button={true}
-                            onClick={this.handleListButton(this.props.onSelectAbout)}
+                            onClick={this.handleListButton(
+                                AppTopSelected.About,
+                                this.props.onSelectMenuItem
+                            )}
                             selected={this.props.selected === AppTopSelected.About}
                         >
                             <ListItemText primary={AppTopSelected.AboutTitle} />

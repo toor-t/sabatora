@@ -8,13 +8,13 @@ import './Application.css';
 import AppTopContainer from './containers/AppTopContainer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 // import 'typeface-roboto';
-// TODO: テーマ変更の実験
+// TODO: テーマ変更
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import indigo from '@material-ui/core/colors/indigo';
+// import indigo from '@material-ui/core/colors/indigo';
 import pink from '@material-ui/core/colors/pink';
 import red from '@material-ui/core/colors/red';
-import orange from '@material-ui/core/colors/orange';
-import green from '@material-ui/core/colors/green';
+// import orange from '@material-ui/core/colors/orange';
+// import green from '@material-ui/core/colors/green';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 
 const theme = createMuiTheme({
