@@ -501,6 +501,14 @@ class CreateFormDataGridComponent extends React.Component<
                     ref={(node: ReactDataGrid<{}> | null) => {
                         this.grid = node;
                     }}
+                    contextMenu={
+                        <MyContextMenu
+                            id="customizedContextMenu"
+                            onRowDelete={this.deleteRow}
+                            onRowInsertAbove={this.insertRowAbove}
+                            onRowInsertBelow={this.insertRowBelow}
+                        />
+                    }
                     enableCellSelect={true}
                     cellNavigationMode="changeRow"
                     rowSelection={{
@@ -547,14 +555,6 @@ class CreateFormDataGridComponent extends React.Component<
                         </Toolbar>
                     }
                     rowRenderer={CustomRowRenderer}
-                    contextMenu={
-                        <MyContextMenu
-                            id="customizedContextMenu"
-                            onRowDelete={this.deleteRow}
-                            onRowInsertAbove={this.insertRowAbove}
-                            onRowInsertBelow={this.insertRowBelow}
-                        />
-                    }
                 />
                 <br />
             </div>

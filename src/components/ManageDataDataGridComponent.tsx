@@ -262,7 +262,7 @@ export interface IManageDataDataGridComponentDispatchProps {
 interface IManageDataDataGridComponentStates {
     columns: any[];
     // TODO: 実験
-    rows: DataDoc[] | null;
+    rows: DBDataRow[] | null;
 }
 class ManageDataDataGridComponent extends React.Component<
     IManageDataDataGridComponentStateProps &
@@ -282,36 +282,42 @@ class ManageDataDataGridComponent extends React.Component<
                 key: DBDataRowKeys.id,
                 name: 'No.',
                 width: 48,
+                resizable: false,
                 formatter: CenterFormatter
             },
             {
                 key: DBDataRowKeys.level_1,
                 name: '大分類',
                 ddKey: DataDocKeys.level_1,
+                resizable: true,
                 editable: true
             },
             {
                 key: DBDataRowKeys.level_2,
                 name: '中分類',
                 ddKey: DataDocKeys.level_2,
+                resizable: true,
                 editable: true
             },
             {
                 key: DBDataRowKeys.level_3,
                 name: '小分類',
                 ddKey: DataDocKeys.level_3,
+                resizable: true,
                 editable: true
             },
             {
                 key: DBDataRowKeys.itemName,
                 name: '名称',
                 ddKey: DataDocKeys.itemName,
+                resizable: true,
                 editable: true
             },
             {
                 key: DBDataRowKeys.unitPrice_1,
                 name: '単価 1',
                 ddKey: DataDocKeys.unitPrice,
+                resizable: true,
                 editable: true,
                 formatter: NumberRightFormatter
             },
@@ -319,6 +325,7 @@ class ManageDataDataGridComponent extends React.Component<
                 key: DBDataRowKeys.unitPrice_2,
                 name: '単価 2',
                 ddKey: DataDocKeys.unitPrice,
+                resizable: true,
                 editable: true,
                 formatter: NumberRightFormatter
             },
@@ -326,6 +333,7 @@ class ManageDataDataGridComponent extends React.Component<
                 key: DBDataRowKeys.unitPrice_3,
                 name: '単価 3',
                 ddKey: DataDocKeys.unitPrice,
+                resizable: true,
                 editable: true,
                 formatter: NumberRightFormatter
             }
@@ -345,7 +353,22 @@ class ManageDataDataGridComponent extends React.Component<
     componentWillReceiveProps() {
         console.log('componentWillReceiveProps');
         if (this.props.rows) {
-            this.setState({ rows: this.props.rows });
+            const dbDataRows = this.props.rows.map<DBDataRow>((value, index, array) => {
+                const unitPrice_1 = value[DataDocKeys.unitPrice][0];
+                const unitPrice_2 = value[DataDocKeys.unitPrice][1];
+                const unitPrice_3 = value[DataDocKeys.unitPrice][2];
+                return Object.assign(
+                    {},
+                    value,
+                    {
+                        [DBDataRowKeys.unitPrice_1]: unitPrice_1,
+                        [DBDataRowKeys.unitPrice_2]: unitPrice_2,
+                        [DBDataRowKeys.unitPrice_3]: unitPrice_3
+                    },
+                    { id: index }
+                );
+            });
+            this.setState({ rows: dbDataRows });
         }
     }
     rowGetter = (i: number) => {
@@ -353,15 +376,16 @@ class ManageDataDataGridComponent extends React.Component<
             // TODO: 通常呼ばれないはずだが念のため
             return {};
         }
-        const row = this.state.rows[i];
-        const unitPrice_1 = row[DataDocKeys.unitPrice][0];
-        const unitPrice_2 = row[DataDocKeys.unitPrice][1];
-        const unitPrice_3 = row[DataDocKeys.unitPrice][2];
-        return Object.assign({}, row, {
-            [DBDataRowKeys.unitPrice_1]: unitPrice_1,
-            [DBDataRowKeys.unitPrice_2]: unitPrice_2,
-            [DBDataRowKeys.unitPrice_3]: unitPrice_3
-        });
+        return this.state.rows[i];
+        // const row = this.state.rows[i];
+        // const unitPrice_1 = row[DataDocKeys.unitPrice][0];
+        // const unitPrice_2 = row[DataDocKeys.unitPrice][1];
+        // const unitPrice_3 = row[DataDocKeys.unitPrice][2];
+        // return Object.assign({}, row, {
+        // 	[DBDataRowKeys.unitPrice_1]: unitPrice_1,
+        // 	[DBDataRowKeys.unitPrice_2]: unitPrice_2,
+        // 	[DBDataRowKeys.unitPrice_3]: unitPrice_3
+        // });
     };
     rowCount = () => {
         if (this.state.rows === null) {
