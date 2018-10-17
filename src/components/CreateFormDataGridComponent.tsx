@@ -172,35 +172,30 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
                 { formatter: undefined }
             );
 
-            let l_column = {}; // 左端のカラムの情報
             let width = 0;
             for (let i = 1; i < columns.length - 1; i = i + 1) {
                 width += columns[i].width;
             }
-            l_column = Object.assign(
-                l_column,
+            // 左端のカラムの情報
+            const l_column = Object.assign(
+                {},
                 columns[1],
                 { name: 'LabelTotalPrice' },
                 { width },
                 { key: TotalPriceRowKeys.labelTotalPrice },
-                { formatter: BoldRightFormatter },
-                { editable: false },
-                { editor: undefined }
+                { formatter: BoldRightFormatter }
             );
-            // console.log(l_column);
             const dummy_column = Object.assign(
                 {},
                 columns[1],
                 { width },
                 { key: undefined },
                 { formatter: undefined },
-                { hidden: true },
-                { editable: false },
-                { editor: undefined }
+                { hidden: true }
             );
-            let r_column = {}; // 右端のカラムの情報
-            r_column = Object.assign(
-                r_column,
+            // 右端のカラムの情報
+            const r_column = Object.assign(
+                {},
                 columns[columns.length - 1],
                 { name: 'TotalPrice' },
                 { key: TotalPriceRowKeys.totalPrice },
@@ -208,7 +203,7 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
             );
             _columns = [];
             _columns.push(check_column);
-            for (let i = 1; i < columns.length - 2; i = i + 1) {
+            for (let i = 2; i < columns.length - 1; i = i + 1) {
                 _columns.push(
                     Object.assign({}, dummy_column, { key: `dummy-${i}`, name: `dummy-${i}` })
                 );
@@ -230,35 +225,30 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
             // TODO: 小計表示
             const check_column = columns[0]; // チェックボックスカラム
 
-            let l_column = {}; // 左端のカラムの情報
             let width = 0;
             for (let i = 1; i < columns.length - 1; i = i + 1) {
                 width += columns[i].width;
             }
-            l_column = Object.assign(
-                l_column,
+            // 左端のカラムの情報
+            const l_column = Object.assign(
+                {},
                 columns[1],
                 { name: 'LabelSubtotalPrice' },
                 { width },
                 { key: SubtotalPriceRowKeys.labelSubtotalPrice },
-                { formatter: RightFormatter },
-                { editable: false },
-                { editor: undefined }
+                { formatter: RightFormatter }
             );
-            // console.log(l_column);
             const dummy_column = Object.assign(
                 {},
                 columns[1],
                 { width },
                 { key: undefined },
                 { formatter: undefined },
-                { hidden: true },
-                { editable: false },
-                { editor: undefined }
+                { hidden: true }
             );
-            let r_column = {}; // 右端のカラムの情報
-            r_column = Object.assign(
-                r_column,
+            // 右端のカラムの情報
+            const r_column = Object.assign(
+                {},
                 columns[columns.length - 1],
                 { name: 'SubtotalPrice' },
                 { key: SubtotalPriceRowKeys.subtotalPrice },
@@ -464,14 +454,32 @@ class CreateFormDataGridComponent extends React.Component<
     handleAddSubtotalBtn = (e: any) => {
         this.props.addSubtotalRow();
     };
+
+    // TODO: 実験
+    handleOnCheckCellIsEditable = (param: any) => {
+        if (
+            param.row[TotalPriceRowKeys.labelTotalPrice] ||
+            param.row[SubtotalPriceRowKeys.labelSubtotalPrice]
+        ) {
+            // 合計行、小計行では編集禁止
+            console.log('not editable');
+            return false;
+        }
+        console.log('editable');
+        return true;
+    };
+
     render() {
         // TODO:
         if (this.props.autoCompleteOptions !== undefined) {
             autoCompleteOptions = this.props.autoCompleteOptions;
         }
+        // TODO: 標準のtypesファイルに onCheckCellIsEditable の定義が無いための苦肉の策。
+        const MyReactDataGrid = ReactDataGrid as any;
+
         return (
             <div id="CreateFormDataGrid" /*className={this.props.classes.content}*/>
-                <ReactDataGrid
+                <MyReactDataGrid /* TODO: 標準のtypesファイルに onCheckCellIsEditable の定義が無いための苦肉の策。 */
                     ref={(node: ReactDataGrid<{}> | null) => {
                         this.grid = node;
                     }}
@@ -526,6 +534,8 @@ class CreateFormDataGridComponent extends React.Component<
                         </Toolbar>
                     }
                     rowRenderer={CustomRowRenderer}
+                    // TODO: 実験
+                    onCheckCellIsEditable={this.handleOnCheckCellIsEditable}
                 />
             </div>
         );
