@@ -10,6 +10,8 @@ import { updateAutoCompleteOptions } from '../db_renderer';
 import { openForm, saveForm, saveForm_sendFormData } from '../file_io_rederer';
 // TODO: NotifyComponentの実験
 import { NotifyContext } from '../components/NotifyComponent';
+import { ThunkDispatch } from 'redux-thunk';
+import { IAppState } from '../store';
 
 // NormalDataRowKeys
 export namespace NormalDataRowKeys {
@@ -439,7 +441,8 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         // console.log(loadFormData);
 
         // TODO: 実験 完了時に通知を出してみる。
-        const notify = NotifyContext.defaultNotify('帳票読込完了');
+        const notify = NotifyContext.defaultNotify('帳票読込完了', CreateFormActions.closeNotify);
+        // const notify = new NotifyContext('帳票読込完了', 1, true, 300, 'テストですよ');
 
         // TODO:  選択行の数等のチェック (てか、ロード時は全部解除すべきか？)
         const ret = getSlecetedRowsInfo(loadFormData.dataRows);
@@ -465,9 +468,17 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
             return state;
         }
         // TODO: 実験　失敗時に通知を出してみる。
-        const notify = NotifyContext.defaultNotify('帳票読込失敗');
+        const notify = NotifyContext.defaultNotify('帳票読込失敗', CreateFormActions.closeNotify);
 
         return Object.assign({}, state, { notify });
+    })
+    // 帳票読込確認
+    .case(CreateFormActions.confirmOpenForm, state => {
+        // TODO:
+        // const notify = new NotifyContext(
+        // '現在の帳票は変更されています。保存せずに帳票読込を行いますか？（現在の帳票の変更内容は破棄されます)', 1, true, 0, '', 'キャンセル', '続行');
+
+        return Object.assign({}, state /*,{ notify }*/);
     })
 
     // 帳票保存 (開始)
@@ -484,7 +495,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         // TODO:
         console.log('CreateFormActions.saveForm.done');
         // TODO: 実験 完了時に通知を出してみる。
-        const notify = NotifyContext.defaultNotify('帳票保存完了');
+        const notify = NotifyContext.defaultNotify('帳票保存完了', CreateFormActions.closeNotify);
 
         // TODO: 編集済みフラグリセット
         const formDataEditted = false;
@@ -500,7 +511,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
             return state;
         }
         // TODO: 実験 失敗時に通知を出してみる。
-        const notify = NotifyContext.defaultNotify('帳票保存失敗');
+        const notify = NotifyContext.defaultNotify('帳票保存失敗', CreateFormActions.closeNotify);
 
         return Object.assign({}, state, { notify });
     })
@@ -531,6 +542,14 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         // TODO:
         return state;
+    })
+    // 新規帳票作成確認
+    .case(CreateFormActions.confirmNewForm, state => {
+        // TODO:
+        // const notify = new NotifyContext(
+        // '現在の帳票は変更されています。保存せずに新規帳票作成を行いますか？（現在の帳票の変更内容は破棄されます)', 1, true, 0, '', 'キャンセル', '続行');
+
+        return Object.assign({}, state /*,{ notify }*/);
     })
 
     // .case(CreateFormActions.saveForm.started, state => {
@@ -690,3 +709,37 @@ export const saveFormWorker = wrapAsyncWorker<void, {}, {}>(
         return saveForm();
     }
 );
+
+// TODO: 確認付き帳票読込 ※ここに置くべきか？要検討
+export const openFormWithConfirm = () => (
+    dispatch: ThunkDispatch<IAppState, {}, any>,
+    getState: () => IAppState
+) => {
+    console.log('openFormWithConfirm');
+    const { formDataEditted } = getState().createFormState;
+
+    if (formDataEditted) {
+        // 編集済みのため、読込前にユーザ確認する
+        dispatch(CreateFormActions.confirmOpenForm());
+    } else {
+        // 未編集なのでこのまま読込処理へ
+        openFormWorker(dispatch, void {});
+    }
+};
+
+// TODO: 確認付き新規帳票作成 ※ここに置くべきか？要検討
+export const newFormWithConfirm = () => (
+    dispatch: ThunkDispatch<IAppState, {}, any>,
+    getState: () => IAppState
+) => {
+    console.log('newFormWithConfirm');
+    const { formDataEditted } = getState().createFormState;
+
+    if (formDataEditted) {
+        // 編集済みのため、新規作成前にユーザ確認する
+        dispatch(CreateFormActions.confirmNewForm());
+    } else {
+        // 未編集なのでこのまま新規帳票作成処理へ
+        dispatch(CreateFormActions.newForm(false /* これ要らなくすること */));
+    }
+};

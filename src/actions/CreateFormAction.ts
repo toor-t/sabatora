@@ -75,6 +75,14 @@ export const CreateFormActions = {
      * 新規帳票作成
      */
     newForm: actionCreator<boolean>('NEW_FORM'),
+    /**
+     * TODO: 帳票読込確認
+     */
+    confirmOpenForm: actionCreator<void>('CONFIRM_OPEN_FORM'),
+    /**
+     * TODO: 新規帳票作成確認
+     */
+    confirmNewForm: actionCreator<void>('CONFIRM_NEW_FORM'),
 
     // TODO:
     /**

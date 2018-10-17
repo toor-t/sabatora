@@ -4,7 +4,6 @@
 'use strict';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { Action } from 'typescript-fsa';
 // TODO:
 import { AppTopActions } from '../actions/AppTopAction';
 import AppTopComponent, {
@@ -12,11 +11,17 @@ import AppTopComponent, {
     IAppTopComponentDispatchProps
 } from '../components/AppTopComponent';
 import { IAppState } from '../store';
-// TODO: 実験中
 import { CreateFormActions } from '../actions/CreateFormAction';
-import { openFormWorker, saveFormWorker } from '../states/CreateFormState';
+import {
+    openFormWorker,
+    saveFormWorker,
+    openFormWithConfirm,
+    newFormWithConfirm
+} from '../states/CreateFormState';
 import { queryDbWorker } from '../states/ManageDataState';
 import { DataDoc } from '../db';
+// TODO: 実験用
+import { ThunkDispatch } from 'redux-thunk';
 
 function mapStateToProps(appState: IAppState) {
     // TODO:
@@ -25,16 +30,18 @@ function mapStateToProps(appState: IAppState) {
         drawerOpend: appState.appTopState.drawerOpened
     };
 }
-function mapDispatchToProps(dispatch: Dispatch<Action<any>>): IAppTopComponentDispatchProps {
+function mapDispatchToProps(
+    dispatch: ThunkDispatch<IAppState, {}, any>
+): IAppTopComponentDispatchProps {
     // TODO:
     return {
         onOpenDrawer: () => dispatch(AppTopActions.openDrawer()),
         onCloseDrawer: () => dispatch(AppTopActions.closeDrawer()),
         onSelectMenuItem: (selected: number) => dispatch(AppTopActions.selectMenuItem(selected)),
-        // TODO: 実験中
         onSaveForm: () => saveFormWorker(dispatch, void {}),
-        onOpenForm: () => openFormWorker(dispatch, void {}),
-        onNewForm: () => dispatch(CreateFormActions.newForm(false)),
+        onOpenForm: () => /*openFormWorker(dispatch, void {})*/ dispatch(openFormWithConfirm()), // TODO: 実験中
+        onNewForm: () =>
+            /*dispatch(CreateFormActions.newForm(false))*/ dispatch(newFormWithConfirm()), // TODO:  実験中
         onPrintForm: () => dispatch(CreateFormActions.printForm()),
         // TODO: 実験用
         queryDb: () => queryDbWorker(dispatch, { query: <DataDoc>{}, projection: [] })

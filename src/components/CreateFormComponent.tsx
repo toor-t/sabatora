@@ -85,6 +85,9 @@ const CreateFormComponent: React.SFC<
         notifyContext,
         onNotificationClose,
         onCloseButtonClick,
+        onCancelButtonClick,
+        onOKButtonClick,
+        dispatch, // TODO: 実験中
         ...rest
     } = props;
 
@@ -130,6 +133,10 @@ const CreateFormComponent: React.SFC<
                         notifyContext={notifyContext}
                         onNotificationClose={onNotificationClose}
                         onCloseButtonClick={onCloseButtonClick}
+                        onCancelButtonClick={onCancelButtonClick}
+                        onOKButtonClick={onOKButtonClick}
+                        // TODO:実験中
+                        dispatch={dispatch}
                     />
                 </div>
             </main>

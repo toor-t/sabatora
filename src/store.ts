@@ -2,8 +2,8 @@
  * store
  */
 'use strict';
-import { combineReducers, createStore, applyMiddleware } from 'redux';
-// import reduxThunk from 'redux-thunk';
+import { combineReducers, createStore, applyMiddleware, AnyAction } from 'redux';
+import reduxThunk from 'redux-thunk';
 import { IAppTopState, AppTopStateReducer } from './states/AppTopState';
 import { ICreateFormState, CreateFormStateReducer } from './states/CreateFormState';
 import { IAboutState, AboutStateReducer } from './states/AboutState';
@@ -31,8 +31,8 @@ const store = createStore(
         aboutState: AboutStateReducer,
         configState: ConfigStateReducer,
         manageDataState: ManageDataStateReducer
-    })
-    // applyMiddleware(reduxThunk)
+    }),
+    applyMiddleware(reduxThunk)
 );
 
 export default store;

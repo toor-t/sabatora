@@ -56,12 +56,58 @@ function mapDispatchToProps(
         onCloseButtonClick: () => dispatch(CreateFormActions.clickNotifyCloseButton())
     };
 }
+// TODO:実験
+function mergeProps(
+    stateProps: ICreateFormComponentStateProps & INotifyComponentStateProps,
+    dispatchProps: any,
+    ownProps: any
+): ICreateFormComponentStateProps &
+    INotifyComponentStateProps &
+    ICreateFormComponentDispatchProps &
+    INotifyComponentDispatchProps {
+    const { dispatch } = dispatchProps;
+    const { formDataEditted } = stateProps;
+
+    return {
+        // TODO: 実験中
+        dispatch,
+
+        // State Props
+        ...stateProps,
+
+        // Dispatch Props
+        onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col)),
+        onGridRowUpdate: (e: any) => dispatch(CreateFormActions.updateGridRow(e)),
+        updateAutoCompleteOptions: (c: any) => updateAutoCompleteOptionsWorker(dispatch, c),
+        addRow: () => dispatch(CreateFormActions.addRow()),
+        deleteRows: () => dispatch(CreateFormActions.deleteRows()),
+        selectRows: (rows: { rowIdx: number; row: FormDataRow }[]) =>
+            dispatch(CreateFormActions.selectRows(rows)),
+        deselectRows: (rows: { rowIdx: number; row: FormDataRow }[]) =>
+            dispatch(CreateFormActions.deselectRows(rows)),
+        addSubtotalRow: () => dispatch(CreateFormActions.addSubtotalRow()),
+        startEdittingTitle: () => dispatch(CreateFormActions.startEdittingTitle()),
+        endEdittingTitle: (title: string) => dispatch(CreateFormActions.endEdittingTitle(title)),
+        // TODO:
+        onNotificationClose: () => dispatch(CreateFormActions.closeNotify()),
+        onCloseButtonClick: () => dispatch(CreateFormActions.clickNotifyCloseButton()),
+
+        // Own Props
+        ...ownProps
+    };
+}
 export default connect<
     ICreateFormComponentStateProps & INotifyComponentStateProps,
-    ICreateFormComponentDispatchProps & INotifyComponentDispatchProps,
     {},
+    {},
+    ICreateFormComponentStateProps &
+        INotifyComponentStateProps &
+        ICreateFormComponentDispatchProps &
+        INotifyComponentDispatchProps,
     IAppState
 >(
     mapStateToProps,
-    mapDispatchToProps
+    // mapDispatchToProps,
+    null,
+    mergeProps
 )(CreateFormComponent);
