@@ -222,7 +222,7 @@ const BoldRightFormatter: React.SFC<any> = props => {
 
 // ManageDataDataGridComponent
 const ROW_HEIGHT = 35;
-const HEADER_ROW_HEIGHT = 40;
+const HEADER_ROW_HEIGHT = 35;
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -459,7 +459,11 @@ class ManageDataDataGridComponent extends React.Component<
     render() {
         // TODO:
         return (
-            <div id="ManageDataDataGrid" /*className={this.props.classes.content}*/>
+            <div
+                id="ManageDataDataGrid"
+                /*className={this.props.classes.content}*/
+                style={{ fontSize: '0.82rem' }}
+            >
                 <ReactDataGrid
                     ref={node => {
                         this.grid = node;

@@ -64,12 +64,12 @@
         width: 172mm !IMPORTANT;
         height: 251mm !IMPORTANT;
     }
-    .s6 .index.page .inner.s6 .page .wrapper {
+    /* .s6 .index.page .inner.s6 .page .wrapper {
         width: 47% !IMPORTANT;
         height: 32% !IMPORTANT;
         font-size: 50%;
         line-height: 1.2;
-    }
+    } */
     table {
         page-break-after: auto;
     }

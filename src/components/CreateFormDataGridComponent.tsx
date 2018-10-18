@@ -285,7 +285,7 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
 
 // CreatFormDataGridComponent
 const ROW_HEIGHT = 35;
-const HEADER_ROW_HEIGHT = 40;
+const HEADER_ROW_HEIGHT = 35;
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -478,7 +478,11 @@ class CreateFormDataGridComponent extends React.Component<
         const MyReactDataGrid = ReactDataGrid as any;
 
         return (
-            <div id="CreateFormDataGrid" /*className={this.props.classes.content}*/>
+            <div
+                id="CreateFormDataGrid"
+                /*className={this.props.classes.content}*/
+                style={{ fontSize: '0.82rem' }}
+            >
                 <MyReactDataGrid /* TODO: 標準のtypesファイルに onCheckCellIsEditable の定義が無いための苦肉の策。 */
                     ref={(node: ReactDataGrid<{}> | null) => {
                         this.grid = node;

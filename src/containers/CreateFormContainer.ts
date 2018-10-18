@@ -32,7 +32,8 @@ function mapStateToProps(
         firstSelectedRowIdx: appState.createFormState.formDataFirstSelectedRowIdx,
         formDataEditted: appState.createFormState.formDataEditted,
         // TODO:
-        printing: true /*false*/
+        printing: false
+        // printing: true,
     };
 }
 function mapDispatchToProps(

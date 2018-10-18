@@ -104,14 +104,20 @@ const PrintFormComponent: React.SFC<
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell>No.</TableCell>
-                                <TableCell>大項目</TableCell>
-                                <TableCell>中項目</TableCell>
-                                <TableCell>小項目</TableCell>
-                                <TableCell>名称</TableCell>
-                                <TableCell numeric={true}>単価</TableCell>
-                                <TableCell numeric={true}>個数</TableCell>
-                                <TableCell numeric={true}>価格</TableCell>
+                                <TableCell padding="dense">No.</TableCell>
+                                <TableCell padding="dense">大項目</TableCell>
+                                <TableCell padding="dense">中項目</TableCell>
+                                <TableCell padding="dense">小項目</TableCell>
+                                <TableCell padding="dense">名称</TableCell>
+                                <TableCell padding="dense" numeric={true}>
+                                    単価
+                                </TableCell>
+                                <TableCell padding="dense" numeric={true}>
+                                    個数
+                                </TableCell>
+                                <TableCell padding="dense" numeric={true}>
+                                    価格
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -124,10 +130,10 @@ const PrintFormComponent: React.SFC<
                                         <TableCell />
                                         <TableCell />
                                         <TableCell />
-                                        <TableCell numeric={true}>
+                                        <TableCell padding="dense" numeric={true}>
                                             <Typography>合計:</Typography>
                                         </TableCell>
-                                        <TableCell numeric={true}>
+                                        <TableCell padding="dense" numeric={true}>
                                             {NumberFormatter(row.totalPrice)}
                                         </TableCell>
                                     </TableRow>
@@ -139,25 +145,34 @@ const PrintFormComponent: React.SFC<
                                         <TableCell />
                                         <TableCell />
                                         <TableCell />
-                                        <TableCell numeric={true}>小計:</TableCell>
-                                        <TableCell numeric={true}>
+                                        <TableCell padding="dense" numeric={true}>
+                                            小計:
+                                        </TableCell>
+                                        <TableCell padding="dense" numeric={true}>
                                             {NumberFormatter(row.subtotalPrice)}
                                         </TableCell>
                                     </TableRow>
                                 ) : (
                                     <TableRow key={row.id}>
-                                        <TableCell numeric={true}>{row.id}</TableCell>
-                                        <TableCell>{row.level_1}</TableCell>
-                                        <TableCell>{row.level_2}</TableCell>
-                                        <TableCell>{row.level_3}</TableCell>
-                                        <TableCell>{row.itemName}</TableCell>
-                                        <TableCell numeric={true}>
+                                        <TableCell
+                                            component="th"
+                                            scope="row"
+                                            padding="dense"
+                                            numeric={true}
+                                        >
+                                            {row.id}
+                                        </TableCell>
+                                        <TableCell padding="dense">{row.level_1}</TableCell>
+                                        <TableCell padding="dense">{row.level_2}</TableCell>
+                                        <TableCell padding="dense">{row.level_3}</TableCell>
+                                        <TableCell padding="dense">{row.itemName}</TableCell>
+                                        <TableCell padding="dense" numeric={true}>
                                             {NumberFormatter(row.unitPrice)}
                                         </TableCell>
-                                        <TableCell numeric={true}>
+                                        <TableCell padding="dense" numeric={true}>
                                             {NumberFormatter(row.num)}
                                         </TableCell>
-                                        <TableCell numeric={true}>
+                                        <TableCell padding="dense" numeric={true}>
                                             {NumberFormatter(row.price)}
                                         </TableCell>
                                     </TableRow>
@@ -172,10 +187,10 @@ const PrintFormComponent: React.SFC<
                                 <TableCell />
                                 <TableCell />
                                 <TableCell />
-                                <TableCell numeric={true}>
+                                <TableCell padding="dense" numeric={true}>
                                     <Typography>合計:</Typography>
                                 </TableCell>
-                                <TableCell numeric={true}>
+                                <TableCell padding="dense" numeric={true}>
                                     {NumberFormatter(rows[rows.length - 1].totalPrice)}
                                 </TableCell>
                             </TableRow>
