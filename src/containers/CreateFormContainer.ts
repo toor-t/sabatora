@@ -35,13 +35,13 @@ function mapStateToProps(
     };
 }
 function mapDispatchToProps(
-    dispatch: Dispatch<Action<any>>
+    dispatch: any /*Dispatch<Action<any>>*/
 ): ICreateFormComponentDispatchProps & INotifyComponentDispatchProps {
     // TODO:
     return {
         onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col)),
         onGridRowUpdate: (e: any) => dispatch(CreateFormActions.updateGridRow(e)),
-        updateAutoCompleteOptions: (c: any) => updateAutoCompleteOptionsWorker(dispatch, c),
+        updateAutoCompleteOptions: (c: any) => dispatch(updateAutoCompleteOptionsWorker(c)),
         addRow: () => dispatch(CreateFormActions.addRow()),
         deleteRows: () => dispatch(CreateFormActions.deleteRows()),
         selectRows: (rows: { rowIdx: number; row: FormDataRow }[]) =>
@@ -75,7 +75,7 @@ function mergeProps(
         // Dispatch Props
         onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col)),
         onGridRowUpdate: (e: any) => dispatch(CreateFormActions.updateGridRow(e)),
-        updateAutoCompleteOptions: (c: any) => updateAutoCompleteOptionsWorker(dispatch, c),
+        updateAutoCompleteOptions: (c: any) => dispatch(updateAutoCompleteOptionsWorker(c)),
         addRow: () => dispatch(CreateFormActions.addRow()),
         deleteRows: () => dispatch(CreateFormActions.deleteRows()),
         selectRows: (rows: { rowIdx: number; row: FormDataRow }[]) =>

@@ -698,7 +698,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     });
 
 // 非同期でautoCompleteOptionsを更新する
-export const updateAutoCompleteOptionsWorker = wrapAsyncWorker<
+export const updateAutoCompleteOptionsWorker = wrapThunkAsyncActionWorker<
     { rowData: NormalDataRow; columnDDKey: string },
     {},
     {}
