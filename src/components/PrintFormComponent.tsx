@@ -15,6 +15,7 @@ import Input from '@material-ui/core/Input';
 // tslint:disable-next-line:import-name
 import CreateIcon from '@material-ui/icons/Create';
 import { FormDataRow, TotalPriceRowKeys, TotalPriceRow } from '../states/CreateFormState';
+import { TableFooter } from '@material-ui/core';
 
 // import PrintFormDataGridComponent, {
 // 	ICreateFormDataGridComponentStateProps,
@@ -24,6 +25,15 @@ import { FormDataRow, TotalPriceRowKeys, TotalPriceRow } from '../states/CreateF
 // 	INotifyComponentStateProps,
 // 	INotifyComponentDispatchProps
 // } from './NotifyComponent';
+
+const NumberFormatter = (value: any): string => {
+    if ((typeof value === 'number' && !isNaN(value)) || !isNaN(Number(value))) {
+        const formattedValue: string = String(value).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
+        return formattedValue;
+    }
+    // TODO:
+    return value;
+};
 
 // PrintFormComponent
 
@@ -99,9 +109,9 @@ const PrintFormComponent: React.SFC<
                                 <TableCell>中項目</TableCell>
                                 <TableCell>小項目</TableCell>
                                 <TableCell>名称</TableCell>
-                                <TableCell>単価</TableCell>
-                                <TableCell>個数</TableCell>
-                                <TableCell>価格</TableCell>
+                                <TableCell numeric={true}>単価</TableCell>
+                                <TableCell numeric={true}>個数</TableCell>
+                                <TableCell numeric={true}>価格</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -114,8 +124,12 @@ const PrintFormComponent: React.SFC<
                                         <TableCell />
                                         <TableCell />
                                         <TableCell />
-                                        <TableCell numeric={true}>合計:</TableCell>
-                                        <TableCell numeric={true}>{row.totalPrice}</TableCell>
+                                        <TableCell numeric={true}>
+                                            <Typography>合計:</Typography>
+                                        </TableCell>
+                                        <TableCell numeric={true}>
+                                            {NumberFormatter(row.totalPrice)}
+                                        </TableCell>
                                     </TableRow>
                                 ) : row.subtotalPrice ? (
                                     <TableRow key={row.id}>
@@ -126,7 +140,9 @@ const PrintFormComponent: React.SFC<
                                         <TableCell />
                                         <TableCell />
                                         <TableCell numeric={true}>小計:</TableCell>
-                                        <TableCell numeric={true}>{row.subtotalPrice}</TableCell>
+                                        <TableCell numeric={true}>
+                                            {NumberFormatter(row.subtotalPrice)}
+                                        </TableCell>
                                     </TableRow>
                                 ) : (
                                     <TableRow key={row.id}>
@@ -135,13 +151,35 @@ const PrintFormComponent: React.SFC<
                                         <TableCell>{row.level_2}</TableCell>
                                         <TableCell>{row.level_3}</TableCell>
                                         <TableCell>{row.itemName}</TableCell>
-                                        <TableCell numeric={true}>{row.unitPrice}</TableCell>
-                                        <TableCell numeric={true}>{row.num}</TableCell>
-                                        <TableCell numeric={true}>{row.price}</TableCell>
+                                        <TableCell numeric={true}>
+                                            {NumberFormatter(row.unitPrice)}
+                                        </TableCell>
+                                        <TableCell numeric={true}>
+                                            {NumberFormatter(row.num)}
+                                        </TableCell>
+                                        <TableCell numeric={true}>
+                                            {NumberFormatter(row.price)}
+                                        </TableCell>
                                     </TableRow>
                                 );
                             })}
                         </TableBody>
+                        <TableFooter>
+                            <TableRow key={rows[rows.length - 1].id}>
+                                <TableCell />
+                                <TableCell />
+                                <TableCell />
+                                <TableCell />
+                                <TableCell />
+                                <TableCell />
+                                <TableCell numeric={true}>
+                                    <Typography>合計:</Typography>
+                                </TableCell>
+                                <TableCell numeric={true}>
+                                    {NumberFormatter(rows[rows.length - 1].totalPrice)}
+                                </TableCell>
+                            </TableRow>
+                        </TableFooter>
                     </Table>
                 </div>
             </main>
