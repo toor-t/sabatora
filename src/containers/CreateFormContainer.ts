@@ -32,7 +32,7 @@ function mapStateToProps(
         firstSelectedRowIdx: appState.createFormState.formDataFirstSelectedRowIdx,
         formDataEditted: appState.createFormState.formDataEditted,
         // TODO:
-        printing: false
+        printing: appState.createFormState.printing
         // printing: true,
     };
 }

@@ -14,7 +14,7 @@ import { openForm, saveForm, saveForm_sendFormData } from '../file_io_rederer';
 // TODO: NotifyComponentの実験
 import { NotifyContext } from '../components/NotifyComponent';
 import { ThunkDispatch } from 'redux-thunk';
-import { IAppState } from '../store';
+import store, { IAppState } from '../store';
 import { remote } from 'electron';
 
 // NormalDataRowKeys
@@ -125,13 +125,11 @@ export interface ICreateFormState {
     formDataSelectedRowsCount: number; // TODO:  選択行の数
     formDataFirstSelectedRowIdx: number; // TODO: 先頭から最初の選択行のインデックス
 
-    // edittingCell: { rowIdx: number; idx: number };
-    // selectedRow: number;
-    // selectedCell: { rowIdx: number; idx: number };
-
     autoCompleteOptions: {};
 
-    notify: NotifyContext;
+    notify: NotifyContext; // 通知コンテキスト
+
+    printing: boolean; //
 }
 const initialState: ICreateFormState = {
     formData: {
@@ -179,7 +177,9 @@ const initialState: ICreateFormState = {
 
     autoCompleteOptions: {},
 
-    notify: NotifyContext.emptyNotify()
+    notify: NotifyContext.emptyNotify(),
+
+    printing: false
 };
 
 /**
@@ -531,16 +531,24 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         return Object.assign({}, state, { notify });
     })
 
-    // 帳票印刷
-    .case(CreateFormActions.printForm, state => {
+    // 帳票印刷開始
+    .case(CreateFormActions.startPrintForm, state => {
         // TODO:
-        console.log('printForm');
-        // TODO:  実験中
-        const webContents = remote.getCurrentWindow().webContents;
-        webContents.print();
-        return state;
-    })
+        console.log('startPrintForm');
 
+        // TODO: プリント用画面に切り替える
+        const printing = true;
+        return Object.assign({}, state, { printing });
+    })
+    // 帳票印刷終了
+    .case(CreateFormActions.endPrintForm, state => {
+        // TODO:
+        console.log('endPrintForm');
+
+        // TODO: プリント用画面を終了
+        const printing = false;
+        return Object.assign({}, state, { printing });
+    })
     // 新規帳票作成
     .case(CreateFormActions.newForm, (state /*, force*/) => {
         // TODO:
@@ -761,4 +769,29 @@ export const newFormWithConfirmWorker = () => (
         // 未編集なのでこのまま新規帳票作成処理へ
         dispatch(CreateFormActions.newForm());
     }
+};
+
+// TODO: 印刷処理ワーカー
+export const printFormWorker = () => (
+    dispatch: ThunkDispatch<IAppState, {}, any>,
+    getState: () => IAppState
+) => {
+    console.log('printFormWorker');
+    // 印刷開始
+    dispatch(CreateFormActions.startPrintForm());
+
+    // TODO:  実験中
+    const webContents = remote.getCurrentWindow().webContents;
+    webContents.print(
+        { silent: false, printBackground: false, deviceName: '' },
+        (success: boolean) => {
+            if (!success) {
+                // TODO:  失敗した場合エラー表示する
+                console.log('帳票印刷失敗');
+            }
+            console.log('印刷終了');
+            // 印刷終了
+            dispatch(CreateFormActions.endPrintForm());
+        }
+    );
 };

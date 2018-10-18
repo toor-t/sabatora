@@ -462,7 +462,7 @@ class ManageDataDataGridComponent extends React.Component<
             <div
                 id="ManageDataDataGrid"
                 /*className={this.props.classes.content}*/
-                style={{ fontSize: '0.82rem' }}
+                style={{ fontSize: '0.8125rem' }}
             >
                 <ReactDataGrid
                     ref={node => {

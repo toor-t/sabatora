@@ -14,7 +14,8 @@ import { CreateFormActions } from '../actions/CreateFormAction';
 import {
     saveFormWorker,
     openFormWithConfirmWorker,
-    newFormWithConfirmWorker
+    newFormWithConfirmWorker,
+    printFormWorker
 } from '../states/CreateFormState';
 // TODO: 実験用
 import { ThunkDispatch } from 'redux-thunk';
@@ -37,7 +38,7 @@ function mapDispatchToProps(
         onSaveForm: () => dispatch(saveFormWorker()),
         onOpenForm: () => dispatch(openFormWithConfirmWorker()),
         onNewForm: () => dispatch(newFormWithConfirmWorker()),
-        onPrintForm: () => dispatch(CreateFormActions.printForm())
+        onPrintForm: () => dispatch(printFormWorker())
     };
 }
 export default connect<IAppTopComponentStateProps, IAppTopComponentDispatchProps, {}, IAppState>(

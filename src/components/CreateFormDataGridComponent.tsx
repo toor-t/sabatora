@@ -481,7 +481,7 @@ class CreateFormDataGridComponent extends React.Component<
             <div
                 id="CreateFormDataGrid"
                 /*className={this.props.classes.content}*/
-                style={{ fontSize: '0.82rem' }}
+                style={{ fontSize: '0.8125rem' }}
             >
                 <MyReactDataGrid /* TODO: 標準のtypesファイルに onCheckCellIsEditable の定義が無いための苦肉の策。 */
                     ref={(node: ReactDataGrid<{}> | null) => {

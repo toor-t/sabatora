@@ -60,9 +60,14 @@ export const CreateFormActions = {
     >('UPDATE_AUTO_COMPLETE_OPTIONS'),
 
     /**
-     * 帳票印刷
+     * 帳票印刷開始
      */
-    printForm: actionCreator<void>('PRINT_FORM'),
+    startPrintForm: actionCreator<void>('START_PRINT_FORM'),
+    /**
+     * 帳票印刷終了
+     */
+    endPrintForm: actionCreator<void>('END_PRINT_FORM'),
+
     /**
      * 帳票保存
      */
