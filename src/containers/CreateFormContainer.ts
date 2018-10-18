@@ -50,10 +50,7 @@ function mapDispatchToProps(
             dispatch(CreateFormActions.deselectRows(rows)),
         addSubtotalRow: () => dispatch(CreateFormActions.addSubtotalRow()),
         startEdittingTitle: () => dispatch(CreateFormActions.startEdittingTitle()),
-        endEdittingTitle: (title: string) => dispatch(CreateFormActions.endEdittingTitle(title)),
-        // TODO:
-        onNotificationClose: () => dispatch(CreateFormActions.closeNotify()),
-        onCloseButtonClick: () => dispatch(CreateFormActions.clickNotifyCloseButton())
+        endEdittingTitle: (title: string) => dispatch(CreateFormActions.endEdittingTitle(title))
     };
 }
 // TODO:実験
@@ -88,9 +85,6 @@ function mergeProps(
         addSubtotalRow: () => dispatch(CreateFormActions.addSubtotalRow()),
         startEdittingTitle: () => dispatch(CreateFormActions.startEdittingTitle()),
         endEdittingTitle: (title: string) => dispatch(CreateFormActions.endEdittingTitle(title)),
-        // TODO:
-        onNotificationClose: () => dispatch(CreateFormActions.closeNotify()),
-        onCloseButtonClick: () => dispatch(CreateFormActions.clickNotifyCloseButton()),
 
         // Own Props
         ...ownProps

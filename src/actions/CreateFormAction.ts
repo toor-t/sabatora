@@ -74,7 +74,7 @@ export const CreateFormActions = {
     /**
      * 新規帳票作成
      */
-    newForm: actionCreator<boolean>('NEW_FORM'),
+    newForm: actionCreator<void>('NEW_FORM'),
     /**
      * TODO: 帳票読込確認
      */

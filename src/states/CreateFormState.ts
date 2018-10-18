@@ -475,10 +475,21 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     // 帳票読込確認
     .case(CreateFormActions.confirmOpenForm, state => {
         // TODO:
-        // const notify = new NotifyContext(
-        // '現在の帳票は変更されています。保存せずに帳票読込を行いますか？（現在の帳票の変更内容は破棄されます)', 1, true, 0, '', 'キャンセル', '続行');
+        const notify = new NotifyContext(
+            '現在の帳票は変更されています。保存せずに帳票読込を行いますか？（現在の帳票の変更内容は破棄されます)',
+            1,
+            true,
+            0,
+            '',
+            'キャンセル',
+            '続行',
+            undefined,
+            undefined,
+            CreateFormActions.closeNotify,
+            _openFormWorker
+        );
 
-        return Object.assign({}, state /*,{ notify }*/);
+        return Object.assign({}, state, { notify });
     })
 
     // 帳票保存 (開始)
@@ -524,32 +535,36 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     })
 
     // 新規帳票作成
-    .case(CreateFormActions.newForm, (state, force) => {
+    .case(CreateFormActions.newForm, (state /*, force*/) => {
         // TODO:
-        if (!state.formDataEditted || force) {
-            // 未編集状態、もしくは強制実行なら直ぐに新規作成
-            // TODO:
-            const formData = initialState.formData;
-            // 編集状態解除
-            const formDataEditted = false;
+        const formData = initialState.formData;
+        // 編集状態解除
+        const formDataEditted = false;
 
-            // 確認ダイアログが表示されているなら消す
-            // TODO:
-
-            return Object.assign({}, state, { formData, formDataEditted });
-        }
-        // ダイアログでユーザー確認する
-
+        // 確認ダイアログが表示されているなら消す
         // TODO:
-        return state;
+        const notify = state.notify.open ? state.notify.closedNotify() : state.notify;
+
+        return Object.assign({}, state, { formData, formDataEditted }, { notify });
     })
     // 新規帳票作成確認
     .case(CreateFormActions.confirmNewForm, state => {
         // TODO:
-        // const notify = new NotifyContext(
-        // '現在の帳票は変更されています。保存せずに新規帳票作成を行いますか？（現在の帳票の変更内容は破棄されます)', 1, true, 0, '', 'キャンセル', '続行');
+        const notify = new NotifyContext(
+            '現在の帳票は変更されています。保存せずに新規帳票作成を行いますか？（現在の帳票の変更内容は破棄されます)',
+            1,
+            true,
+            0,
+            '',
+            'キャンセル',
+            '続行',
+            undefined,
+            undefined,
+            CreateFormActions.closeNotify,
+            CreateFormActions.newForm
+        );
 
-        return Object.assign({}, state /*,{ notify }*/);
+        return Object.assign({}, state, { notify });
     })
 
     // .case(CreateFormActions.saveForm.started, state => {
@@ -710,6 +725,11 @@ export const saveFormWorker = wrapAsyncWorker<void, {}, {}>(
     }
 );
 
+// TODO:  実験用ラップ
+const _openFormWorker = () => (dispatch: any, getState: () => any) => {
+    openFormWorker(dispatch, void {});
+};
+
 // TODO: 確認付き帳票読込 ※ここに置くべきか？要検討
 export const openFormWithConfirm = () => (
     dispatch: ThunkDispatch<IAppState, {}, any>,
@@ -740,6 +760,6 @@ export const newFormWithConfirm = () => (
         dispatch(CreateFormActions.confirmNewForm());
     } else {
         // 未編集なのでこのまま新規帳票作成処理へ
-        dispatch(CreateFormActions.newForm(false /* これ要らなくすること */));
+        dispatch(CreateFormActions.newForm());
     }
 };

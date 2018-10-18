@@ -78,7 +78,7 @@ const ManageDataComponent: React.SFC<
         INotifyComponentDispatchProps
 > = props => {
     // TODO:
-    const { classes, notifyContext, onNotificationClose, onCloseButtonClick, ...rest } = props;
+    const { classes, notifyContext, ...rest } = props;
 
     return (
         <div className={classes.root}>

@@ -83,10 +83,6 @@ const CreateFormComponent: React.SFC<
         edittingTitle,
         endEdittingTitle,
         notifyContext,
-        onNotificationClose,
-        onCloseButtonClick,
-        onCancelButtonClick,
-        onOKButtonClick,
         dispatch, // TODO: 実験中
         ...rest
     } = props;
@@ -129,15 +125,7 @@ const CreateFormComponent: React.SFC<
                     <br />
                     <CreateFormDataGridComponent {...rest} />
 
-                    <NotifyComponent
-                        notifyContext={notifyContext}
-                        onNotificationClose={onNotificationClose}
-                        onCloseButtonClick={onCloseButtonClick}
-                        onCancelButtonClick={onCancelButtonClick}
-                        onOKButtonClick={onOKButtonClick}
-                        // TODO:実験中
-                        dispatch={dispatch}
-                    />
+                    <NotifyComponent notifyContext={notifyContext} dispatch={dispatch} />
                 </div>
             </main>
         </div>

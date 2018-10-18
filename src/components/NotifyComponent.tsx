@@ -31,6 +31,13 @@ const styles = (theme: Theme) =>
 // 	open: boolean;
 // 	duration: number;
 // }
+
+// TODO: 実験
+type _CallBack =
+    | (() => (dispatch: any, getState: () => any) => void)
+    | ActionCreator<void>
+    | undefined;
+
 export class NotifyContext {
     public readonly message: string;
     public readonly type: number;
@@ -40,10 +47,10 @@ export class NotifyContext {
     public readonly cancelTitle: string;
     public readonly okTitle: string;
     // TODO:
-    public readonly onNotificationClose: (() => void) | ActionCreator<void> | undefined;
-    public readonly onCloseButtonClick: (() => void) | ActionCreator<void> | undefined;
-    public readonly onCancelButtonClick: (() => void) | ActionCreator<void> | undefined;
-    public readonly onOKButtonClick: (() => void) | ActionCreator<void> | undefined;
+    public readonly onNotificationClose: _CallBack;
+    public readonly onCloseButtonClick: _CallBack;
+    public readonly onCancelButtonClick: _CallBack;
+    public readonly onOKButtonClick: _CallBack;
 
     constructor(
         message: string,
@@ -53,10 +60,10 @@ export class NotifyContext {
         title: string = '',
         cancelTitle: string = 'キャンセル',
         okTitle: string = 'OK',
-        onNotificationClose: (() => void) | ActionCreator<void> | undefined,
-        onCloseButtonClick: (() => void) | ActionCreator<void> | undefined,
-        onCancelButtonClick: (() => void) | ActionCreator<void> | undefined = undefined,
-        onOKButtonClick: (() => void) | ActionCreator<void> | undefined = undefined
+        onNotificationClose: _CallBack,
+        onCloseButtonClick: _CallBack,
+        onCancelButtonClick: _CallBack = undefined,
+        onOKButtonClick: _CallBack = undefined
     ) {
         this.message = message;
         this.type = type;
@@ -70,10 +77,7 @@ export class NotifyContext {
         this.onCancelButtonClick = onCancelButtonClick;
         this.onOKButtonClick = onOKButtonClick;
     }
-    public static defaultNotify = (
-        message: string,
-        notifyClose: (() => void) | ActionCreator<void>
-    ): NotifyContext => {
+    public static defaultNotify = (message: string, notifyClose: _CallBack): NotifyContext => {
         return new NotifyContext(message, 0, true, 3000, '', '', '', notifyClose, notifyClose);
     };
     public static emptyNotify = (): NotifyContext => {
@@ -99,8 +103,8 @@ export class NotifyContext {
         message: string,
         cancelTitle: string,
         okTitle: string,
-        cancelButtonClick: (() => void) | ActionCreator<void>,
-        okButtonClick: (() => void) | ActionCreator<void>
+        cancelButtonClick: _CallBack,
+        okButtonClick: _CallBack
     ): NotifyContext => {
         return new NotifyContext(
             message,
@@ -122,10 +126,6 @@ export interface INotifyComponentStateProps {
     notifyContext: NotifyContext;
 }
 export interface INotifyComponentDispatchProps {
-    onNotificationClose?: () => void;
-    onCloseButtonClick?: () => void;
-    onCancelButtonClick?: () => void;
-    onOKButtonClick?: () => void;
     dispatch?: any;
 }
 interface INotifyComponentStates {}
@@ -137,8 +137,8 @@ class NotifyComponent extends React.Component<
     handleCloseButtonClick = (event: any) => {
         // TODO:
         // this.props.onCloseButtonClick && this.props.onCloseButtonClick();
-        console.log(this.props.notifyContext.onCloseButtonClick);
-        console.log(this.props.dispatch);
+        // console.log(this.props.notifyContext.onCloseButtonClick);
+        // console.log(this.props.dispatch);
         this.props.notifyContext.onCloseButtonClick &&
             this.props.dispatch &&
             this.props.dispatch(this.props.notifyContext.onCloseButtonClick());
@@ -146,12 +146,16 @@ class NotifyComponent extends React.Component<
 
     handleCancelButtonClick = (event: any) => {
         // TODO:
-        this.props.onCancelButtonClick && this.props.onCancelButtonClick();
+        this.props.notifyContext.onCancelButtonClick &&
+            this.props.dispatch &&
+            this.props.dispatch(this.props.notifyContext.onCancelButtonClick());
     };
 
     handleOKButtonClick = (event: any) => {
         // TODO:
-        this.props.onOKButtonClick && this.props.onOKButtonClick();
+        this.props.notifyContext.onOKButtonClick &&
+            this.props.dispatch &&
+            this.props.dispatch(this.props.notifyContext.onOKButtonClick());
     };
 
     handleSnackbarClose = (event: React.SyntheticEvent, reason: string) => {
@@ -159,16 +163,17 @@ class NotifyComponent extends React.Component<
             return;
         }
         // TODO:
-        // this.props.onNotificationClose && this.props.onNotificationClose();
-        console.log(this.props.notifyContext.onNotificationClose);
-        console.log(this.props.dispatch);
+        // console.log(this.props.notifyContext.onNotificationClose);
+        // console.log(this.props.dispatch);
         this.props.notifyContext.onNotificationClose &&
             this.props.dispatch &&
             this.props.dispatch(this.props.notifyContext.onNotificationClose());
     };
 
     handleDialogClose = () => {
-        this.props.onNotificationClose && this.props.onNotificationClose();
+        this.props.notifyContext.onNotificationClose &&
+            this.props.dispatch &&
+            this.props.dispatch(this.props.notifyContext.onNotificationClose());
     };
 
     dialogTransition = (props: {}) => {
