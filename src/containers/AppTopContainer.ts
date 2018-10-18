@@ -41,7 +41,7 @@ function mapDispatchToProps(
         onNewForm: () => dispatch(newFormWithConfirmWorker()),
         onPrintForm: () => dispatch(CreateFormActions.printForm()),
         // TODO: 実験用
-        queryDb: () => queryDbWorker(dispatch, { query: <DataDoc>{}, projection: [] })
+        queryDb: () => dispatch(queryDbWorker({ query: <DataDoc>{}, projection: [] }))
     };
 }
 export default connect<IAppTopComponentStateProps, IAppTopComponentDispatchProps, {}, IAppState>(

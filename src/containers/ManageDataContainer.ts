@@ -15,6 +15,7 @@ import ManageDataComponent, {
 import { IAppState } from '../store';
 import { queryDbWorker } from '../states/ManageDataState';
 import { DataDoc } from '../db';
+import { ThunkDispatch } from 'redux-thunk';
 
 let _prevRows: DataDoc[] | null = null;
 
@@ -31,10 +32,12 @@ function mapStateToProps(appState: IAppState): IManageDataComponentStateProps {
 
     return props;
 }
-function mapDispatchToProps(dispatch: Dispatch<Action<any>>): IManageDataComponentDispatchProps {
+function mapDispatchToProps(
+    dispatch: ThunkDispatch<IAppState, {}, any>
+): IManageDataComponentDispatchProps {
     // TODO:
     return {
-        queryDb: () => queryDbWorker(dispatch, { query: <DataDoc>{}, projection: [] })
+        queryDb: () => dispatch(queryDbWorker({ query: <DataDoc>{}, projection: [] }))
     };
 }
 export default connect(

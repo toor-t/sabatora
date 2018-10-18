@@ -5,7 +5,7 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { ManageDataActions } from '../actions/ManageDataAction';
 import * as db from '../db';
-import wrapAsyncWorker from '../wrapAsyncWorker';
+import wrapAsyncWorker, { wrapThunkAsyncActionWorker } from '../wrapAsyncWorker';
 import { queryDb } from '../db_renderer';
 
 // DBDataRowKeys
@@ -66,9 +66,8 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
         return state;
     });
 
-export const queryDbWorker = wrapAsyncWorker<{ query: db.DataDoc; projection: any[] }, {}, {}>(
-    ManageDataActions.queryDb,
-    ({ query, projection }): Promise<{}> => {
-        return queryDb(query, projection);
-    }
-);
+export const queryDbWorker = wrapThunkAsyncActionWorker<
+    { query: db.DataDoc; projection: any[] },
+    {},
+    {}
+>(ManageDataActions.queryDb, queryDb);
