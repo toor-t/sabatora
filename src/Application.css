@@ -56,3 +56,18 @@
     border-left: 1px solid #dddddd;
     border-top: 1px solid #dddddd;
 }
+
+@media print {
+    body {
+        top: 0 !IMPORTANT;
+        left: 0 !IMPORTANT;
+        width: 172mm !IMPORTANT;
+        height: 251mm !IMPORTANT;
+    }
+    .s6 .index.page .inner.s6 .page .wrapper {
+        width: 47% !IMPORTANT;
+        height: 32% !IMPORTANT;
+        font-size: 50%;
+        line-height: 1.2;
+    }
+}

@@ -76,15 +76,14 @@ export const CreateFormActions = {
      */
     newForm: actionCreator<void>('NEW_FORM'),
     /**
-     * TODO: 帳票読込確認
+     * 帳票読込確認
      */
     confirmOpenForm: actionCreator<void>('CONFIRM_OPEN_FORM'),
     /**
-     * TODO: 新規帳票作成確認
+     * 新規帳票作成確認
      */
     confirmNewForm: actionCreator<void>('CONFIRM_NEW_FORM'),
 
-    // TODO:
     /**
      * 通知が閉じられた
      */

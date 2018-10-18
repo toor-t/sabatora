@@ -16,8 +16,6 @@ import {
     openFormWithConfirmWorker,
     newFormWithConfirmWorker
 } from '../states/CreateFormState';
-import { queryDbWorker } from '../states/ManageDataState';
-import { DataDoc } from '../db';
 // TODO: 実験用
 import { ThunkDispatch } from 'redux-thunk';
 
@@ -39,9 +37,7 @@ function mapDispatchToProps(
         onSaveForm: () => dispatch(saveFormWorker()),
         onOpenForm: () => dispatch(openFormWithConfirmWorker()),
         onNewForm: () => dispatch(newFormWithConfirmWorker()),
-        onPrintForm: () => dispatch(CreateFormActions.printForm()),
-        // TODO: 実験用
-        queryDb: () => dispatch(queryDbWorker({ query: <DataDoc>{}, projection: [] }))
+        onPrintForm: () => dispatch(CreateFormActions.printForm())
     };
 }
 export default connect<IAppTopComponentStateProps, IAppTopComponentDispatchProps, {}, IAppState>(

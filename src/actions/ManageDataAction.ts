@@ -44,7 +44,6 @@ export const ManageDataActions = {
      */
     queryDb: actionCreator.async<{ query: db.DataDoc; projection: any[] }, {}, {}>('QUERY_DB'),
 
-    // TODO:
     /**
      * 通知が閉じられた
      */

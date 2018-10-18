@@ -30,8 +30,9 @@ function mapStateToProps(
         notifyContext: appState.createFormState.notify,
         selectedRowsCount: appState.createFormState.formDataSelectedRowsCount,
         firstSelectedRowIdx: appState.createFormState.formDataFirstSelectedRowIdx,
+        formDataEditted: appState.createFormState.formDataEditted,
         // TODO:
-        formDataEditted: appState.createFormState.formDataEditted
+        printing: /*true*/ false
     };
 }
 function mapDispatchToProps(

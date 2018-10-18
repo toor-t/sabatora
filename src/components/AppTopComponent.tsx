@@ -157,9 +157,6 @@ export interface IAppTopComponentDispatchProps {
     onOpenForm: () => void;
     onNewForm: () => void;
     onPrintForm: () => void;
-
-    // TODO: 実験　要削除
-    queryDb: () => void;
 }
 interface IAppTopComponentStates {
     anchorEl?: HTMLElement;
@@ -243,9 +240,7 @@ class AppTopComponent extends React.Component<
                 AppBarTitle = AppTopSelected.ManageDataTitle;
                 MoreVartMenuContent = (
                     <div style={{ outline: 0 }}>
-                        <MenuItem onClick={this.handleMenuItemButton(this.props.queryDb)}>
-                            ダミー
-                        </MenuItem>
+                        <MenuItem>ダミー</MenuItem>
                     </div>
                 );
                 break;

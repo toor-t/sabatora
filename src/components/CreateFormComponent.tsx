@@ -18,6 +18,7 @@ import NotifyComponent, {
     INotifyComponentStateProps,
     INotifyComponentDispatchProps
 } from './NotifyComponent';
+import PrintFormComponent from './PrintFormComponent';
 
 // CreateFormComponent
 
@@ -57,6 +58,8 @@ export interface ICreateFormComponentStateProps extends ICreateFormDataGridCompo
     title: string;
     edittingTitle: boolean;
     formDataEditted: boolean;
+    // TODO: 印刷処理
+    printing: boolean;
 }
 
 export interface ICreateFormComponentDispatchProps
@@ -84,49 +87,54 @@ const CreateFormComponent: React.SFC<
         endEdittingTitle,
         notifyContext,
         dispatch, // TODO: 実験中
+        printing, // TODO: 実験中
         ...rest
     } = props;
 
     return (
         <div className={classes.root}>
             <main>
-                <div>
-                    {!edittingTitle ? (
-                        // タイトル通常表示
-                        <Typography variant="display1" align="center">
-                            {title}
-                            <IconButton
-                                className={classes.button}
-                                aria-label="Delete"
-                                onClick={startEdittingTitle}
-                            >
-                                <CreateIcon />
-                            </IconButton>
-                        </Typography>
-                    ) : (
-                        // TODO: タイトル編集中 編集終了ボタンが欲しい？
-                        <div className={classes.flexbox}>
-                            <Input
-                                autoFocus={true}
-                                className={classes.input}
-                                type="text"
-                                placeholder="Title"
-                                defaultValue={title}
-                                // tslint:disable-next-line:jsx-no-lambda
-                                onBlur={(e: any) => {
-                                    endEdittingTitle(e.target.value);
-                                }}
-                                inputProps={{
-                                    'aria-label': 'Description'
-                                }}
-                            />
-                        </div>
-                    )}
-                    <br />
-                    <CreateFormDataGridComponent {...rest} />
+                {!printing ? (
+                    <div id="CreateFormComponent">
+                        {!edittingTitle ? (
+                            // タイトル通常表示
+                            <Typography variant="display1" align="center">
+                                {title}
+                                <IconButton
+                                    className={classes.button}
+                                    aria-label="Delete"
+                                    onClick={startEdittingTitle}
+                                >
+                                    <CreateIcon />
+                                </IconButton>
+                            </Typography>
+                        ) : (
+                            // TODO: タイトル編集中 編集終了ボタンが欲しい？
+                            <div className={classes.flexbox}>
+                                <Input
+                                    autoFocus={true}
+                                    className={classes.input}
+                                    type="text"
+                                    placeholder="Title"
+                                    defaultValue={title}
+                                    // tslint:disable-next-line:jsx-no-lambda
+                                    onBlur={(e: any) => {
+                                        endEdittingTitle(e.target.value);
+                                    }}
+                                    inputProps={{
+                                        'aria-label': 'Description'
+                                    }}
+                                />
+                            </div>
+                        )}
+                        <br />
+                        <CreateFormDataGridComponent {...rest} />
 
-                    <NotifyComponent notifyContext={notifyContext} dispatch={dispatch} />
-                </div>
+                        <NotifyComponent notifyContext={notifyContext} dispatch={dispatch} />
+                    </div>
+                ) : (
+                    <PrintFormComponent title={title} rows={props.rows} />
+                )}
             </main>
         </div>
     );

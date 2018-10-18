@@ -15,6 +15,7 @@ import { openForm, saveForm, saveForm_sendFormData } from '../file_io_rederer';
 import { NotifyContext } from '../components/NotifyComponent';
 import { ThunkDispatch } from 'redux-thunk';
 import { IAppState } from '../store';
+import { remote } from 'electron';
 
 // NormalDataRowKeys
 export namespace NormalDataRowKeys {
@@ -534,6 +535,9 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     .case(CreateFormActions.printForm, state => {
         // TODO:
         console.log('printForm');
+        // TODO:  実験中
+        const webContents = remote.getCurrentWindow().webContents;
+        webContents.print();
         return state;
     })
 
