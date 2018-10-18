@@ -3,7 +3,6 @@
  */
 'use strict';
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
 // TODO:
 import { AppTopActions } from '../actions/AppTopAction';
 import AppTopComponent, {
@@ -13,10 +12,9 @@ import AppTopComponent, {
 import { IAppState } from '../store';
 import { CreateFormActions } from '../actions/CreateFormAction';
 import {
-    openFormWorker,
     saveFormWorker,
-    openFormWithConfirm,
-    newFormWithConfirm
+    openFormWithConfirmWorker,
+    newFormWithConfirmWorker
 } from '../states/CreateFormState';
 import { queryDbWorker } from '../states/ManageDataState';
 import { DataDoc } from '../db';
@@ -38,10 +36,9 @@ function mapDispatchToProps(
         onOpenDrawer: () => dispatch(AppTopActions.openDrawer()),
         onCloseDrawer: () => dispatch(AppTopActions.closeDrawer()),
         onSelectMenuItem: (selected: number) => dispatch(AppTopActions.selectMenuItem(selected)),
-        onSaveForm: () => saveFormWorker(dispatch, void {}),
-        onOpenForm: () => /*openFormWorker(dispatch, void {})*/ dispatch(openFormWithConfirm()), // TODO: 実験中
-        onNewForm: () =>
-            /*dispatch(CreateFormActions.newForm(false))*/ dispatch(newFormWithConfirm()), // TODO:  実験中
+        onSaveForm: () => dispatch(saveFormWorker()),
+        onOpenForm: () => dispatch(openFormWithConfirmWorker()),
+        onNewForm: () => dispatch(newFormWithConfirmWorker()),
         onPrintForm: () => dispatch(CreateFormActions.printForm()),
         // TODO: 実験用
         queryDb: () => queryDbWorker(dispatch, { query: <DataDoc>{}, projection: [] })

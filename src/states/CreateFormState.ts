@@ -5,7 +5,10 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { CreateFormActions } from '../actions/CreateFormAction';
 import immutabilityHelper from 'immutability-helper';
-import wrapAsyncWorker from '../wrapAsyncWorker';
+import wrapAsyncWorker, {
+    wrapThunkAsyncActionWorker,
+    wrapThunkAsyncActionParamVoidWorker
+} from '../wrapAsyncWorker';
 import { updateAutoCompleteOptions } from '../db_renderer';
 import { openForm, saveForm, saveForm_sendFormData } from '../file_io_rederer';
 // TODO: NotifyComponentの実験
@@ -486,7 +489,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
             undefined,
             undefined,
             CreateFormActions.closeNotify,
-            _openFormWorker
+            openFormWorker
         );
 
         return Object.assign({}, state, { notify });
@@ -495,7 +498,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     // 帳票保存 (開始)
     .case(CreateFormActions.saveForm.started, state => {
         // TODO:
-        console.log('CreateFormActions.saveForm.started');
+        // console.log('CreateFormActions.saveForm.started');
         // FormDataを送る
         saveForm_sendFormData(state.formData);
 
@@ -504,7 +507,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     // 帳票保存 (完了)
     .case(CreateFormActions.saveForm.done, (state, payload) => {
         // TODO:
-        console.log('CreateFormActions.saveForm.done');
+        // console.log('CreateFormActions.saveForm.done');
         // TODO: 実験 完了時に通知を出してみる。
         const notify = NotifyContext.defaultNotify('帳票保存完了', CreateFormActions.closeNotify);
 
@@ -710,28 +713,19 @@ export const updateAutoCompleteOptionsWorker = wrapAsyncWorker<
 );
 
 // TODO: 非同期帳票読込
-export const openFormWorker = wrapAsyncWorker<void, Buffer, {}>(
+export const openFormWorker = wrapThunkAsyncActionParamVoidWorker<Buffer, {}>(
     CreateFormActions.openForm,
-    (): Promise<Buffer> => {
-        return openForm();
-    }
+    openForm
 );
 
 // TODO: 非同期帳票保存
-export const saveFormWorker = wrapAsyncWorker<void, {}, {}>(
+export const saveFormWorker = wrapThunkAsyncActionParamVoidWorker<{}, {}>(
     CreateFormActions.saveForm,
-    (): Promise<{}> => {
-        return saveForm();
-    }
+    saveForm
 );
 
-// TODO:  実験用ラップ
-const _openFormWorker = () => (dispatch: any, getState: () => any) => {
-    openFormWorker(dispatch, void {});
-};
-
 // TODO: 確認付き帳票読込 ※ここに置くべきか？要検討
-export const openFormWithConfirm = () => (
+export const openFormWithConfirmWorker = () => (
     dispatch: ThunkDispatch<IAppState, {}, any>,
     getState: () => IAppState
 ) => {
@@ -743,12 +737,13 @@ export const openFormWithConfirm = () => (
         dispatch(CreateFormActions.confirmOpenForm());
     } else {
         // 未編集なのでこのまま読込処理へ
-        openFormWorker(dispatch, void {});
+        // openFormWorker(dispatch, void {});
+        dispatch(openFormWorker());
     }
 };
 
 // TODO: 確認付き新規帳票作成 ※ここに置くべきか？要検討
-export const newFormWithConfirm = () => (
+export const newFormWithConfirmWorker = () => (
     dispatch: ThunkDispatch<IAppState, {}, any>,
     getState: () => IAppState
 ) => {

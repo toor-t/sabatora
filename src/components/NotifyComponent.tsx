@@ -16,7 +16,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 // tslint:disable-next-line:import-name
 import CloseIcon from '@material-ui/icons/Close';
-import { Action } from 'redux';
 import { ActionCreator } from 'typescript-fsa';
 
 const styles = (theme: Theme) =>
@@ -26,17 +25,8 @@ const styles = (theme: Theme) =>
         }
     });
 
-// export type NotifyContext = {
-// 	message: string;
-// 	open: boolean;
-// 	duration: number;
-// }
-
-// TODO: 実験
-type _CallBack =
-    | (() => (dispatch: any, getState: () => any) => void)
-    | ActionCreator<void>
-    | undefined;
+type ThunkActionType = (() => (dispatch: any, getState: () => any) => any);
+type ThunkDispatchActionType = ThunkActionType | ActionCreator<void> | undefined;
 
 export class NotifyContext {
     public readonly message: string;
@@ -46,11 +36,10 @@ export class NotifyContext {
     public readonly title: string;
     public readonly cancelTitle: string;
     public readonly okTitle: string;
-    // TODO:
-    public readonly onNotificationClose: _CallBack;
-    public readonly onCloseButtonClick: _CallBack;
-    public readonly onCancelButtonClick: _CallBack;
-    public readonly onOKButtonClick: _CallBack;
+    public readonly onNotificationClose: ThunkDispatchActionType;
+    public readonly onCloseButtonClick: ThunkDispatchActionType;
+    public readonly onCancelButtonClick: ThunkDispatchActionType;
+    public readonly onOKButtonClick: ThunkDispatchActionType;
 
     constructor(
         message: string,
@@ -60,10 +49,10 @@ export class NotifyContext {
         title: string = '',
         cancelTitle: string = 'キャンセル',
         okTitle: string = 'OK',
-        onNotificationClose: _CallBack,
-        onCloseButtonClick: _CallBack,
-        onCancelButtonClick: _CallBack = undefined,
-        onOKButtonClick: _CallBack = undefined
+        onNotificationClose: ThunkDispatchActionType,
+        onCloseButtonClick: ThunkDispatchActionType,
+        onCancelButtonClick: ThunkDispatchActionType = undefined,
+        onOKButtonClick: ThunkDispatchActionType = undefined
     ) {
         this.message = message;
         this.type = type;
@@ -77,7 +66,10 @@ export class NotifyContext {
         this.onCancelButtonClick = onCancelButtonClick;
         this.onOKButtonClick = onOKButtonClick;
     }
-    public static defaultNotify = (message: string, notifyClose: _CallBack): NotifyContext => {
+    public static defaultNotify = (
+        message: string,
+        notifyClose: ThunkDispatchActionType
+    ): NotifyContext => {
         return new NotifyContext(message, 0, true, 3000, '', '', '', notifyClose, notifyClose);
     };
     public static emptyNotify = (): NotifyContext => {
@@ -103,8 +95,8 @@ export class NotifyContext {
         message: string,
         cancelTitle: string,
         okTitle: string,
-        cancelButtonClick: _CallBack,
-        okButtonClick: _CallBack
+        cancelButtonClick: ThunkDispatchActionType,
+        okButtonClick: ThunkDispatchActionType
     ): NotifyContext => {
         return new NotifyContext(
             message,
@@ -136,9 +128,6 @@ class NotifyComponent extends React.Component<
 > {
     handleCloseButtonClick = (event: any) => {
         // TODO:
-        // this.props.onCloseButtonClick && this.props.onCloseButtonClick();
-        // console.log(this.props.notifyContext.onCloseButtonClick);
-        // console.log(this.props.dispatch);
         this.props.notifyContext.onCloseButtonClick &&
             this.props.dispatch &&
             this.props.dispatch(this.props.notifyContext.onCloseButtonClick());
@@ -163,8 +152,6 @@ class NotifyComponent extends React.Component<
             return;
         }
         // TODO:
-        // console.log(this.props.notifyContext.onNotificationClose);
-        // console.log(this.props.dispatch);
         this.props.notifyContext.onNotificationClose &&
             this.props.dispatch &&
             this.props.dispatch(this.props.notifyContext.onNotificationClose());
