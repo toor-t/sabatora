@@ -62,9 +62,9 @@ const openForm = (): Promise<{}> => {
                     ]
                 },
                 filename => {
-                    console.log(filename);
+                    // console.log(filename);
                     if (filename && filename[0]) {
-                        console.log(filename[0]);
+                        // console.log(filename[0]);
                         // ファイルオープン
                         const data = fs.readFile(filename[0], (err, data) => {
                             if (err) {
@@ -94,9 +94,9 @@ const openForm = (): Promise<{}> => {
 // TODO:
 const saveForm_request = ipcMain.on(SaveForm.Request, (event: any, arg: any) => {
     // TODO:
-    console.log('saveForm_request');
-    console.log(event);
-    console.log(arg);
+    // console.log('saveForm_request');
+    // console.log(event);
+    // console.log(arg);
     // TODO: 実験：waitしてみる
     sleep(200, () => {
         saveForm(arg[0]).then(
@@ -132,13 +132,13 @@ const saveForm = (formData: any): Promise<{}> => {
                     ]
                 },
                 filename => {
-                    console.log(filename);
+                    // console.log(filename);
                     if (filename) {
                         // TODO:  保存不要なステータスを除去したステータスを用意
                         const saveFormData = Object.assign({}, formData);
                         // ファイルに保存
                         const fileContent = JSON.stringify(saveFormData);
-                        console.log(fileContent);
+                        // console.log(fileContent);
                         fs.writeFile(filename, fileContent, err => {
                             if (err) {
                                 // TODO:

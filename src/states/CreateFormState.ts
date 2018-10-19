@@ -5,7 +5,7 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { CreateFormActions } from '../actions/CreateFormAction';
 import immutabilityHelper from 'immutability-helper';
-import wrapAsyncWorker, {
+import {
     wrapThunkAsyncActionWorker,
     wrapThunkAsyncActionParamVoidWorker
 } from '../wrapAsyncWorker';
@@ -14,8 +14,7 @@ import { openForm, saveForm, saveForm_sendFormData } from '../file_io_rederer';
 // TODO: NotifyComponentの実験
 import { NotifyContext } from '../components/NotifyComponent';
 import { ThunkDispatch } from 'redux-thunk';
-import store, { IAppState } from '../store';
-import { remote } from 'electron';
+import { IAppState } from '../store';
 import { printForm } from '../print_renderer';
 import { Str } from '../strings';
 
@@ -25,65 +24,33 @@ export namespace NormalDataRowKeys {
     export const id = 'id'; // : number;
 
     export const level_1 = 'level_1'; // : string; // 大項目
-    export const level_1_isValid = 'level_1_isValid'; // : boolean;
-    export const level_1_isEmpty = 'level_1_isEmpty'; // : boolean;
-
     export const level_2 = 'level_2'; // : string; // 中項目
-    export const level_2_isValid = 'level_2_isValid'; // : boolean;
-    export const level_2_isEmpty = 'level_2_isEmpty'; // : boolean;
-
     export const level_3 = 'level_3'; // : string; // 小項目
-    export const level_3_isValid = 'level_3_isValid'; // : boolean;
-    export const level_3_isEmpty = 'level_3_isEmpty'; // : boolean;
-
     export const itemName = 'itemName'; // : string; // 名称
-    export const itemName_isValid = 'itemName_isValid'; // : boolean;
-    export const itemName_isEmpty = 'itemName_isEmpty'; // : boolean;
-
     export const unitPrice = 'unitPrice'; // : number; // 単価 TODO: データをどのように持たすか？
-    export const unitPrice_isValid = 'unitPrice_isValid'; // : boolean;
-    export const unitPrice_isEmpty = 'unitPrice_isEmpty'; // : boolean;
-
     export const num = 'num'; // : number; // 個数
-    export const num_isValid = 'num_isValid'; // : boolean;
-    export const num_isEmpty = 'num_isEmpty'; // : boolean;
-
     export const price = 'price'; // : number; // 価格
-    export const price_isEmpty = 'price_isEmpty'; // : boolean;
 
     export const selected = 'selected'; // : boolean;
+
+    // TODO: 実験
+    export const invalid = 'invalid'; // : boolean;
 }
 export interface NormalDataRow {
     [NormalDataRowKeys.id]: number;
 
     [NormalDataRowKeys.level_1]: string; // 大項目
-    [NormalDataRowKeys.level_1_isValid]: boolean;
-    [NormalDataRowKeys.level_1_isEmpty]: boolean;
-
     [NormalDataRowKeys.level_2]: string; // 中項目
-    [NormalDataRowKeys.level_2_isValid]: boolean;
-    [NormalDataRowKeys.level_2_isEmpty]: boolean;
-
     [NormalDataRowKeys.level_3]: string; // 小項目
-    [NormalDataRowKeys.level_3_isValid]: boolean;
-    [NormalDataRowKeys.level_3_isEmpty]: boolean;
-
     [NormalDataRowKeys.itemName]: string; // 名称
-    [NormalDataRowKeys.itemName_isValid]: boolean;
-    [NormalDataRowKeys.itemName_isEmpty]: boolean;
-
-    [NormalDataRowKeys.unitPrice]: number; // 単価 TODO: データをどのように持たすか？
-    [NormalDataRowKeys.unitPrice_isValid]: boolean;
-    [NormalDataRowKeys.unitPrice_isEmpty]: boolean;
-
+    [NormalDataRowKeys.unitPrice]: number; // 単価
     [NormalDataRowKeys.num]: number; // 個数
-    [NormalDataRowKeys.num_isValid]: boolean;
-    [NormalDataRowKeys.num_isEmpty]: boolean;
-
     [NormalDataRowKeys.price]: number; // 価格
-    [NormalDataRowKeys.price_isEmpty]: boolean;
 
     [NormalDataRowKeys.selected]: boolean;
+
+    // TODO: 実験
+    [NormalDataRowKeys.invalid]: boolean;
 }
 
 // 合計表示行
@@ -133,33 +100,26 @@ export interface ICreateFormState {
 
     printing: boolean; //
 }
+const initialDataRow: FormDataRow = {
+    id: 1,
+
+    level_1: '',
+    level_2: '',
+    level_3: '',
+    itemName: '',
+    unitPrice: 0,
+    num: 1, // 初期個数は1に
+    price: 0,
+
+    selected: false,
+    // TODO: 実験
+    invalid: false
+};
 const initialState: ICreateFormState = {
     formData: {
         dataRows: [
-            {
-                id: 1,
-                level_1: '',
-                level_1_isValid: false,
-                level_1_isEmpty: true,
-                level_2: '',
-                level_2_isValid: false,
-                level_2_isEmpty: true,
-                level_3: '',
-                level_3_isValid: false,
-                level_3_isEmpty: true,
-                itemName: '',
-                itemName_isEmpty: true,
-                itemName_isValid: false,
-                unitPrice: 0,
-                unitPrice_isEmpty: true,
-                unitPrice_isValid: false,
-                num: 1, // 初期個数は1に
-                num_isEmpty: true,
-                num_isValid: false,
-                price: 0,
-                price_isEmpty: true,
-                selected: false
-            },
+            initialDataRow,
+
             {
                 id: -1,
                 [TotalPriceRowKeys.labelTotalPrice]: Str.TotalPrice,
@@ -191,8 +151,8 @@ function calcTotalPrice(rows: any[]): number {
     let subSumPrice: number = 0;
     for (let i = 0; i < rows.length; i = i + 1) {
         if (
-            rows[i][NormalDataRowKeys.price] !== undefined &&
-            !rows[i][NormalDataRowKeys.price_isEmpty]
+            rows[i][NormalDataRowKeys.price] !== undefined
+            // && !rows[i][NormalDataRowKeys.price_isEmpty]
         ) {
             sumPrice += rows[i][NormalDataRowKeys.price];
             subSumPrice += rows[i][NormalDataRowKeys.price];
@@ -211,7 +171,11 @@ function calcTotalPrice(rows: any[]): number {
     return sumPrice;
 }
 
-// TODO: 選択行の数と先頭から数えて最初の選択行のインデックスを取得
+/**
+ * TODO: 選択行の数と先頭から数えて最初の選択行のインデックスを取得
+ * @param rows
+ * @returns {count: number; firstIdx: number}
+ */
 const getSlecetedRowsInfo = (rows: FormDataRow[]): { count: number; firstIdx: number } => {
     let count: number = 0;
     let firstIdx: number = -1;
@@ -224,7 +188,7 @@ const getSlecetedRowsInfo = (rows: FormDataRow[]): { count: number; firstIdx: nu
             }
         }
     }
-    console.log(`count=${count}, firstIdx=${firstIdx}`);
+    // console.log(`count=${count}, firstIdx=${firstIdx}`);
     return { count, firstIdx };
 };
 /**
@@ -251,30 +215,10 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         }
 
         if (insertIdx > -1) {
-            dataRows.splice(insertIdx, 0, {
-                id: rowsCount, // TODO:  これじゃダメ、どうすべき？
-                level_1: '',
-                level_1_isEmpty: true,
-                level_1_isValid: false,
-                level_2: '',
-                level_2_isEmpty: true,
-                level_2_isValid: false,
-                level_3: '',
-                level_3_isEmpty: true,
-                level_3_isValid: false,
-                itemName: '',
-                itemName_isEmpty: true,
-                itemName_isValid: false,
-                unitPrice: 0,
-                unitPrice_isEmpty: true,
-                unitPrice_isValid: false,
-                num: 1, // 初期個数は1に
-                num_isEmpty: true,
-                num_isValid: false,
-                price: 0,
-                price_isEmpty: true,
-                selected: false
+            const row = Object.assign({}, initialDataRow, {
+                id: rowsCount /* TODO:  これじゃダメ、どうすべき？ */
             });
+            dataRows.splice(insertIdx, 0, row);
         } else {
             // 何もせずリターン (通常来ない)
             console.log(`ABNORMAL firstIdx=${state.formDataFirstSelectedRowIdx}`);
@@ -386,15 +330,6 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         );
     })
 
-    // .case(CreateFormActions.insertRow, (state, r) => {
-    //     // TODO:
-
-    //     // 合計を計算
-    //     const totalPrice = calcTotalPrice(state.dataRows);
-
-    //     return Object.assign({}, state, {formData:{ totalPrice /* TODO: */ }});
-    // })
-
     // グリッド行更新
     .case(CreateFormActions.updateGridRow, (state, e) => {
         // TODO:
@@ -415,7 +350,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
                     : e.updated[NormalDataRowKeys.num];
 
                 e.updated[NormalDataRowKeys.price] = _unitPrice * _num;
-                e.updated[NormalDataRowKeys.price_isEmpty] = false;
+                // e.updated[NormalDataRowKeys.price_isEmpty] = false;
 
                 const updatedRow = immutabilityHelper(rowToUpdate, { $merge: e.updated });
                 dataRows[i] = updatedRow;
@@ -533,7 +468,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     // 帳票印刷開始
     .case(CreateFormActions.startPrintForm, state => {
         // TODO:
-        console.log('startPrintForm');
+        // console.log('startPrintForm');
 
         // TODO: プリント用画面に切り替える
         const printing = true;
@@ -542,7 +477,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     // 帳票印刷終了
     .case(CreateFormActions.endPrintForm, state => {
         // TODO:
-        console.log('endPrintForm');
+        // console.log('endPrintForm');
 
         // TODO: プリント用画面を終了
         const printing = false;
@@ -552,7 +487,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     .case(CreateFormActions.newForm, (state /*, force*/) => {
         // TODO: 初期データを復元する
         const formData = initialState.formData;
-        console.log(formData);
+        // console.log(formData);
         // 編集状態解除
         const formDataEditted = false;
 
@@ -581,20 +516,6 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         return Object.assign({}, state, { notify });
     })
-
-    // .case(CreateFormActions.saveForm.started, state => {
-    // 	// TODO:
-    // 	return state;
-    // })
-    // .case(CreateFormActions.saveForm.done, state => {
-    // 	// TODO:
-    // 	return state;
-    // })
-    // .case(CreateFormActions.saveForm.failed, (state, err) => {
-    // 	// TODO:
-    // 	console.log(err);
-    // 	return state;
-    // })
 
     // セル選択
     .case(CreateFormActions.selectCell, (state, col) => {
@@ -741,7 +662,7 @@ export const openFormWithConfirmWorker = () => (
     dispatch: ThunkDispatch<IAppState, {}, any>,
     getState: () => IAppState
 ) => {
-    console.log('openFormWithConfirm');
+    // console.log('openFormWithConfirm');
     const { formDataEditted } = getState().createFormState;
 
     if (formDataEditted) {
@@ -759,7 +680,7 @@ export const newFormWithConfirmWorker = () => (
     dispatch: ThunkDispatch<IAppState, {}, any>,
     getState: () => IAppState
 ) => {
-    console.log('newFormWithConfirm');
+    // console.log('newFormWithConfirm');
     const { formDataEditted } = getState().createFormState;
 
     if (formDataEditted) {
@@ -776,7 +697,7 @@ export const printFormWorker = () => (
     dispatch: ThunkDispatch<IAppState, {}, any>,
     getState: () => IAppState
 ) => {
-    console.log('printFormWorker');
+    // console.log('printFormWorker');
     // 印刷開始
     dispatch(CreateFormActions.startPrintForm());
     return printForm().then(

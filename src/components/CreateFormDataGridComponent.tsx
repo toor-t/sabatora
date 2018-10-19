@@ -28,19 +28,21 @@ import { Str } from '../strings';
 let autoCompleteOptions: any;
 autoCompleteOptions = {};
 
-const getOptions = (ddKey: string): { (): { id: number; title: string } } => {
+const getOptions = (ddKey: string): { (): { id: number; title: string }[] } => {
     return () => {
         return autoCompleteOptions[ddKey];
     };
 };
 
 // CustomAutoCompleteEditor
-interface ICustomAutoComleteEditorStates {
+interface ICustomAutoCompleteEditorProps {
     // TODO:
+    getOptions: () => { id: number; title: string };
 }
+interface ICustomAutoCompleteEditorStates {}
 class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
-    any,
-    ICustomAutoComleteEditorStates
+    ICustomAutoCompleteEditorProps & any,
+    ICustomAutoCompleteEditorStates
 > {
     constructor(props: any) {
         super(props);
@@ -54,7 +56,26 @@ class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
     autoComplete: any;
 
     getValue() {
-        return this.autoComplete.getValue();
+        // TODO: 実験
+        // return this.autoComplete.getValue();
+        const valueObj: {} = this.autoComplete.getValue();
+        // console.log(valueObj);
+        const key = Object.keys(valueObj)[0];
+        // console.log(key);
+        const value = Object.values(valueObj)[0];
+        // console.log(value)
+        const _options: { id: number; title: string }[] = this.props.getOptions();
+        if (_options) {
+            // console.log(_options);
+            let found: boolean = false;
+            _options.map((option, index, array) => {
+                if (option.title === value) {
+                    found = true;
+                }
+            });
+            if (!found) return { [key]: '' };
+        }
+        return valueObj;
     }
     getInputNode() {
         return this.autoComplete.getInputNode();
@@ -64,6 +85,7 @@ class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
     }
     render() {
         const { ref, options, getOptions, ...rest } = this.props;
+        // console.log(rest);
         // 選択候補が多すぎる時は表示しない
         const _options =
             getOptions() === undefined
@@ -467,10 +489,10 @@ class CreateFormDataGridComponent extends React.Component<
             param.row[SubtotalPriceRowKeys.labelSubtotalPrice]
         ) {
             // 合計行、小計行では編集禁止
-            console.log('not editable');
+            // console.log('not editable');
             return false;
         }
-        console.log('editable');
+        // console.log('editable');
         return true;
     };
 

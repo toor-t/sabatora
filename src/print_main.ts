@@ -64,7 +64,7 @@ const printForm = (): Promise<{}> => {
                     resolve('印刷完了');
                 }
             );
-            console.log('webContents.print() end!!');
+            // console.log('webContents.print() end!!');
         } else {
             // TODO:
             reject('印刷異常終了');

@@ -10,7 +10,7 @@ import { ipcRenderer } from 'electron';
 export const printForm = (): Promise<void> => {
     return new Promise((resolve, reject) => {
         const resultListener = (event: any, result: any) => {
-            console.log(`PrintForm-result=${{ ...result }}`);
+            // console.log(`PrintForm-result=${{ ...result }}`);
             resolve(result);
 
             // Remove Listner
@@ -19,7 +19,7 @@ export const printForm = (): Promise<void> => {
         };
         ipcRenderer.once(PrintForm.Result, resultListener);
         const rejectListener = (event: any, result: any) => {
-            console.log(`PrintForm-result=${{ ...result }}`);
+            // console.log(`PrintForm-result=${{ ...result }}`);
             reject(result);
 
             // Remove Listner
@@ -29,7 +29,7 @@ export const printForm = (): Promise<void> => {
         ipcRenderer.once(PrintForm.Reject, rejectListener);
         const replyListener = (event: any, reply: any) => {
             /* TODO: */
-            console.log(`PrintForm-reply = ${reply}`);
+            // console.log(`PrintForm-reply = ${reply}`);
             // // TODO: 実験 リプライ時に李ソルブ扱いにしてみる。キャンセル時処理のため。->ダメでした。
             // resolve(reply);
 
@@ -38,7 +38,7 @@ export const printForm = (): Promise<void> => {
         };
         ipcRenderer.once(PrintForm.Reply, replyListener);
         //
-        console.log('Send PrintForm-request');
+        // console.log('Send PrintForm-request');
         ipcRenderer.send(PrintForm.Request, []);
     });
 };
