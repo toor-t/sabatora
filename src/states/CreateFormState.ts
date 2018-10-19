@@ -16,6 +16,7 @@ import { NotifyContext } from '../components/NotifyComponent';
 import { ThunkDispatch } from 'redux-thunk';
 import store, { IAppState } from '../store';
 import { remote } from 'electron';
+import { printForm } from '../print_renderer';
 
 // NormalDataRowKeys
 export namespace NormalDataRowKeys {
@@ -777,19 +778,19 @@ export const printFormWorker = () => (
     console.log('printFormWorker');
     // 印刷開始
     dispatch(CreateFormActions.startPrintForm());
-
-    // TODO:  実験中
-    const webContents = remote.getCurrentWindow().webContents;
-    webContents.print(
-        { silent: false, printBackground: false, deviceName: '' },
-        (success: boolean) => {
-            if (!success) {
-                // TODO:  失敗した場合エラー表示する
-                console.log('帳票印刷失敗');
-            }
+    return printForm().then(
+        result => {
             console.log('印刷終了');
             // 印刷終了
             dispatch(CreateFormActions.endPrintForm());
+            return result;
+        },
+        error => {
+            // TODO:  失敗した場合エラー表示する
+            console.log('帳票印刷失敗');
+            dispatch(CreateFormActions.endPrintForm());
+            // throw error;
+            return error;
         }
     );
 };

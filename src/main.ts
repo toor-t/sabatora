@@ -7,6 +7,7 @@ import * as path from 'path';
 import * as url from 'url';
 import './db_main';
 import './file_io_main';
+import './print_main';
 
 const ElectronStore = require('electron-store');
 

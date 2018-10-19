@@ -5,8 +5,8 @@
 
 // TODO:
 export namespace PrintForm {
-    const Request = 'printForm-request';
-    const Reply = 'printForm-reply';
-    const Result = 'printForm-result';
-    const Error = 'printForm-error';
+    export const Request = 'printForm-request';
+    export const Reply = 'printForm-reply';
+    export const Result = 'printForm-result';
+    export const Reject = 'printForm-reject';
 }
