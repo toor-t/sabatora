@@ -6,7 +6,7 @@
 import * as ReactDataGrid from 'react-data-grid';
 import * as React from 'react';
 import { Toolbar, Editors } from 'react-data-grid-addons';
-const { AutoComplete: AutoCompleteEditor } = Editors;
+const { AutoComplete: AutoCompleteEditor, SimpleTextEditor } = Editors;
 import {
     NormalDataRow,
     NormalDataRowKeys,
@@ -68,15 +68,19 @@ class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
         const _options =
             getOptions() === undefined
                 ? undefined
-                : getOptions().length < 100
-                    ? getOptions()
-                    : undefined;
-        return (
+                : getOptions().length === 0
+                    ? undefined
+                    : getOptions().length < 100
+                        ? getOptions()
+                        : undefined;
+        return _options !== undefined ? (
             <AutoCompleteEditor
                 ref={node => (this.autoComplete = node)}
                 options={_options}
                 {...rest}
             />
+        ) : (
+            <SimpleTextEditor ref={node => (this.autoComplete = node)} {...rest} />
         );
     }
 }

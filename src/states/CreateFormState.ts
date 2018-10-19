@@ -153,7 +153,7 @@ const initialState: ICreateFormState = {
                 unitPrice: 0,
                 unitPrice_isEmpty: true,
                 unitPrice_isValid: false,
-                num: 0,
+                num: 1, // 初期個数は1に
                 num_isEmpty: true,
                 num_isValid: false,
                 price: 0,
@@ -268,7 +268,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
                 unitPrice: 0,
                 unitPrice_isEmpty: true,
                 unitPrice_isValid: false,
-                num: 0,
+                num: 1, // 初期個数は1に
                 num_isEmpty: true,
                 num_isValid: false,
                 price: 0,
