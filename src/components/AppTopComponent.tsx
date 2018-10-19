@@ -113,8 +113,19 @@ const styles = (theme: Theme) =>
         content: {
             flexGrow: 1,
             backgroundColor: theme.palette.background.default,
-            padding: theme.spacing.unit * 3
+            padding: theme.spacing.unit * 3,
             // marginLeft: -drawerWidth,
+            transition: theme.transitions.create(['margin'], {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.leavingScreen
+            })
+        },
+        contentShift: {
+            marginLeft: drawerWidth,
+            transition: theme.transitions.create(['margin'], {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.enteringScreen
+            })
         }
     });
 
@@ -269,66 +280,68 @@ class AppTopComponent extends React.Component<
         }
         return (
             <div className={classes.root}>
-                <AppBar
-                    position="fixed"
-                    className={classNames(
-                        classes.appBar,
-                        this.props.drawerOpend && classes.appBarShift
-                    )}
-                >
-                    <Toolbar disableGutters={!this.props.drawerOpend}>
-                        <IconButton
-                            color="inherit"
-                            aria-label="Open drawer"
-                            onClick={this.props.onOpenDrawer}
-                            className={classNames(
-                                classes.menuButton,
-                                this.props.drawerOpend && classes.hide
-                            )}
-                            // tslint:disable-next-line:jsx-no-lambda
-                            onFocus={(e: any) => e.currentTarget.blur()}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography
-                            variant="title"
-                            color="inherit"
-                            style={{ flexGrow: 1 }}
-                            noWrap={true}
-                        >
-                            {AppBarTitle}
-                        </Typography>
-                        {/* TODO: */}
-                        <div>
+                <div id="app-top-component-app-bar">
+                    <AppBar
+                        position="fixed"
+                        className={classNames(
+                            classes.appBar,
+                            this.props.drawerOpend && classes.appBarShift
+                        )}
+                    >
+                        <Toolbar disableGutters={!this.props.drawerOpend}>
                             <IconButton
-                                aria-owns={open ? 'menu-appbar' : undefined}
-                                aria-haspopup="true"
-                                onClick={this.handleMenuOpen}
                                 color="inherit"
+                                aria-label="Open drawer"
+                                onClick={this.props.onOpenDrawer}
+                                className={classNames(
+                                    classes.menuButton,
+                                    this.props.drawerOpend && classes.hide
+                                )}
                                 // tslint:disable-next-line:jsx-no-lambda
                                 onFocus={(e: any) => e.currentTarget.blur()}
                             >
-                                <MoreVertIcon />
+                                <MenuIcon />
                             </IconButton>
-                            <Menu
-                                id="menu-appbar"
-                                anchorEl={anchorEl}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right'
-                                }}
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right'
-                                }}
-                                open={open}
-                                onClose={this.handleMenuClose}
+                            <Typography
+                                variant="title"
+                                color="inherit"
+                                style={{ flexGrow: 1 }}
+                                noWrap={true}
                             >
-                                {MoreVartMenuContent}
-                            </Menu>
-                        </div>
-                    </Toolbar>
-                </AppBar>
+                                {AppBarTitle}
+                            </Typography>
+                            {/* TODO: */}
+                            <div>
+                                <IconButton
+                                    aria-owns={open ? 'menu-appbar' : undefined}
+                                    aria-haspopup="true"
+                                    onClick={this.handleMenuOpen}
+                                    color="inherit"
+                                    // tslint:disable-next-line:jsx-no-lambda
+                                    onFocus={(e: any) => e.currentTarget.blur()}
+                                >
+                                    <MoreVertIcon />
+                                </IconButton>
+                                <Menu
+                                    id="menu-appbar"
+                                    anchorEl={anchorEl}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right'
+                                    }}
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right'
+                                    }}
+                                    open={open}
+                                    onClose={this.handleMenuClose}
+                                >
+                                    {MoreVartMenuContent}
+                                </Menu>
+                            </div>
+                        </Toolbar>
+                    </AppBar>
+                </div>
                 <Drawer
                     variant="persistent"
                     // classes={{
@@ -403,8 +416,13 @@ class AppTopComponent extends React.Component<
                         </ListItem>
                     </List>
                 </Drawer>
-                <main className={classes.content}>
-                    <div className={classes.toolbar} />
+                <main
+                    className={classNames(
+                        classes.content
+                        // this.props.drawerOpend && classes.contentShift
+                    )}
+                >
+                    <div className={classes.toolbar} id="app-top-component-toolbar" />
 
                     <Content />
                 </main>

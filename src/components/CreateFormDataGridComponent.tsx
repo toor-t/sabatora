@@ -505,9 +505,7 @@ class CreateFormDataGridComponent extends React.Component<
                     headerRowHeight={HEADER_ROW_HEIGHT}
                     minHeight={
                         HEADER_ROW_HEIGHT +
-                        ROW_HEIGHT *
-                            ((this.rowCount() < 20 ? 20 : this.rowCount()) +
-                                2) /* 下部余白２行分 */ -
+                        ROW_HEIGHT * (this.rowCount() + 6) /* 下部余白6行分 */ -
                         1
                     }
                     onGridRowsUpdated={this.props.onGridRowUpdate}

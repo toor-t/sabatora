@@ -46,35 +46,20 @@ const NumberFormatter = (value: any): string => {
 const styles = (theme: Theme) =>
     createStyles({
         root: {
-            flexGrow: 1
+            width: '100%',
+            marginTop: theme.spacing.unit * 3,
+            overflowX: 'auto'
         },
-        grow: {
-            flexGrow: 1
+        table: {
+            minWidth: 700
         },
-        menuButton: {
-            marginLeft: -12,
-            marginRight: 20
-        },
-        button: {
-            margin: theme.spacing.unit
-        },
-        container: {
-            display: 'inline',
-            flexWrap: 'wrap'
-        },
-        input: {
-            margin: theme.spacing.unit
-        },
-        flexbox: {
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'stretch',
-            textAlign: 'center'
-            // height: 150,
-            // padding: 10,
-            // margin: 20,
+        row: {
+            '&:nth-of-type(odd)': {
+                backgroundColor: theme.palette.background.default
+            }
         }
     });
+
 export interface IPrintFormComponentStateProps {
     title: string;
     rows: any[];
@@ -99,7 +84,7 @@ const PrintFormComponent: React.SFC<
 
     const tableHeadContents: JSX.Element = (
         <TableRow>
-            <TableCell padding="dense" numeric={true}>
+            <TableCell padding="dense" numeric={true} style={{ width: 64 }}>
                 No.
             </TableCell>
             <TableCell padding="dense">大項目</TableCell>
@@ -117,6 +102,7 @@ const PrintFormComponent: React.SFC<
             </TableCell>
         </TableRow>
     );
+
     const tableBodyContents: JSX.Element[] = [];
     for (let rowsidx = 0; rowsidx < rows.length - 1; rowsidx += 1) {
         const row = rows[rowsidx];
@@ -141,7 +127,7 @@ const PrintFormComponent: React.SFC<
         } else {
             // 通常行
             tableBodyContents.push(
-                <TableRow key={row[NormalDataRowKeys.id]}>
+                <TableRow className={classes.row} key={row[NormalDataRowKeys.id]}>
                     <TableCell component="th" scope="row" padding="dense" numeric={true}>
                         {row[NormalDataRowKeys.id]}
                     </TableCell>
@@ -180,6 +166,7 @@ const PrintFormComponent: React.SFC<
             </TableCell>
         </TableRow>
     );
+
     return (
         <div className={classes.root}>
             <main>
@@ -190,7 +177,7 @@ const PrintFormComponent: React.SFC<
                     </Typography>
 
                     {/* 表 */}
-                    <Table>
+                    <Table className={classes.table}>
                         <TableHead>{tableHeadContents}</TableHead>
                         <TableBody>{tableBodyContents}</TableBody>
                         <TableFooter>{tableFooterContents}</TableFooter>

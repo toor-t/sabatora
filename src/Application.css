@@ -85,4 +85,10 @@
         display: table-header-group;
         page-break-before: always;
     }
+    #app-top-component-app-bar {
+        display: none;
+    }
+    #app-top-component-toolbar {
+        display: none;
+    }
 }
