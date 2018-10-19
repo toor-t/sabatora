@@ -171,9 +171,6 @@ const initialState: ICreateFormState = {
     edittingTitle: false,
     formDataSelectedRowsCount: 0,
     formDataFirstSelectedRowIdx: -1,
-    // edittingCell: { rowIdx: -1, idx: -1 },
-    // selectedRow: -1,
-    // selectedCell: { rowIdx: -1, idx: -1 },
 
     autoCompleteOptions: {},
 
@@ -551,8 +548,9 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     })
     // 新規帳票作成
     .case(CreateFormActions.newForm, (state /*, force*/) => {
-        // TODO:
+        // TODO: 初期データを復元する
         const formData = initialState.formData;
+        console.log(formData);
         // 編集状態解除
         const formDataEditted = false;
 

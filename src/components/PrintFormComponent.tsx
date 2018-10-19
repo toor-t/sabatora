@@ -14,7 +14,13 @@ import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 // tslint:disable-next-line:import-name
 import CreateIcon from '@material-ui/icons/Create';
-import { FormDataRow, TotalPriceRowKeys, TotalPriceRow } from '../states/CreateFormState';
+import {
+    FormDataRow,
+    TotalPriceRowKeys,
+    TotalPriceRow,
+    SubtotalPriceRowKeys,
+    NormalDataRowKeys
+} from '../states/CreateFormState';
 import { TableFooter } from '@material-ui/core';
 
 // import PrintFormDataGridComponent, {
@@ -91,6 +97,89 @@ const PrintFormComponent: React.SFC<
         ...rest
     } = props;
 
+    const tableHeadContents: JSX.Element = (
+        <TableRow>
+            <TableCell padding="dense" numeric={true}>
+                No.
+            </TableCell>
+            <TableCell padding="dense">大項目</TableCell>
+            <TableCell padding="dense">中項目</TableCell>
+            <TableCell padding="dense">小項目</TableCell>
+            <TableCell padding="dense">名称</TableCell>
+            <TableCell padding="dense" numeric={true}>
+                単価
+            </TableCell>
+            <TableCell padding="dense" numeric={true}>
+                個数
+            </TableCell>
+            <TableCell padding="dense" numeric={true}>
+                価格
+            </TableCell>
+        </TableRow>
+    );
+    const tableBodyContents: JSX.Element[] = [];
+    for (let rowsidx = 0; rowsidx < rows.length - 1; rowsidx += 1) {
+        const row = rows[rowsidx];
+        if (row[SubtotalPriceRowKeys.labelSubtotalPrice]) {
+            // 小計行
+            tableBodyContents.push(
+                <TableRow key={row[SubtotalPriceRowKeys.id]}>
+                    <TableCell />
+                    <TableCell />
+                    <TableCell />
+                    <TableCell />
+                    <TableCell />
+                    <TableCell />
+                    <TableCell padding="dense" numeric={true}>
+                        {row[SubtotalPriceRowKeys.labelSubtotalPrice]}
+                    </TableCell>
+                    <TableCell padding="dense" numeric={true}>
+                        {NumberFormatter(row[SubtotalPriceRowKeys.subtotalPrice])}
+                    </TableCell>
+                </TableRow>
+            );
+        } else {
+            // 通常行
+            tableBodyContents.push(
+                <TableRow key={row[NormalDataRowKeys.id]}>
+                    <TableCell component="th" scope="row" padding="dense" numeric={true}>
+                        {row[NormalDataRowKeys.id]}
+                    </TableCell>
+                    <TableCell padding="dense">{row[NormalDataRowKeys.level_1]}</TableCell>
+                    <TableCell padding="dense">{row[NormalDataRowKeys.level_2]}</TableCell>
+                    <TableCell padding="dense">{row[NormalDataRowKeys.level_3]}</TableCell>
+                    <TableCell padding="dense">{row[NormalDataRowKeys.itemName]}</TableCell>
+                    <TableCell padding="dense" numeric={true}>
+                        {NumberFormatter(row[NormalDataRowKeys.unitPrice])}
+                    </TableCell>
+                    <TableCell padding="dense" numeric={true}>
+                        {NumberFormatter(row[NormalDataRowKeys.num])}
+                    </TableCell>
+                    <TableCell padding="dense" numeric={true}>
+                        {NumberFormatter(row[NormalDataRowKeys.price])}
+                    </TableCell>
+                </TableRow>
+            );
+        }
+    }
+
+    const row = rows[rows.length - 1];
+    const tableFooterContents: JSX.Element = (
+        <TableRow key={row[TotalPriceRowKeys.id]}>
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell padding="dense" numeric={true}>
+                <Typography>{row[TotalPriceRowKeys.labelTotalPrice]}</Typography>
+            </TableCell>
+            <TableCell padding="dense" numeric={true}>
+                <Typography>{NumberFormatter(row[TotalPriceRowKeys.totalPrice])}</Typography>
+            </TableCell>
+        </TableRow>
+    );
     return (
         <div className={classes.root}>
             <main>
@@ -102,99 +191,9 @@ const PrintFormComponent: React.SFC<
 
                     {/* 表 */}
                     <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell padding="dense">No.</TableCell>
-                                <TableCell padding="dense">大項目</TableCell>
-                                <TableCell padding="dense">中項目</TableCell>
-                                <TableCell padding="dense">小項目</TableCell>
-                                <TableCell padding="dense">名称</TableCell>
-                                <TableCell padding="dense" numeric={true}>
-                                    単価
-                                </TableCell>
-                                <TableCell padding="dense" numeric={true}>
-                                    個数
-                                </TableCell>
-                                <TableCell padding="dense" numeric={true}>
-                                    価格
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rows.map((row: any) => {
-                                return row.totalPrice ? (
-                                    <TableRow key={row.id}>
-                                        <TableCell />
-                                        <TableCell />
-                                        <TableCell />
-                                        <TableCell />
-                                        <TableCell />
-                                        <TableCell />
-                                        <TableCell padding="dense" numeric={true}>
-                                            <Typography>合計:</Typography>
-                                        </TableCell>
-                                        <TableCell padding="dense" numeric={true}>
-                                            {NumberFormatter(row.totalPrice)}
-                                        </TableCell>
-                                    </TableRow>
-                                ) : row.subtotalPrice ? (
-                                    <TableRow key={row.id}>
-                                        <TableCell />
-                                        <TableCell />
-                                        <TableCell />
-                                        <TableCell />
-                                        <TableCell />
-                                        <TableCell />
-                                        <TableCell padding="dense" numeric={true}>
-                                            小計:
-                                        </TableCell>
-                                        <TableCell padding="dense" numeric={true}>
-                                            {NumberFormatter(row.subtotalPrice)}
-                                        </TableCell>
-                                    </TableRow>
-                                ) : (
-                                    <TableRow key={row.id}>
-                                        <TableCell
-                                            component="th"
-                                            scope="row"
-                                            padding="dense"
-                                            numeric={true}
-                                        >
-                                            {row.id}
-                                        </TableCell>
-                                        <TableCell padding="dense">{row.level_1}</TableCell>
-                                        <TableCell padding="dense">{row.level_2}</TableCell>
-                                        <TableCell padding="dense">{row.level_3}</TableCell>
-                                        <TableCell padding="dense">{row.itemName}</TableCell>
-                                        <TableCell padding="dense" numeric={true}>
-                                            {NumberFormatter(row.unitPrice)}
-                                        </TableCell>
-                                        <TableCell padding="dense" numeric={true}>
-                                            {NumberFormatter(row.num)}
-                                        </TableCell>
-                                        <TableCell padding="dense" numeric={true}>
-                                            {NumberFormatter(row.price)}
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                        <TableFooter>
-                            <TableRow key={rows[rows.length - 1].id}>
-                                <TableCell />
-                                <TableCell />
-                                <TableCell />
-                                <TableCell />
-                                <TableCell />
-                                <TableCell />
-                                <TableCell padding="dense" numeric={true}>
-                                    <Typography>合計:</Typography>
-                                </TableCell>
-                                <TableCell padding="dense" numeric={true}>
-                                    {NumberFormatter(rows[rows.length - 1].totalPrice)}
-                                </TableCell>
-                            </TableRow>
-                        </TableFooter>
+                        <TableHead>{tableHeadContents}</TableHead>
+                        <TableBody>{tableBodyContents}</TableBody>
+                        <TableFooter>{tableFooterContents}</TableFooter>
                     </Table>
                 </div>
             </main>
