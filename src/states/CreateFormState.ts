@@ -17,6 +17,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import store, { IAppState } from '../store';
 import { remote } from 'electron';
 import { printForm } from '../print_renderer';
+import { Str } from '../strings';
 
 // NormalDataRowKeys
 export namespace NormalDataRowKeys {
@@ -161,7 +162,7 @@ const initialState: ICreateFormState = {
             },
             {
                 id: -1,
-                [TotalPriceRowKeys.labelTotalPrice]: '合計:',
+                [TotalPriceRowKeys.labelTotalPrice]: Str.TotalPrice,
                 [TotalPriceRowKeys.totalPrice]: 0
             }
         ],
@@ -323,7 +324,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         if (insertIdx > -1) {
             dataRows.splice(insertIdx, 0, {
                 id: -1,
-                labelSubtotalPrice: '小計:',
+                labelSubtotalPrice: Str.SubtotalPrice,
                 subtotalPrice: 0,
                 selected: false
             });

@@ -22,6 +22,7 @@ import AddBox from '@material-ui/icons/AddBox';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
 import * as classNames from 'classnames';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { Str } from '../strings';
 
 // autoCompleteOptions
 let autoCompleteOptions: any;
@@ -342,41 +343,41 @@ class CreateFormDataGridComponent extends React.Component<
         const columns: (ReactDataGrid.Column<NormalDataRow> & { ddKey?: string })[] = [
             {
                 key: NormalDataRowKeys.id,
-                name: 'No.',
+                name: Str.No,
                 width: 48,
                 formatter: CenterFormatter
             },
             {
                 key: NormalDataRowKeys.level_1,
-                name: '大分類',
+                name: Str.Level_1,
                 ddKey: DataDocKeys.level_1,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_1)} />,
                 resizable: true
             },
             {
                 key: NormalDataRowKeys.level_2,
-                name: '中分類',
+                name: Str.Level_2,
                 ddKey: DataDocKeys.level_2,
                 resizable: true,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_2)} />
             },
             {
                 key: NormalDataRowKeys.level_3,
-                name: '小分類',
+                name: Str.Level_3,
                 resizable: true,
                 ddKey: DataDocKeys.level_3,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_3)} />
             },
             {
                 key: NormalDataRowKeys.itemName,
-                name: '名称',
+                name: Str.ItemName,
                 resizable: true,
                 ddKey: DataDocKeys.itemName,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.itemName)} />
             },
             {
                 key: NormalDataRowKeys.unitPrice,
-                name: '単価',
+                name: Str.UnitPrice,
                 resizable: true,
                 ddKey: DataDocKeys.unitPrice,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.unitPrice)} />,
@@ -384,14 +385,14 @@ class CreateFormDataGridComponent extends React.Component<
             },
             {
                 key: NormalDataRowKeys.num,
-                name: '個数',
+                name: Str.Num,
                 editable: true,
                 resizable: true,
                 formatter: NumberRightFormatter
             },
             {
                 key: NormalDataRowKeys.price,
-                name: '価格',
+                name: Str.Price,
                 editable: false,
                 resizable: true,
                 formatter: NumberRightFormatter

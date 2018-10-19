@@ -22,6 +22,7 @@ import {
     NormalDataRowKeys
 } from '../states/CreateFormState';
 import { TableFooter } from '@material-ui/core';
+import { Str } from '../strings';
 
 // import PrintFormDataGridComponent, {
 // 	ICreateFormDataGridComponentStateProps,
@@ -85,20 +86,20 @@ const PrintFormComponent: React.SFC<
     const tableHeadContents: JSX.Element = (
         <TableRow>
             <TableCell padding="dense" numeric={true} style={{ width: 64 }}>
-                No.
+                {Str.No}
             </TableCell>
-            <TableCell padding="dense">大項目</TableCell>
-            <TableCell padding="dense">中項目</TableCell>
-            <TableCell padding="dense">小項目</TableCell>
-            <TableCell padding="dense">名称</TableCell>
+            <TableCell padding="dense">{Str.Level_1}</TableCell>
+            <TableCell padding="dense">{Str.Level_2}</TableCell>
+            <TableCell padding="dense">{Str.Level_3}</TableCell>
+            <TableCell padding="dense">{Str.ItemName}</TableCell>
             <TableCell padding="dense" numeric={true}>
-                単価
-            </TableCell>
-            <TableCell padding="dense" numeric={true}>
-                個数
+                {Str.UnitPrice}
             </TableCell>
             <TableCell padding="dense" numeric={true}>
-                価格
+                {Str.Num}
+            </TableCell>
+            <TableCell padding="dense" numeric={true}>
+                {Str.Price}
             </TableCell>
         </TableRow>
     );

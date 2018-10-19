@@ -24,6 +24,7 @@ import { DataDocKeys, DataDoc } from '../db';
 import { Paper, MenuList, MenuItem } from '@material-ui/core';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { DBDataRowKeys, DBDataRow } from '../states/ManageDataState';
+import { Str } from '../strings';
 
 // TODO: Formatter
 const NumberRightFormatter: React.SFC<any> = props => {
@@ -281,42 +282,42 @@ class ManageDataDataGridComponent extends React.Component<
         const columns: (ReactDataGrid.Column<NormalDataRow> & { ddKey?: string })[] = [
             {
                 key: DBDataRowKeys.id,
-                name: 'No.',
+                name: Str.No,
                 width: 48,
                 resizable: false,
                 formatter: CenterFormatter
             },
             {
                 key: DBDataRowKeys.level_1,
-                name: '大分類',
+                name: Str.Level_1,
                 ddKey: DataDocKeys.level_1,
                 resizable: true,
                 editable: true
             },
             {
                 key: DBDataRowKeys.level_2,
-                name: '中分類',
+                name: Str.Level_2,
                 ddKey: DataDocKeys.level_2,
                 resizable: true,
                 editable: true
             },
             {
                 key: DBDataRowKeys.level_3,
-                name: '小分類',
+                name: Str.Level_3,
                 ddKey: DataDocKeys.level_3,
                 resizable: true,
                 editable: true
             },
             {
                 key: DBDataRowKeys.itemName,
-                name: '名称',
+                name: Str.ItemName,
                 ddKey: DataDocKeys.itemName,
                 resizable: true,
                 editable: true
             },
             {
                 key: DBDataRowKeys.unitPrice_1,
-                name: '単価 1',
+                name: `${Str.UnitPrice} 1`,
                 ddKey: DataDocKeys.unitPrice,
                 resizable: true,
                 editable: true,
@@ -324,7 +325,7 @@ class ManageDataDataGridComponent extends React.Component<
             },
             {
                 key: DBDataRowKeys.unitPrice_2,
-                name: '単価 2',
+                name: `${Str.UnitPrice} 2`,
                 ddKey: DataDocKeys.unitPrice,
                 resizable: true,
                 editable: true,
@@ -332,7 +333,7 @@ class ManageDataDataGridComponent extends React.Component<
             },
             {
                 key: DBDataRowKeys.unitPrice_3,
-                name: '単価 3',
+                name: `${Str.UnitPrice} 3`,
                 ddKey: DataDocKeys.unitPrice,
                 resizable: true,
                 editable: true,
@@ -465,7 +466,7 @@ class ManageDataDataGridComponent extends React.Component<
                 style={{ fontSize: '0.8125rem' }}
             >
                 <ReactDataGrid
-                    ref={node => {
+                    ref={(node: ReactDataGrid<{}> | null) => {
                         this.grid = node;
                     }}
                     enableCellSelect={true}
