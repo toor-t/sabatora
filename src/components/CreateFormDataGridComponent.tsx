@@ -22,7 +22,7 @@ import AddBox from '@material-ui/icons/AddBox';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
 import * as classNames from 'classnames';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Str } from '../strings';
+import { Str, BtnLabel } from '../strings';
 
 // autoCompleteOptions
 let autoCompleteOptions: any;
@@ -541,7 +541,9 @@ class CreateFormDataGridComponent extends React.Component<
                         <Toolbar>
                             <button type="button" className="btn" onClick={this.handleAddRowBtn}>
                                 <AddCircle />
-                                {this.props.selectedRowsCount === 1 ? '行挿入' : '行追加'}
+                                {this.props.selectedRowsCount === 1
+                                    ? BtnLabel.InsertRow
+                                    : BtnLabel.AddRow}
                             </button>
                             <button
                                 type="button"
@@ -549,7 +551,9 @@ class CreateFormDataGridComponent extends React.Component<
                                 onClick={this.handleAddSubtotalBtn}
                             >
                                 <AddBox />
-                                {this.props.selectedRowsCount === 1 ? '小計行挿入' : '小計行追加'}
+                                {this.props.selectedRowsCount === 1
+                                    ? BtnLabel.InsertSubtotalRow
+                                    : BtnLabel.AddSubtotalRow}
                             </button>
                             <button
                                 type="button"
@@ -558,7 +562,7 @@ class CreateFormDataGridComponent extends React.Component<
                                 disabled={this.props.selectedRowsCount === 0 ? true : false}
                             >
                                 <RemoveCircle />
-                                {'行削除'}
+                                {BtnLabel.DeleteRows}
                             </button>
                         </Toolbar>
                     }

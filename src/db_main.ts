@@ -84,13 +84,21 @@ const queryDb = (query: any, projection: string[] = []): Promise<{}> => {
         }
         // console.log('_projection');
         // console.log(_projection);
-        data_db.find(_query, _projection, (err, docs: any[]) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(docs);
-            }
-        });
+        data_db
+            .find(_query, _projection)
+            .sort({
+                [DataDocKeys.level_1]: 1,
+                [DataDocKeys.level_2]: 1,
+                [DataDocKeys.level_3]: 1,
+                [DataDocKeys.itemName]: 1
+            })
+            .exec((err, docs: any[]) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(docs);
+                }
+            });
     });
 };
 

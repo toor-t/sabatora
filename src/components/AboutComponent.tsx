@@ -5,6 +5,8 @@
 import * as React from 'react';
 import Typography from '@material-ui/core/Typography';
 
+import { Title } from '../strings';
+
 export interface IAboutComponentProps {
     // TODO:
     checked?: boolean;
@@ -23,7 +25,7 @@ const AboutComponent: React.SFC<IAboutComponentProps> = props => {
                 noWrap={true}
                 align="center"
             >
-                About
+                {Title.About}
             </Typography>
         </div>
     );

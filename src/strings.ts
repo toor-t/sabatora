@@ -15,3 +15,25 @@ export namespace Str {
     export const SubtotalPrice = '小計';
     export const TotalPrice = '合計';
 }
+
+export namespace Title {
+    export const About = 'About';
+    export const CreateForm = '帳票作成';
+    export const ManageData = 'データ管理';
+    export const Config = '設定';
+}
+
+export namespace MenuTitle {
+    export const OpenForm = '帳票読込';
+    export const SaveForm = '帳票保存';
+    export const NewForm = '新規帳票';
+    export const PrintForm = '帳票印刷';
+}
+
+export namespace BtnLabel {
+    export const AddRow = '行追加';
+    export const InsertRow = '行挿入';
+    export const AddSubtotalRow = '小計行追加';
+    export const InsertSubtotalRow = '小計行挿入';
+    export const DeleteRows = '行削除';
+}

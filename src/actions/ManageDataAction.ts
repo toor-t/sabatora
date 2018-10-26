@@ -43,6 +43,14 @@ export const ManageDataActions = {
      * データベースクエリー
      */
     queryDb: actionCreator.async<{ query: db.DataDoc; projection: any[] }, {}, {}>('QUERY_DB'),
+    /**
+     * データベースバックアップ
+     */
+    backupDb: actionCreator.async<void, void, {}>('BACKUP_DB'),
+    /**
+     * データベースリストア
+     */
+    restoreDb: actionCreator.async<void, void, {}>('RESTORE_DB'),
 
     /**
      * 通知が閉じられた

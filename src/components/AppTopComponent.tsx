@@ -48,6 +48,8 @@ import ManageDataContainer from '../containers/ManageDataContainer';
 import ConfigContainer from '../containers/ConfigContainer';
 import AboutContainer from '../containers/AboutContainer';
 
+import { Title, Str, MenuTitle } from '../strings';
+
 const drawerWidth = 240;
 
 const styles = (theme: Theme) =>
@@ -135,10 +137,10 @@ export namespace AppTopSelected {
     export const Config = 3;
     export const About = 4;
 
-    export const CreateFormTitle = '帳票作成';
-    export const ManageDataTitle = 'データ管理';
-    export const ConfigTitle = '設定';
-    export const AboutTitle = 'About';
+    export const CreateFormTitle = Title.CreateForm;
+    export const ManageDataTitle = Title.ManageData;
+    export const ConfigTitle = Title.Config;
+    export const AboutTitle = Title.About;
 }
 export interface IAppTopComponentStateProps {
     /**
@@ -227,20 +229,20 @@ class AppTopComponent extends React.Component<
                     <div style={{ outline: 0 }}>
                         <MenuItem onClick={this.handleMenuItemButton(this.props.onOpenForm)}>
                             <OpenInNewIcon />
-                            帳票読込
+                            {MenuTitle.OpenForm}
                         </MenuItem>
                         <MenuItem onClick={this.handleMenuItemButton(this.props.onSaveForm)}>
                             <SaveAltIcon />
-                            帳票保存
+                            {MenuTitle.SaveForm}
                         </MenuItem>
                         <MenuItem onClick={this.handleMenuItemButton(this.props.onNewForm)}>
                             <NewIcon />
-                            新規帳票
+                            {MenuTitle.NewForm}
                         </MenuItem>
                         <Divider />
                         <MenuItem onClick={this.handleMenuItemButton(this.props.onPrintForm)}>
                             <PrintIcon />
-                            帳票印刷
+                            {MenuTitle.PrintForm}
                         </MenuItem>
                     </div>
                 );
