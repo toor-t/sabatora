@@ -337,19 +337,39 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         // tslint:disable-next-line:no-increment-decrement
         for (let i = e.fromRow; i <= e.toRow; i++) {
-            if ((state.formData.dataRows[i] as any)[NormalDataRowKeys.price] !== undefined) {
-                const rowToUpdate: NormalDataRow = state.formData.dataRows[i] as NormalDataRow;
+            if ((dataRows[i] as any)[NormalDataRowKeys.price] !== undefined) {
+                const rowToUpdate: NormalDataRow = dataRows[i] as NormalDataRow;
                 // TODO: 価格を計算
                 // console.log(`unitPrice=${e.updated[FormDataRowKeys.unitPrice]}`);
                 // console.log(`num=${e.updated[FormDataRowKeys.num]}`);
+                if (e.updated[NormalDataRowKeys.unitPrice]) {
+                    e.updated[NormalDataRowKeys.unitPrice] = String(
+                        e.updated[NormalDataRowKeys.unitPrice]
+                    ).replace(/[Ａ-Ｚａ-ｚ０-９]/g, (s: string) => {
+                        return String.fromCharCode(s.charCodeAt(0) - 65248);
+                    });
+                }
+                if (e.updated[NormalDataRowKeys.num]) {
+                    e.updated[NormalDataRowKeys.num] = String(
+                        e.updated[NormalDataRowKeys.num]
+                    ).replace(/[Ａ-Ｚａ-ｚ０-９]/g, (s: string) => {
+                        return String.fromCharCode(s.charCodeAt(0) - 65248);
+                    });
+                }
                 const _unitPrice = !e.updated[NormalDataRowKeys.unitPrice]
                     ? rowToUpdate[NormalDataRowKeys.unitPrice]
-                    : e.updated[NormalDataRowKeys.unitPrice];
+                    : e.updated[NormalDataRowKeys.unitPrice] === ''
+                        ? 0
+                        : e.updated[NormalDataRowKeys.unitPrice];
+                console.log(e.updated[NormalDataRowKeys.unitPrice]);
                 const _num = !e.updated[NormalDataRowKeys.num]
                     ? rowToUpdate[NormalDataRowKeys.num]
-                    : e.updated[NormalDataRowKeys.num];
+                    : e.updated[NormalDataRowKeys.num] === ''
+                        ? 0
+                        : e.updated[NormalDataRowKeys.num];
+                console.log(e.updated[NormalDataRowKeys.num]);
 
-                e.updated[NormalDataRowKeys.price] = _unitPrice * _num;
+                e.updated[NormalDataRowKeys.price] = Number(_unitPrice) * Number(_num);
                 // e.updated[NormalDataRowKeys.price_isEmpty] = false;
 
                 const updatedRow = immutabilityHelper(rowToUpdate, { $merge: e.updated });
