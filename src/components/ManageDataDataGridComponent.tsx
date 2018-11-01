@@ -457,17 +457,17 @@ class ManageDataDataGridComponent extends React.Component<
                     rowHeight={ROW_HEIGHT}
                     headerRowHeight={HEADER_ROW_HEIGHT}
                     minHeight={600}
-                    contextMenu={
-                        <Menu.ContextMenu>
-                            <Paper>
-                                <MenuList>
-                                    <MenuItem>hige</MenuItem>
-                                    <MenuItem>hoge</MenuItem>
-                                    <MenuItem>mushi</MenuItem>
-                                </MenuList>
-                            </Paper>
-                        </Menu.ContextMenu>
-                    }
+                    // contextMenu={
+                    //     <Menu.ContextMenu>
+                    //         <Paper>
+                    //             <MenuList>
+                    //                 <MenuItem>hige</MenuItem>
+                    //                 <MenuItem>hoge</MenuItem>
+                    //                 <MenuItem>mushi</MenuItem>
+                    //             </MenuList>
+                    //         </Paper>
+                    //     </Menu.ContextMenu>
+                    // }
                     onGridRowsUpdated={this.props.onGridRowUpdate}
                     // onCellSelected={this.handleCellSeceted}
                     // toolbar={

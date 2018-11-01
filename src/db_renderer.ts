@@ -3,7 +3,7 @@
  */
 'use strict';
 import { ipcRenderer } from 'electron';
-import { UpdateAutoCompleteOptions, QueryDb } from './db';
+import { UpdateAutoCompleteOptions, QueryDb, UpdateDb } from './db';
 
 // AutoCompleteOptions
 export const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promise<{}> => {
@@ -70,5 +70,39 @@ export const queryDb = (query: any, projection: string[] = []): Promise<{}> => {
         //
         // console.log('Send QueryDb-request');
         ipcRenderer.send(QueryDb.Request, [query, projection]);
+    });
+};
+
+// dbUpdate
+export const updateDb = (query: any, update: any): Promise<{}> => {
+    return new Promise((resolve, reject) => {
+        const resultListener = (event: any, result: any) => {
+            // console.log(`UpdateDb-result=${{ ...result }}`);
+            resolve(result);
+
+            // Remove Listner
+            ipcRenderer.removeListener(UpdateDb.Result, resultListener);
+            ipcRenderer.removeListener(UpdateDb.Reject, rejectListener);
+        };
+        ipcRenderer.once(UpdateDb.Result, resultListener);
+        const rejectListener = (event: any, result: any) => {
+            // console.log(`UpdateDb-result=${{ ...result }}`);
+            reject(result);
+
+            // Remove Listner
+            ipcRenderer.removeListener(UpdateDb.Reject, rejectListener);
+            ipcRenderer.removeListener(UpdateDb.Result, resultListener);
+        };
+        ipcRenderer.once(UpdateDb.Reject, rejectListener);
+        const replyListener = (event: any, reply: any) => {
+            /* TODO: */
+            // console.log(`UpdateDb-reply = ${reply}`);
+            // Remove Listner
+            ipcRenderer.removeListener(UpdateDb.Reply, replyListener);
+        };
+        ipcRenderer.once(UpdateDb.Reply, replyListener);
+        //
+        // console.log('Send UpdateDb-request');
+        ipcRenderer.send(UpdateDb.Request, [query, update]);
     });
 };

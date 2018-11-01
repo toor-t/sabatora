@@ -37,3 +37,10 @@ export namespace QueryDb {
     export const Reject = 'queryDb-reject';
     export const Reply = 'queryDb-reply';
 }
+
+export namespace UpdateDb {
+    export const Request = 'updateDb-request';
+    export const Result = 'updateDb-result';
+    export const Reject = 'updateDb-reject';
+    export const Reply = 'updateDb-reply';
+}

@@ -6,7 +6,7 @@ import { app, ipcMain } from 'electron';
 import * as DataStore from 'nedb';
 import { win } from './main';
 
-import { DataDocKeys, DataDoc, ConfDoc, UpdateAutoCompleteOptions, QueryDb } from './db';
+import { DataDocKeys, DataDoc, ConfDoc, UpdateAutoCompleteOptions, QueryDb, UpdateDb } from './db';
 
 const userDataPath = app.getPath('userData');
 // const userDataPath = './db';
@@ -99,6 +99,75 @@ const queryDb = (query: any, projection: string[] = []): Promise<{}> => {
                     resolve(docs);
                 }
             });
+    });
+};
+
+// TODO: UpdateDb
+const updateDb_request = ipcMain.on(UpdateDb.Request, (event: any, arg: any) => {
+    // TODO:
+    updateDb(arg[0], arg[1]).then(
+        result => {
+            if (win) {
+                win.webContents.send(UpdateDb.Result, result);
+            }
+        },
+        reject => {
+            // TODO:
+            if (win) {
+                win.webContents.send(UpdateDb.Reject, reject);
+            }
+        }
+    );
+    event.sender.send(UpdateDb.Reply, 'Request received.');
+});
+const updateDb = (query: any, update: any): Promise<{}> => {
+    return new Promise((resolve, reject) => {
+        // query生成
+        let _query = {};
+        for (const key in query) {
+            switch (key) {
+                case DataDocKeys.level_1:
+                case DataDocKeys.level_2:
+                case DataDocKeys.level_3:
+                case DataDocKeys.itemName:
+                    if (query[key] !== '') {
+                        _query = Object.assign(_query, { [key]: query[key] });
+                    }
+                    break;
+                case DataDocKeys.unitPrice:
+                    // TODO: 何もしないで良いか？
+                    break;
+                default:
+                    // 何もしない
+                    break;
+            }
+        }
+        // console.log('_query=');
+        // console.log(_query);
+        // projection生成
+        // let _projection = {};
+        // for (const key in projection) {
+        // 	switch (projection[key]) {
+        // 		case DataDocKeys.level_1:
+        // 		case DataDocKeys.level_2:
+        // 		case DataDocKeys.level_3:
+        // 		case DataDocKeys.itemName:
+        // 		case DataDocKeys.unitPrice:
+        // 			_projection = Object.assign(_projection, { [projection[key]]: 1 });
+        // 			break;
+        // 		default:
+        // 			break;
+        // 	}
+        // }
+        // console.log('_projection');
+        // console.log(_projection);
+        data_db.update(_query, update, {}, (err: any, numAffected: any, docs: any, upsert: any) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(docs);
+            }
+        });
     });
 };
 

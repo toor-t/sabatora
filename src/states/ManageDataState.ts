@@ -105,7 +105,15 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
                 });
             }
             const updatedRow = immutabilityHelper(dataRows[i], { $merge: e.updated });
-            dataRows[i] = updatedRow;
+            dataRows[i] = Object.assign({}, updatedRow, {
+                [db.DataDocKeys.unitPrice]: [
+                    updatedRow[DBDataRowKeys.unitPrice_1],
+                    updatedRow[DBDataRowKeys.unitPrice_2],
+                    updatedRow[DBDataRowKeys.unitPrice_3]
+                ]
+            });
+
+            // TODO: データベースアップデート
         }
 
         // TODO: 編集済みフラグセット
