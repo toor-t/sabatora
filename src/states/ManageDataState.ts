@@ -47,6 +47,36 @@ const initialState: IManageDataState = {
  * ManageDataStateReducer
  */
 export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(initialState)
+    // 行選択
+    .case(ManageDataActions.selectRows, (state, payload) => {
+        // TODO:
+        return state;
+    })
+    // 行選択解除
+    .case(ManageDataActions.deselectRows, (state, payload) => {
+        // TODO:
+        return state;
+    })
+    // セル選択
+    .case(ManageDataActions.selectCell, (state, payload) => {
+        // TODO:
+        return state;
+    })
+    // 行追加
+    .case(ManageDataActions.addRow, state => {
+        // TODO:
+        return state;
+    })
+    // 行削除
+    .case(ManageDataActions.deleteRows, state => {
+        // TODO:
+        return state;
+    })
+    // グリッド行更新
+    .case(ManageDataActions.updateGridRow, (state, payload) => {
+        // TODO:
+        return state;
+    })
     // デーベースクエリー (開始)
     .case(ManageDataActions.queryDb.started, (state, param) => {
         // TODO:
@@ -63,6 +93,46 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
     .case(ManageDataActions.queryDb.failed, (state, payload) => {
         // TODO:
         console.log('ManageDataActions.queryDb.failed');
+        return state;
+    })
+    // データベースバックアップ (開始)
+    .case(ManageDataActions.backupDb.started, state => {
+        // TODO:
+        return state;
+    })
+    // データベースバックアップ (完了)
+    .case(ManageDataActions.backupDb.done, (state, payload) => {
+        // TODO:
+        return state;
+    })
+    // データベースバックアップ (失敗)
+    .case(ManageDataActions.backupDb.failed, (state, payload) => {
+        // TODO:
+        return state;
+    })
+    // データベースリストア (開始)
+    .case(ManageDataActions.restoreDb.started, state => {
+        // TODO:
+        return state;
+    })
+    // データベースリストア (完了)
+    .case(ManageDataActions.restoreDb.done, (state, payload) => {
+        // TODO:
+        return state;
+    })
+    // データベースリストア (失敗)
+    .case(ManageDataActions.restoreDb.failed, (state, payload) => {
+        // TODO:
+        return state;
+    })
+    // 通知が閉じられた
+    .case(ManageDataActions.closeNotify, state => {
+        // TODO:
+        return state;
+    })
+    // 通知クローズボタンが押された
+    .case(ManageDataActions.clickNotifyCloseButton, state => {
+        // TODO:
         return state;
     });
 
