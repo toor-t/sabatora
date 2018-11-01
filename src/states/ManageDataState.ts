@@ -7,6 +7,7 @@ import { ManageDataActions } from '../actions/ManageDataAction';
 import * as db from '../db';
 import wrapAsyncWorker, { wrapThunkAsyncActionWorker } from '../wrapAsyncWorker';
 import { queryDb } from '../db_renderer';
+import immutabilityHelper from 'immutability-helper';
 
 // DBDataRowKeys
 export namespace DBDataRowKeys {
@@ -37,10 +38,10 @@ export interface DBDataRow {
  * IManageDataState
  */
 export interface IManageDataState {
-    dbDataRows: db.DataDoc[];
+    dbDataRows: DBDataRow[] | null;
 }
 const initialState: IManageDataState = {
-    dbDataRows: []
+    dbDataRows: null
 };
 
 /**
@@ -73,9 +74,44 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
         return state;
     })
     // グリッド行更新
-    .case(ManageDataActions.updateGridRow, (state, payload) => {
+    .case(ManageDataActions.updateGridRow, (state, e) => {
         // TODO:
-        return state;
+        if (state.dbDataRows === null) {
+            return state;
+        }
+        const dataRows = state.dbDataRows.slice();
+
+        // tslint:disable-next-line:no-increment-decrement
+        for (let i = e.fromRow; i <= e.toRow; i++) {
+            if (e.updated[DBDataRowKeys.unitPrice_1]) {
+                e.updated[DBDataRowKeys.unitPrice_1] = String(
+                    e.updated[DBDataRowKeys.unitPrice_1]
+                ).replace(/[Ａ-Ｚａ-ｚ０-９]/g, (s: string) => {
+                    return String.fromCharCode(s.charCodeAt(0) - 65248);
+                });
+            }
+            if (e.updated[DBDataRowKeys.unitPrice_2]) {
+                e.updated[DBDataRowKeys.unitPrice_2] = String(
+                    e.updated[DBDataRowKeys.unitPrice_2]
+                ).replace(/[Ａ-Ｚａ-ｚ０-９]/g, (s: string) => {
+                    return String.fromCharCode(s.charCodeAt(0) - 65248);
+                });
+            }
+            if (e.updated[DBDataRowKeys.unitPrice_3]) {
+                e.updated[DBDataRowKeys.unitPrice_3] = String(
+                    e.updated[DBDataRowKeys.unitPrice_3]
+                ).replace(/[Ａ-Ｚａ-ｚ０-９]/g, (s: string) => {
+                    return String.fromCharCode(s.charCodeAt(0) - 65248);
+                });
+            }
+            const updatedRow = immutabilityHelper(dataRows[i], { $merge: e.updated });
+            dataRows[i] = updatedRow;
+        }
+
+        // TODO: 編集済みフラグセット
+        // const formDataEditted = true;
+
+        return Object.assign({}, state, { dbDataRows: dataRows });
     })
     // デーベースクエリー (開始)
     .case(ManageDataActions.queryDb.started, (state, param) => {
@@ -87,7 +123,24 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
     .case(ManageDataActions.queryDb.done, (state, payload) => {
         // TODO:
         console.log('ManageDataActions.queryDb.done');
-        return Object.assign({}, state, { dbDataRows: payload.result });
+        const dbDocs = payload.result as db.DataDoc[];
+        const dbDataRows = dbDocs.map<DBDataRow>((value, index, array) => {
+            const unitPrice_1 = value[db.DataDocKeys.unitPrice][0];
+            const unitPrice_2 = value[db.DataDocKeys.unitPrice][1];
+            const unitPrice_3 = value[db.DataDocKeys.unitPrice][2];
+            return Object.assign(
+                {},
+                value,
+                {
+                    [DBDataRowKeys.unitPrice_1]: unitPrice_1,
+                    [DBDataRowKeys.unitPrice_2]: unitPrice_2,
+                    [DBDataRowKeys.unitPrice_3]: unitPrice_3
+                },
+                { id: index }
+            );
+        });
+
+        return Object.assign({}, state, { dbDataRows });
     })
     // データベースクエリー (失敗)
     .case(ManageDataActions.queryDb.failed, (state, payload) => {

@@ -17,27 +17,19 @@ import { queryDbWorker } from '../states/ManageDataState';
 import { DataDoc } from '../db';
 import { ThunkDispatch } from 'redux-thunk';
 
-let _prevRows: DataDoc[] | null = null;
-
 function mapStateToProps(appState: IAppState): IManageDataComponentStateProps {
     // TODO:
-    let props: IManageDataComponentStateProps = {};
-    if (_prevRows !== null && _prevRows !== appState.manageDataState.dbDataRows) {
-        console.log('_prevRows !== appState.manageDataState.dbDataRows');
-        props = {
-            rows: appState.manageDataState.dbDataRows
-        };
-    }
-    _prevRows = appState.manageDataState.dbDataRows;
-
-    return props;
+    return {
+        rows: appState.manageDataState.dbDataRows
+    };
 }
 function mapDispatchToProps(
     dispatch: ThunkDispatch<IAppState, {}, any>
 ): IManageDataComponentDispatchProps {
     // TODO:
     return {
-        queryDb: () => dispatch(queryDbWorker({ query: <DataDoc>{}, projection: [] }))
+        queryDb: () => dispatch(queryDbWorker({ query: <DataDoc>{}, projection: [] })),
+        onGridRowUpdate: (e: any) => dispatch(ManageDataActions.updateGridRow(e))
     };
 }
 export default connect(

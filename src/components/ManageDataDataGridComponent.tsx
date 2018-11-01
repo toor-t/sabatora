@@ -245,14 +245,14 @@ const styles = (theme: Theme) =>
 
 export interface IManageDataDataGridComponentStateProps {
     // TODO:
-    rows?: DataDoc[];
+    rows: DBDataRow[] | null;
     // autoCompleteOptions: {};
 }
 export interface IManageDataDataGridComponentDispatchProps {
     // TODO:
     queryDb: () => void;
     // TODO:
-    // onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) => void;
+    onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) => void;
     // onSelectedCell: (col: { rowIdx: number; idx: number }) => void;
     // updateAutoCompleteOptions: (col: { rowData: NormalDataRow; columnDDKey: string }) => void;
     // addRow: () => void;
@@ -263,8 +263,6 @@ export interface IManageDataDataGridComponentDispatchProps {
 }
 interface IManageDataDataGridComponentStates {
     columns: any[];
-    // TODO: 実験
-    rows: DBDataRow[] | null;
 }
 class ManageDataDataGridComponent extends React.Component<
     IManageDataDataGridComponentStateProps &
@@ -341,8 +339,7 @@ class ManageDataDataGridComponent extends React.Component<
             }
         ];
         this.state = {
-            columns,
-            rows: null
+            columns
         };
         this.rowGetter.bind(this);
         this.rowCount.bind(this);
@@ -352,52 +349,25 @@ class ManageDataDataGridComponent extends React.Component<
     grid: any = {};
 
     // TODO:  実験
-    componentWillReceiveProps() {
-        console.log('componentWillReceiveProps');
-        if (this.props.rows) {
-            const dbDataRows = this.props.rows.map<DBDataRow>((value, index, array) => {
-                const unitPrice_1 = value[DataDocKeys.unitPrice][0];
-                const unitPrice_2 = value[DataDocKeys.unitPrice][1];
-                const unitPrice_3 = value[DataDocKeys.unitPrice][2];
-                return Object.assign(
-                    {},
-                    value,
-                    {
-                        [DBDataRowKeys.unitPrice_1]: unitPrice_1,
-                        [DBDataRowKeys.unitPrice_2]: unitPrice_2,
-                        [DBDataRowKeys.unitPrice_3]: unitPrice_3
-                    },
-                    { id: index }
-                );
-            });
-            this.setState({ rows: dbDataRows });
-        }
-    }
+    // componentWillReceiveProps() {
+    // 	console.log('componentWillReceiveProps');
+    // }
     rowGetter = (i: number) => {
-        if (this.state.rows === null) {
+        if (this.props.rows === null) {
             // TODO: 通常呼ばれないはずだが念のため
             return {};
         }
-        return this.state.rows[i];
-        // const row = this.state.rows[i];
-        // const unitPrice_1 = row[DataDocKeys.unitPrice][0];
-        // const unitPrice_2 = row[DataDocKeys.unitPrice][1];
-        // const unitPrice_3 = row[DataDocKeys.unitPrice][2];
-        // return Object.assign({}, row, {
-        // 	[DBDataRowKeys.unitPrice_1]: unitPrice_1,
-        // 	[DBDataRowKeys.unitPrice_2]: unitPrice_2,
-        // 	[DBDataRowKeys.unitPrice_3]: unitPrice_3
-        // });
+        return this.props.rows[i];
     };
     rowCount = () => {
-        if (this.state.rows === null) {
+        if (this.props.rows === null) {
             // TODO: 実験中　データロード
             this.props.queryDb();
             // // TODO: この時点でstate.rowsに空データを代入しておく
             // this.setState({ rows: [] });
             return 0;
         }
-        return this.state.rows.length;
+        return this.props.rows.length;
     };
     // handleCellSeceted = (col: { rowIdx: number; idx: number }) => {
     // 	// TODO:
@@ -498,7 +468,7 @@ class ManageDataDataGridComponent extends React.Component<
                             </Paper>
                         </Menu.ContextMenu>
                     }
-                    // onGridRowsUpdated={this.props.onGridRowUpdate}
+                    onGridRowsUpdated={this.props.onGridRowUpdate}
                     // onCellSelected={this.handleCellSeceted}
                     // toolbar={
                     // 	<Toolbar>
