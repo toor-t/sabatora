@@ -6,7 +6,7 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { ManageDataActions } from '../actions/ManageDataAction';
 import * as db from '../db';
 import wrapAsyncWorker, { wrapThunkAsyncActionWorker } from '../wrapAsyncWorker';
-import { queryDb, updateDb } from '../db_renderer';
+import { queryDb, updateDb, insertDb } from '../db_renderer';
 import immutabilityHelper from 'immutability-helper';
 
 // DBDataRowKeys
@@ -65,8 +65,43 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
     })
     // 行追加
     .case(ManageDataActions.addRow, state => {
-        // TODO:
-        return state;
+        if (state.dbDataRows === null) {
+            return state;
+        }
+        // TODO:　先頭に追加する
+        const insertRow: DBDataRow = {
+            [DBDataRowKeys.id]: state.dbDataRows.length, // TODO: 何を割り当てるべきか？
+            [DBDataRowKeys.level_1]: '大項目未入力',
+            [DBDataRowKeys.level_2]: '中項目未入力',
+            [DBDataRowKeys.level_3]: '小項目未入力',
+            [DBDataRowKeys.itemName]: '名称未入力',
+            [DBDataRowKeys.unitPrice_1]: 0,
+            [DBDataRowKeys.unitPrice_2]: 0,
+            [DBDataRowKeys.unitPrice_3]: 0
+        };
+        const dbDataRows = state.dbDataRows.slice();
+        dbDataRows.unshift(insertRow);
+        // TODO: 実験 DBに追加
+        const insertDoc = Object.assign(
+            {},
+            insertRow,
+            {
+                [DBDataRowKeys.id]: undefined,
+                [DBDataRowKeys.unitPrice_1]: undefined,
+                [DBDataRowKeys.unitPrice_2]: undefined,
+                [DBDataRowKeys.unitPrice_3]: undefined
+            },
+            {
+                [db.DataDocKeys.unitPrice]: [
+                    insertRow[DBDataRowKeys.unitPrice_1],
+                    insertRow[DBDataRowKeys.unitPrice_2],
+                    insertRow[DBDataRowKeys.unitPrice_3]
+                ]
+            }
+        );
+        insertDb(insertDoc).then();
+
+        return Object.assign({}, state, { dbDataRows });
     })
     // 行削除
     .case(ManageDataActions.deleteRows, state => {
@@ -106,13 +141,23 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
             }
             const updatedRow = immutabilityHelper(dataRows[i], { $merge: e.updated });
             // TODO: 実験 データベースアップデート
-            const update = Object.assign({}, updatedRow, {
-                [db.DataDocKeys.unitPrice]: [
-                    updatedRow[DBDataRowKeys.unitPrice_1],
-                    updatedRow[DBDataRowKeys.unitPrice_2],
-                    updatedRow[DBDataRowKeys.unitPrice_3]
-                ]
-            });
+            const update = Object.assign(
+                {},
+                updatedRow,
+                {
+                    [db.DataDocKeys.unitPrice]: [
+                        updatedRow[DBDataRowKeys.unitPrice_1],
+                        updatedRow[DBDataRowKeys.unitPrice_2],
+                        updatedRow[DBDataRowKeys.unitPrice_3]
+                    ]
+                },
+                {
+                    [DBDataRowKeys.id]: undefined,
+                    [DBDataRowKeys.unitPrice_1]: undefined,
+                    [DBDataRowKeys.unitPrice_2]: undefined,
+                    [DBDataRowKeys.unitPrice_3]: undefined
+                }
+            );
             updateDb(dataRows[i], update).then(); // TODO: エラー処理等必要！
             // TODO: 実験終わり
             dataRows[i] = Object.assign({}, updatedRow, {

@@ -17,9 +17,9 @@ import {
     SubtotalPriceRowKeys
 } from '../states/CreateFormState';
 import { DataDocKeys, DataDoc } from '../db';
-// import AddCircle from '@material-ui/icons/AddCircle';
-// import AddBox from '@material-ui/icons/AddBox';
-// import RemoveCircle from '@material-ui/icons/RemoveCircle';
+import AddCircle from '@material-ui/icons/AddCircle';
+import AddBox from '@material-ui/icons/AddBox';
+import RemoveCircle from '@material-ui/icons/RemoveCircle';
 // import * as classNames from 'classnames';
 import { Paper, MenuList, MenuItem } from '@material-ui/core';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -255,8 +255,8 @@ export interface IManageDataDataGridComponentDispatchProps {
     onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) => void;
     // onSelectedCell: (col: { rowIdx: number; idx: number }) => void;
     // updateAutoCompleteOptions: (col: { rowData: NormalDataRow; columnDDKey: string }) => void;
-    // addRow: () => void;
-    // deleteRows: () => void;
+    addRow: () => void;
+    deleteRows: () => void;
     // selectRows: (rows: { rowIdx: number; row: FormData }[]) => void;
     // deselectRows: (rows: { rowIdx: number; row: FormData }[]) => void;
     // addSubtotalRow: () => void;
@@ -412,16 +412,16 @@ class ManageDataDataGridComponent extends React.Component<
     // 		this.props.deselectRows(rows);
     // 	}
     // };
-    // handleAddRowBtn = (e: any) => {
-    // 	if (this.props.addRow) {
-    // 		this.props.addRow();
-    // 	}
-    // };
-    // handleDeleteBtn = (e: any) => {
-    // 	if (this.props.deleteRows) {
-    // 		this.props.deleteRows();
-    // 	}
-    // };
+    handleAddRowBtn = (e: any) => {
+        if (this.props.addRow) {
+            this.props.addRow();
+        }
+    };
+    handleDeleteBtn = (e: any) => {
+        if (this.props.deleteRows) {
+            this.props.deleteRows();
+        }
+    };
     // handleAddSubtotalBtn = (e: any) => {
     // 	if (this.props.addSubtotalRow) {
     // 		this.props.addSubtotalRow();
@@ -470,26 +470,18 @@ class ManageDataDataGridComponent extends React.Component<
                     // }
                     onGridRowsUpdated={this.props.onGridRowUpdate}
                     // onCellSelected={this.handleCellSeceted}
-                    // toolbar={
-                    // 	<Toolbar>
-                    // 		<button type="button" className="btn" onClick={this.handleAddRowBtn}>
-                    // 			<AddCircle />
-                    // 			{'行追加'}
-                    // 		</button>
-                    // 		<button
-                    // 			type="button"
-                    // 			className="btn"
-                    // 			onClick={this.handleAddSubtotalBtn}
-                    // 		>
-                    // 			<AddBox />
-                    // 			{'小計行追加'}
-                    // 		</button>
-                    // 		<button type="button" className="btn" onClick={this.handleDeleteBtn}>
-                    // 			<RemoveCircle />
-                    // 			{'行削除'}
-                    // 		</button>
-                    // 	</Toolbar>
-                    // }
+                    toolbar={
+                        <Toolbar>
+                            <button type="button" className="btn" onClick={this.handleAddRowBtn}>
+                                <AddCircle />
+                                {'行追加'}
+                            </button>
+                            <button type="button" className="btn" onClick={this.handleDeleteBtn}>
+                                <RemoveCircle />
+                                {'行削除'}
+                            </button>
+                        </Toolbar>
+                    }
                     // rowRenderer={CustomRowRenderer}
                 />
                 <br />
