@@ -6,7 +6,7 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { ManageDataActions } from '../actions/ManageDataAction';
 import * as db from '../db';
 import wrapAsyncWorker, { wrapThunkAsyncActionWorker } from '../wrapAsyncWorker';
-import { queryDb } from '../db_renderer';
+import { queryDb, updateDb } from '../db_renderer';
 import immutabilityHelper from 'immutability-helper';
 
 // DBDataRowKeys
@@ -105,6 +105,16 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
                 });
             }
             const updatedRow = immutabilityHelper(dataRows[i], { $merge: e.updated });
+            // TODO: 実験 データベースアップデート
+            const update = Object.assign({}, updatedRow, {
+                [db.DataDocKeys.unitPrice]: [
+                    updatedRow[DBDataRowKeys.unitPrice_1],
+                    updatedRow[DBDataRowKeys.unitPrice_2],
+                    updatedRow[DBDataRowKeys.unitPrice_3]
+                ]
+            });
+            updateDb(dataRows[i], update).then(); // TODO: エラー処理等必要！
+            // TODO: 実験終わり
             dataRows[i] = Object.assign({}, updatedRow, {
                 [db.DataDocKeys.unitPrice]: [
                     updatedRow[DBDataRowKeys.unitPrice_1],

@@ -6,7 +6,15 @@ import { app, ipcMain } from 'electron';
 import * as DataStore from 'nedb';
 import { win } from './main';
 
-import { DataDocKeys, DataDoc, ConfDoc, UpdateAutoCompleteOptions, QueryDb, UpdateDb } from './db';
+import {
+    DataDocKeys,
+    DataDoc,
+    ConfDoc,
+    UpdateAutoCompleteOptions,
+    QueryDb,
+    UpdateDb,
+    InsertDb
+} from './db';
 
 const userDataPath = app.getPath('userData');
 // const userDataPath = './db';
@@ -166,6 +174,36 @@ const updateDb = (query: any, update: any): Promise<{}> => {
                 reject(err);
             } else {
                 resolve(docs);
+            }
+        });
+    });
+};
+
+// TODO: InsertDb
+const insertDb_request = ipcMain.on(InsertDb.Request, (event: any, arg: any) => {
+    // TODO:
+    insertDb(arg[0]).then(
+        result => {
+            if (win) {
+                win.webContents.send(InsertDb.Result, result);
+            }
+        },
+        reject => {
+            // TODO:
+            if (win) {
+                win.webContents.send(InsertDb.Reject, reject);
+            }
+        }
+    );
+    event.sender.send(InsertDb.Reply, 'Request received.');
+});
+const insertDb = (doc: any): Promise<{}> => {
+    return new Promise((resolve, reject) => {
+        data_db.insert(doc, (err: any, document: any) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(document);
             }
         });
     });

@@ -44,3 +44,10 @@ export namespace UpdateDb {
     export const Reject = 'updateDb-reject';
     export const Reply = 'updateDb-reply';
 }
+
+export namespace InsertDb {
+    export const Request = 'insertDb-request';
+    export const Result = 'insertDb-result';
+    export const Reject = 'insertDb-reject';
+    export const Reply = 'insertDb-reply';
+}
