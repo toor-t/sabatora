@@ -31,7 +31,9 @@ function mapDispatchToProps(
         queryDb: () => dispatch(queryDbWorker({ query: <DataDoc>{}, projection: [] })),
         onGridRowUpdate: (e: any) => dispatch(ManageDataActions.updateGridRow(e)),
         addRow: () => dispatch(ManageDataActions.addRow()),
-        deleteRows: () => dispatch(ManageDataActions.deleteRows())
+        deleteRows: () => dispatch(ManageDataActions.deleteRows()),
+        selectRows: (rows: any) => dispatch(ManageDataActions.selectRows(rows)),
+        deselectRows: (rows: any) => dispatch(ManageDataActions.deselectRows(rows))
     };
 }
 export default connect(

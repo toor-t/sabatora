@@ -257,8 +257,8 @@ export interface IManageDataDataGridComponentDispatchProps {
     // updateAutoCompleteOptions: (col: { rowData: NormalDataRow; columnDDKey: string }) => void;
     addRow: () => void;
     deleteRows: () => void;
-    // selectRows: (rows: { rowIdx: number; row: FormData }[]) => void;
-    // deselectRows: (rows: { rowIdx: number; row: FormData }[]) => void;
+    selectRows: (rows: { rowIdx: number; row: FormData }[]) => void;
+    deselectRows: (rows: { rowIdx: number; row: FormData }[]) => void;
     // addSubtotalRow: () => void;
 }
 interface IManageDataDataGridComponentStates {
@@ -400,18 +400,18 @@ class ManageDataDataGridComponent extends React.Component<
     // 		}
     // 	}
     // };
-    // onRowsSelected = (rows: any) => {
-    // 	// TODO:
-    // 	if (this.props.selectRows) {
-    // 		this.props.selectRows(rows);
-    // 	}
-    // };
-    // onRowsDeselected = (rows: any) => {
-    // 	// TODO:
-    // 	if (this.props.deselectRows) {
-    // 		this.props.deselectRows(rows);
-    // 	}
-    // };
+    onRowsSelected = (rows: any) => {
+        // TODO:
+        if (this.props.selectRows) {
+            this.props.selectRows(rows);
+        }
+    };
+    onRowsDeselected = (rows: any) => {
+        // TODO:
+        if (this.props.deselectRows) {
+            this.props.deselectRows(rows);
+        }
+    };
     handleAddRowBtn = (e: any) => {
         if (this.props.addRow) {
             this.props.addRow();
@@ -441,15 +441,15 @@ class ManageDataDataGridComponent extends React.Component<
                     }}
                     enableCellSelect={true}
                     cellNavigationMode="changeRow"
-                    // rowSelection={{
-                    // 	showCheckbox: true,
-                    // 	enableShiftSelect: true,
-                    // 	onRowsSelected: this.onRowsSelected,
-                    // 	onRowsDeselected: this.onRowsDeselected,
-                    // 	selectBy: {
-                    // 		isSelectedKey: NormalDataRowKeys.selected
-                    // 	}
-                    // }}
+                    rowSelection={{
+                        showCheckbox: true,
+                        enableShiftSelect: true,
+                        onRowsSelected: this.onRowsSelected,
+                        onRowsDeselected: this.onRowsDeselected,
+                        selectBy: {
+                            isSelectedKey: DBDataRowKeys.selected
+                        }
+                    }}
                     columns={this.state.columns}
                     // tslint:disable-next-line:jsx-no-lambda
                     rowGetter={this.rowGetter}

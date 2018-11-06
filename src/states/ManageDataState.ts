@@ -21,6 +21,8 @@ export namespace DBDataRowKeys {
     export const unitPrice_1 = 'unitPrice_1';
     export const unitPrice_2 = 'unitPrice_2';
     export const unitPrice_3 = 'unitPrice_3';
+
+    export const selected = 'selected';
 }
 
 export interface DBDataRow {
@@ -32,6 +34,8 @@ export interface DBDataRow {
     [DBDataRowKeys.unitPrice_1]: number;
     [DBDataRowKeys.unitPrice_2]: number;
     [DBDataRowKeys.unitPrice_3]: number;
+
+    [DBDataRowKeys.selected]: boolean;
 }
 
 /**
@@ -49,14 +53,62 @@ const initialState: IManageDataState = {
  */
 export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(initialState)
     // 行選択
-    .case(ManageDataActions.selectRows, (state, payload) => {
+    .case(ManageDataActions.selectRows, (state, rows) => {
         // TODO:
-        return state;
+        if (state.dbDataRows === null) {
+            return state;
+        }
+        const dbDataRows = state.dbDataRows.map((value, index, array) => {
+            for (let i = 0; i < rows.length; i = i + 1) {
+                if (index === rows[i].rowIdx) {
+                    // 選択された
+                    return Object.assign({}, array[index], { selected: true });
+                }
+            }
+            // 選択されてない
+            return Object.assign({}, array[index]);
+        });
+
+        // const formData = Object.assign({}, state.formData, { dataRows });
+
+        // // TODO:  選択行の数等のチェック
+        // const ret = getSlecetedRowsInfo(formData.dataRows);
+
+        return Object.assign(
+            {},
+            state,
+            { dbDataRows }
+            // { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
+        );
     })
     // 行選択解除
-    .case(ManageDataActions.deselectRows, (state, payload) => {
+    .case(ManageDataActions.deselectRows, (state, rows) => {
         // TODO:
-        return state;
+        if (state.dbDataRows === null) {
+            return state;
+        }
+        const dbDataRows = state.dbDataRows.map((value, index, array) => {
+            for (let i = 0; i < rows.length; i = i + 1) {
+                if (index === rows[i].rowIdx) {
+                    // 選択解除された
+                    return Object.assign({}, array[index], { selected: false });
+                }
+            }
+            // 選択解除されてない
+            return Object.assign({}, array[index]);
+        });
+
+        // const formData = Object.assign({}, state.formData, { dataRows });
+
+        // // TODO:  選択行の数等のチェック
+        // const ret = getSlecetedRowsInfo(formData.dataRows);
+
+        return Object.assign(
+            {},
+            state,
+            { dbDataRows }
+            // { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
+        );
     })
     // セル選択
     .case(ManageDataActions.selectCell, (state, payload) => {
@@ -77,7 +129,9 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
             [DBDataRowKeys.itemName]: '名称未入力',
             [DBDataRowKeys.unitPrice_1]: 0,
             [DBDataRowKeys.unitPrice_2]: 0,
-            [DBDataRowKeys.unitPrice_3]: 0
+            [DBDataRowKeys.unitPrice_3]: 0,
+
+            [DBDataRowKeys.selected]: false
         };
         const dbDataRows = state.dbDataRows.slice();
         dbDataRows.unshift(insertRow);
@@ -106,7 +160,36 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
     // 行削除
     .case(ManageDataActions.deleteRows, state => {
         // TODO:
-        return state;
+        if (state.dbDataRows === null) {
+            return state;
+        }
+        const dbDataRows: DBDataRow[] = [];
+
+        for (const dbDataRowIdx in state.dbDataRows) {
+            if (!state.dbDataRows[dbDataRowIdx][DBDataRowKeys.selected]) {
+                // 残す行
+                dbDataRows.push(state.dbDataRows[dbDataRowIdx]);
+            }
+        }
+
+        // // 合計を計算
+        // const totalPrice = calcTotalPrice(dataRows);
+
+        // const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
+
+        // // TODO: 編集済みフラグセット
+        // const formDataEditted = true;
+
+        // // TODO:  選択行の数等のチェック
+        // const ret = getSlecetedRowsInfo(formData.dataRows);
+
+        return Object.assign(
+            {},
+            state,
+            { dbDataRows }
+            // { formData, formDataEditted },
+            // { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
+        );
     })
     // グリッド行更新
     .case(ManageDataActions.updateGridRow, (state, e) => {
@@ -199,7 +282,8 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
                     [DBDataRowKeys.unitPrice_2]: unitPrice_2,
                     [DBDataRowKeys.unitPrice_3]: unitPrice_3
                 },
-                { id: index }
+                { [DBDataRowKeys.id]: index },
+                { [DBDataRowKeys.selected]: false }
             );
         });
 
