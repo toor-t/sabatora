@@ -29,6 +29,9 @@ const data_db: Nedb = new DataStore({
 	beforeDeserialization: fuga,
 	*/
 });
+// TODO: auto compaction
+data_db.persistence.setAutocompactionInterval(60000);
+
 const conf_db: Nedb = new DataStore({
     filename: `${userDataPath}/conf.db`, // TODO: ファイル名
     autoload: true

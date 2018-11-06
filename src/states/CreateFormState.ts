@@ -361,13 +361,13 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
                     : e.updated[NormalDataRowKeys.unitPrice] === ''
                         ? 0
                         : e.updated[NormalDataRowKeys.unitPrice];
-                console.log(e.updated[NormalDataRowKeys.unitPrice]);
+                // console.log(e.updated[NormalDataRowKeys.unitPrice]);
                 const _num = !e.updated[NormalDataRowKeys.num]
                     ? rowToUpdate[NormalDataRowKeys.num]
                     : e.updated[NormalDataRowKeys.num] === ''
                         ? 0
                         : e.updated[NormalDataRowKeys.num];
-                console.log(e.updated[NormalDataRowKeys.num]);
+                // console.log(e.updated[NormalDataRowKeys.num]);
 
                 e.updated[NormalDataRowKeys.price] = Number(_unitPrice) * Number(_num);
                 // e.updated[NormalDataRowKeys.price_isEmpty] = false;

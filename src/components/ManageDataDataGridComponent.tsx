@@ -278,13 +278,13 @@ class ManageDataDataGridComponent extends React.Component<
         super(props);
         // カラム定義
         const columns: (ReactDataGrid.Column<NormalDataRow> & { ddKey?: string })[] = [
-            {
-                key: DBDataRowKeys.id,
-                name: Str.No,
-                width: 48,
-                resizable: false,
-                formatter: CenterFormatter
-            },
+            // {
+            //     key: DBDataRowKeys.id,
+            //     name: Str.No,
+            //     width: 48,
+            //     resizable: false,
+            //     formatter: CenterFormatter
+            // },
             {
                 key: DBDataRowKeys.level_1,
                 name: Str.Level_1,
