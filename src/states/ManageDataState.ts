@@ -6,7 +6,7 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { ManageDataActions } from '../actions/ManageDataAction';
 import * as db from '../db';
 import wrapAsyncWorker, { wrapThunkAsyncActionWorker } from '../wrapAsyncWorker';
-import { queryDb, updateDb, insertDb } from '../db_renderer';
+import { queryDb, updateDb, insertDb, removeDb } from '../db_renderer';
 import immutabilityHelper from 'immutability-helper';
 
 // DBDataRowKeys
@@ -143,7 +143,8 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
                 [DBDataRowKeys.id]: undefined,
                 [DBDataRowKeys.unitPrice_1]: undefined,
                 [DBDataRowKeys.unitPrice_2]: undefined,
-                [DBDataRowKeys.unitPrice_3]: undefined
+                [DBDataRowKeys.unitPrice_3]: undefined,
+                [DBDataRowKeys.selected]: undefined
             },
             {
                 [db.DataDocKeys.unitPrice]: [
@@ -169,6 +170,28 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
             if (!state.dbDataRows[dbDataRowIdx][DBDataRowKeys.selected]) {
                 // 残す行
                 dbDataRows.push(state.dbDataRows[dbDataRowIdx]);
+            } else {
+                // 消す行
+                // TODO: DBから削除する
+                const removeQuery = Object.assign(
+                    {},
+                    state.dbDataRows[dbDataRowIdx],
+                    {
+                        [DBDataRowKeys.id]: undefined,
+                        [DBDataRowKeys.unitPrice_1]: undefined,
+                        [DBDataRowKeys.unitPrice_2]: undefined,
+                        [DBDataRowKeys.unitPrice_3]: undefined,
+                        [DBDataRowKeys.selected]: undefined
+                    },
+                    {
+                        [db.DataDocKeys.unitPrice]: [
+                            state.dbDataRows[dbDataRowIdx][DBDataRowKeys.unitPrice_1],
+                            state.dbDataRows[dbDataRowIdx][DBDataRowKeys.unitPrice_2],
+                            state.dbDataRows[dbDataRowIdx][DBDataRowKeys.unitPrice_3]
+                        ]
+                    }
+                );
+                removeDb(removeQuery).then();
             }
         }
 
@@ -238,7 +261,8 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
                     [DBDataRowKeys.id]: undefined,
                     [DBDataRowKeys.unitPrice_1]: undefined,
                     [DBDataRowKeys.unitPrice_2]: undefined,
-                    [DBDataRowKeys.unitPrice_3]: undefined
+                    [DBDataRowKeys.unitPrice_3]: undefined,
+                    [DBDataRowKeys.selected]: undefined
                 }
             );
             updateDb(dataRows[i], update).then(); // TODO: エラー処理等必要！

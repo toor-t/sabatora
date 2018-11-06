@@ -51,3 +51,10 @@ export namespace InsertDb {
     export const Reject = 'insertDb-reject';
     export const Reply = 'insertDb-reply';
 }
+
+export namespace RemoveDb {
+    export const Request = 'removeDb-request';
+    export const Result = 'removeDb-result';
+    export const Reject = 'removeDb-reject';
+    export const Reply = 'removeDb-reply';
+}

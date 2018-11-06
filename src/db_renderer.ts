@@ -3,7 +3,7 @@
  */
 'use strict';
 import { ipcRenderer } from 'electron';
-import { UpdateAutoCompleteOptions, QueryDb, UpdateDb, InsertDb } from './db';
+import { UpdateAutoCompleteOptions, QueryDb, UpdateDb, InsertDb, RemoveDb } from './db';
 
 // AutoCompleteOptions
 export const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promise<{}> => {
@@ -138,5 +138,39 @@ export const insertDb = (doc: any): Promise<{}> => {
         //
         // console.log('Send InsertDb-request');
         ipcRenderer.send(InsertDb.Request, [doc]);
+    });
+};
+
+// dbRemove
+export const removeDb = (query: any): Promise<{}> => {
+    return new Promise((resolve, reject) => {
+        const resultListener = (event: any, result: any) => {
+            // console.log(`RemoveDb-result=${{ ...result }}`);
+            resolve(result);
+
+            // Remove Listner
+            ipcRenderer.removeListener(RemoveDb.Result, resultListener);
+            ipcRenderer.removeListener(RemoveDb.Reject, rejectListener);
+        };
+        ipcRenderer.once(RemoveDb.Result, resultListener);
+        const rejectListener = (event: any, result: any) => {
+            // console.log(`RemoveDb-result=${{ ...result }}`);
+            reject(result);
+
+            // Remove Listner
+            ipcRenderer.removeListener(RemoveDb.Reject, rejectListener);
+            ipcRenderer.removeListener(RemoveDb.Result, resultListener);
+        };
+        ipcRenderer.once(RemoveDb.Reject, rejectListener);
+        const replyListener = (event: any, reply: any) => {
+            /* TODO: */
+            // console.log(`RemoveDb-reply = ${reply}`);
+            // Remove Listner
+            ipcRenderer.removeListener(RemoveDb.Reply, replyListener);
+        };
+        ipcRenderer.once(RemoveDb.Reply, replyListener);
+        //
+        // console.log('Send RemoveDb-request');
+        ipcRenderer.send(RemoveDb.Request, [query]);
     });
 };

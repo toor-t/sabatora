@@ -13,7 +13,8 @@ import {
     UpdateAutoCompleteOptions,
     QueryDb,
     UpdateDb,
-    InsertDb
+    InsertDb,
+    RemoveDb
 } from './db';
 
 const userDataPath = app.getPath('userData');
@@ -204,6 +205,36 @@ const insertDb = (doc: any): Promise<{}> => {
                 reject(err);
             } else {
                 resolve(document);
+            }
+        });
+    });
+};
+
+// TODO: RemoveDb
+const removeDb_request = ipcMain.on(RemoveDb.Request, (event: any, arg: any) => {
+    // TODO:
+    removeDb(arg[0]).then(
+        result => {
+            if (win) {
+                win.webContents.send(RemoveDb.Result, result);
+            }
+        },
+        reject => {
+            // TODO:
+            if (win) {
+                win.webContents.send(RemoveDb.Reject, reject);
+            }
+        }
+    );
+    event.sender.send(RemoveDb.Reply, 'Request received.');
+});
+const removeDb = (query: any): Promise<{}> => {
+    return new Promise((resolve, reject) => {
+        data_db.remove(query, (err: any, n: number) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(n);
             }
         });
     });
