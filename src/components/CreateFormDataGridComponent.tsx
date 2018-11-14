@@ -36,7 +36,6 @@ const getOptions = (ddKey: string): { (): { id: number; title: string }[] } => {
 
 // CustomAutoCompleteEditor
 interface ICustomAutoCompleteEditorProps {
-    // TODO:
     getOptions: () => { id: number; title: string };
 }
 interface ICustomAutoCompleteEditorStates {}
@@ -47,7 +46,7 @@ class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
     constructor(props: any) {
         super(props);
         this.state = {
-            // TODO:
+            // 現状空
         };
         this.getValue.bind(this);
         this.getInputNode.bind(this);
@@ -56,24 +55,19 @@ class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
     autoComplete: any;
 
     getValue() {
-        // TODO: 実験
-        // return this.autoComplete.getValue();
         const valueObj: {} = this.autoComplete.getValue();
-        // console.log(valueObj);
         const key = Object.keys(valueObj)[0];
-        // console.log(key);
         const value = Object.values(valueObj)[0];
-        // console.log(value)
         const _options: { id: number; title: string }[] = this.props.getOptions();
+        // データベースの値と違う値は入力できないようにする処理
         if (_options) {
-            // console.log(_options);
             let found: boolean = false;
             _options.map((option, index, array) => {
                 if (option.title === value) {
                     found = true;
                 }
             });
-            if (!found) return { [key]: '' };
+            if (!found) return { [key]: '' }; // データベースの値と違うので空を返す
         }
         return valueObj;
     }
@@ -107,7 +101,7 @@ class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
     }
 }
 
-// TODO: Formatter
+// Formatter
 const NumberRightFormatter: React.SFC<any> = props => {
     if ((typeof props.value === 'number' && !isNaN(props.value)) || !isNaN(Number(props.value))) {
         const formattedValue: string = String(props.value).replace(
@@ -155,7 +149,7 @@ const BoldRightFormatter: React.SFC<any> = props => {
     );
 };
 
-// TODO: Row render
+// Row render
 interface ICustomRowRendererStates {
     grid: CreateFormDataGridComponent;
 }
@@ -191,7 +185,7 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
         let _columns = columns;
 
         if (this.props.row[TotalPriceRowKeys.totalPrice] !== undefined) {
-            // TODO: 合計表示
+            // 合計表示
             const check_column = Object.assign(
                 {},
                 columns[0],
@@ -249,7 +243,7 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
             );
         }
         if (this.props.row[SubtotalPriceRowKeys.subtotalPrice] !== undefined) {
-            // TODO: 小計表示
+            // 小計表示
             const check_column = columns[0]; // チェックボックスカラム
 
             let width = 0;
@@ -335,12 +329,10 @@ const styles = (theme: Theme) =>
 export interface ICreateFormDataGridComponentStateProps {
     rows: {}[];
     autoCompleteOptions: {};
-    // TODO:
     selectedRowsCount: number;
     firstSelectedRowIdx: number;
 }
 export interface ICreateFormDataGridComponentDispatchProps {
-    // TODO:
     onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) => void;
     onSelectedCell: (col: { rowIdx: number; idx: number }) => void;
     updateAutoCompleteOptions: (col: { rowData: NormalDataRow; columnDDKey: string }) => void;
@@ -441,9 +433,8 @@ class CreateFormDataGridComponent extends React.Component<
         return !this.props.rows ? 0 : this.props.rows.length;
     };
     handleCellSeceted = (col: { rowIdx: number; idx: number }) => {
-        // TODO:
         this.props.onSelectedCell(col);
-        // TODO: updateAutoCompleteOptions
+        // updateAutoCompleteOptions
         if (
             this.props.rows &&
             (this.props.rows[col.rowIdx] as NormalDataRow)[NormalDataRowKeys.price] !== undefined
@@ -482,7 +473,6 @@ class CreateFormDataGridComponent extends React.Component<
         this.props.addSubtotalRow();
     };
 
-    // TODO: 実験
     handleOnCheckCellIsEditable = (param: any) => {
         if (
             param.row[TotalPriceRowKeys.labelTotalPrice] ||
@@ -497,7 +487,6 @@ class CreateFormDataGridComponent extends React.Component<
     };
 
     render() {
-        // TODO:
         if (this.props.autoCompleteOptions !== undefined) {
             autoCompleteOptions = this.props.autoCompleteOptions;
         }
@@ -567,7 +556,6 @@ class CreateFormDataGridComponent extends React.Component<
                         </Toolbar>
                     }
                     rowRenderer={CustomRowRenderer}
-                    // TODO: 実験
                     onCheckCellIsEditable={this.handleOnCheckCellIsEditable}
                 />
             </div>

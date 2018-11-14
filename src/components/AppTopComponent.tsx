@@ -165,11 +165,24 @@ export interface IAppTopComponentDispatchProps {
      * ドロワーメニュー項目選択
      */
     onSelectMenuItem: (selected: number) => void;
-    // TODO: 実験中
+    /**
+     * 帳票保存
+     */
     onSaveForm: () => void;
+    /**
+     * 帳票読込
+     */
     onOpenForm: () => void;
+    /**
+     * 新規帳票
+     */
     onNewForm: () => void;
+    /**
+     * 帳票印刷
+     */
     onPrintForm: () => void;
+
+    // TODO: 他画面用メニューも必要？
 }
 interface IAppTopComponentStates {
     anchorEl?: HTMLElement;
@@ -222,7 +235,7 @@ class AppTopComponent extends React.Component<
         let MoreVartMenuContent: JSX.Element = <div />;
         switch (selected) {
             case AppTopSelected.CreateForm:
-                // TODO:
+                // 帳票作成
                 Content = CreateFormContainer;
                 AppBarTitle = AppTopSelected.CreateFormTitle;
                 MoreVartMenuContent = (
@@ -248,7 +261,7 @@ class AppTopComponent extends React.Component<
                 );
                 break;
             case AppTopSelected.ManageData:
-                // TODO:
+                // TODO: データ管理
                 Content = ManageDataContainer;
                 AppBarTitle = AppTopSelected.ManageDataTitle;
                 MoreVartMenuContent = (
@@ -258,7 +271,7 @@ class AppTopComponent extends React.Component<
                 );
                 break;
             case AppTopSelected.Config:
-                // TODO:
+                // TODO: 設定
                 Content = ConfigContainer;
                 AppBarTitle = AppTopSelected.ConfigTitle;
                 MoreVartMenuContent = (
@@ -268,7 +281,7 @@ class AppTopComponent extends React.Component<
                 );
                 break;
             case AppTopSelected.About:
-                // TODO:
+                // TODO: About
                 Content = AboutContainer;
                 AppBarTitle = AppTopSelected.AboutTitle;
                 MoreVartMenuContent = (
@@ -291,6 +304,7 @@ class AppTopComponent extends React.Component<
                         )}
                     >
                         <Toolbar disableGutters={!this.props.drawerOpend}>
+                            {/* 左上アイコン */}
                             <IconButton
                                 color="inherit"
                                 aria-label="Open drawer"
@@ -304,6 +318,7 @@ class AppTopComponent extends React.Component<
                             >
                                 <MenuIcon />
                             </IconButton>
+                            {/* タイトル */}
                             <Typography
                                 variant="title"
                                 color="inherit"
@@ -312,7 +327,7 @@ class AppTopComponent extends React.Component<
                             >
                                 {AppBarTitle}
                             </Typography>
-                            {/* TODO: */}
+                            {/* 右上ボタン */}
                             <div>
                                 <IconButton
                                     aria-owns={open ? 'menu-appbar' : undefined}

@@ -1,8 +1,6 @@
 /**
  * ManageDataDataGridComponent
  */
-
-// TODO:
 'use strict';
 
 import * as ReactDataGrid from 'react-data-grid';
@@ -29,7 +27,7 @@ import { Str } from '../strings';
 // tslint:disable-next-line:import-name
 import Measure, { ContentRect } from 'react-measure';
 
-// TODO: Formatter
+// Formatter
 const NumberRightFormatter: React.SFC<any> = props => {
     if ((typeof props.value === 'number' && !isNaN(props.value)) || !isNaN(Number(props.value))) {
         const formattedValue: string = String(props.value).replace(
@@ -252,7 +250,6 @@ export interface IManageDataDataGridComponentStateProps {
     // autoCompleteOptions: {};
 }
 export interface IManageDataDataGridComponentDispatchProps {
-    // TODO:
     queryDb: () => void;
     // TODO:
     onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) => void;
@@ -355,20 +352,16 @@ class ManageDataDataGridComponent extends React.Component<
     // ReactDataGridへの参照
     grid: any = {};
 
-    // TODO:  実験
-    // componentWillReceiveProps() {
-    // 	console.log('componentWillReceiveProps');
-    // }
     rowGetter = (i: number) => {
         if (this.props.rows === null) {
-            // TODO: 通常呼ばれないはずだが念のため
+            // 通常呼ばれないはずだが念のため
             return {};
         }
         return this.props.rows[i];
     };
     rowCount = () => {
         if (this.props.rows === null) {
-            // TODO: 実験中　データロード
+            // データロード
             this.props.queryDb();
             // // TODO: この時点でstate.rowsに空データを代入しておく
             // this.setState({ rows: [] });
@@ -408,13 +401,11 @@ class ManageDataDataGridComponent extends React.Component<
     // 	}
     // };
     onRowsSelected = (rows: any) => {
-        // TODO:
         if (this.props.selectRows) {
             this.props.selectRows(rows);
         }
     };
     onRowsDeselected = (rows: any) => {
-        // TODO:
         if (this.props.deselectRows) {
             this.props.deselectRows(rows);
         }
@@ -435,7 +426,6 @@ class ManageDataDataGridComponent extends React.Component<
     // 	}
     // };
     render() {
-        // TODO:
         const { width, height } = this.state;
         return (
             // TODO: 実験
