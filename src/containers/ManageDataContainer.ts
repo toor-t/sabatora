@@ -20,7 +20,8 @@ import { ThunkDispatch } from 'redux-thunk';
 function mapStateToProps(appState: IAppState): IManageDataComponentStateProps {
     // TODO:
     return {
-        rows: appState.manageDataState.dbDataRows
+        rows: appState.manageDataState.dbDataRows,
+        selectedRowsCount: appState.manageDataState.selectedRowsCount
     };
 }
 function mapDispatchToProps(

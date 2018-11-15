@@ -149,6 +149,7 @@ const initialState: ICreateFormState = {
 function calcTotalPrice(rows: any[]): number {
     let sumPrice: number = 0;
     let subSumPrice: number = 0;
+    let id: number = 1;
     for (let i = 0; i < rows.length; i = i + 1) {
         if (
             rows[i][NormalDataRowKeys.price] !== undefined
@@ -156,6 +157,9 @@ function calcTotalPrice(rows: any[]): number {
         ) {
             sumPrice += rows[i][NormalDataRowKeys.price];
             subSumPrice += rows[i][NormalDataRowKeys.price];
+            // TODO: No.を更新する処理
+            rows[i][NormalDataRowKeys.id] = id;
+            id += 1;
         }
         // 小計行
         if (rows[i][SubtotalPriceRowKeys.subtotalPrice] !== undefined) {

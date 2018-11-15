@@ -42,7 +42,8 @@ const styles = (theme: Theme) =>
             flexWrap: 'wrap'
         },
         input: {
-            margin: theme.spacing.unit
+            margin: theme.spacing.unit,
+            width: '25%'
         },
         flexbox: {
             display: 'flex',
@@ -102,7 +103,7 @@ const CreateFormComponent: React.SFC<
                                 {title}
                                 <IconButton
                                     className={classes.button}
-                                    aria-label="Delete"
+                                    aria-label="Edit"
                                     onClick={startEdittingTitle}
                                 >
                                     <CreateIcon />

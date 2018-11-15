@@ -247,6 +247,7 @@ const styles = (theme: Theme) =>
 export interface IManageDataDataGridComponentStateProps {
     // TODO:
     rows: DBDataRow[] | null;
+    selectedRowsCount: number;
     // autoCompleteOptions: {};
 }
 export interface IManageDataDataGridComponentDispatchProps {
@@ -497,6 +498,7 @@ class ManageDataDataGridComponent extends React.Component<
                                         type="button"
                                         className="btn"
                                         onClick={this.handleDeleteBtn}
+                                        disabled={this.props.selectedRowsCount === 0 ? true : false}
                                     >
                                         <RemoveCircle />
                                         {'行削除'}

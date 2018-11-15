@@ -12,7 +12,7 @@ import immutabilityHelper from 'immutability-helper';
 // DBDataRowKeys
 export namespace DBDataRowKeys {
     // TODO:
-    export const id = 'id'; // : number;
+    // export const id = 'id'; // : number;
 
     export const level_1 = db.DataDocKeys.level_1;
     export const level_2 = db.DataDocKeys.level_2;
@@ -26,7 +26,7 @@ export namespace DBDataRowKeys {
 }
 
 export interface DBDataRow {
-    [DBDataRowKeys.id]: number;
+    // [DBDataRowKeys.id]: number;
     [DBDataRowKeys.level_1]: string;
     [DBDataRowKeys.level_2]: string;
     [DBDataRowKeys.level_3]: string;
@@ -43,9 +43,28 @@ export interface DBDataRow {
  */
 export interface IManageDataState {
     dbDataRows: DBDataRow[] | null;
+    selectedRowsCount: number; // TODO:  選択行の数
 }
 const initialState: IManageDataState = {
-    dbDataRows: null
+    dbDataRows: null,
+    selectedRowsCount: 0
+};
+
+/**
+ * TODO: 選択行の数を取得
+ * @param rows
+ * @returns number
+ */
+const getSlecetedRowsCount = (rows: DBDataRow[]): number => {
+    let count: number = 0;
+    for (let idx = 0; idx < rows.length; idx += 1) {
+        const row: DBDataRow = rows[idx] as DBDataRow;
+        if (row[DBDataRowKeys.selected]) {
+            count += 1;
+        }
+    }
+    // console.log(`count=${count}`);
+    return count;
 };
 
 /**
@@ -71,13 +90,13 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
 
         // const formData = Object.assign({}, state.formData, { dataRows });
 
-        // // TODO:  選択行の数等のチェック
-        // const ret = getSlecetedRowsInfo(formData.dataRows);
+        // TODO:  選択行の数チェック
+        const selectedRowsCount = getSlecetedRowsCount(dbDataRows);
 
         return Object.assign(
             {},
             state,
-            { dbDataRows }
+            { dbDataRows, selectedRowsCount }
             // { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
         );
     })
@@ -100,13 +119,13 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
 
         // const formData = Object.assign({}, state.formData, { dataRows });
 
-        // // TODO:  選択行の数等のチェック
-        // const ret = getSlecetedRowsInfo(formData.dataRows);
+        // TODO:  選択行の数等のチェック
+        const selectedRowsCount = getSlecetedRowsCount(dbDataRows);
 
         return Object.assign(
             {},
             state,
-            { dbDataRows }
+            { dbDataRows, selectedRowsCount }
             // { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
         );
     })
@@ -122,7 +141,7 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
         }
         // TODO:　先頭に追加する
         const insertRow: DBDataRow = {
-            [DBDataRowKeys.id]: state.dbDataRows.length, // TODO: 何を割り当てるべきか？
+            // [DBDataRowKeys.id]: state.dbDataRows.length, // TODO: 何を割り当てるべきか？
             [DBDataRowKeys.level_1]: '大項目未入力',
             [DBDataRowKeys.level_2]: '中項目未入力',
             [DBDataRowKeys.level_3]: '小項目未入力',
@@ -140,7 +159,7 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
             {},
             insertRow,
             {
-                [DBDataRowKeys.id]: undefined,
+                // [DBDataRowKeys.id]: undefined,
                 [DBDataRowKeys.unitPrice_1]: undefined,
                 [DBDataRowKeys.unitPrice_2]: undefined,
                 [DBDataRowKeys.unitPrice_3]: undefined,
@@ -177,7 +196,7 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
                     {},
                     state.dbDataRows[dbDataRowIdx],
                     {
-                        [DBDataRowKeys.id]: undefined,
+                        // [DBDataRowKeys.id]: undefined,
                         [DBDataRowKeys.unitPrice_1]: undefined,
                         [DBDataRowKeys.unitPrice_2]: undefined,
                         [DBDataRowKeys.unitPrice_3]: undefined,
@@ -203,13 +222,13 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
         // // TODO: 編集済みフラグセット
         // const formDataEditted = true;
 
-        // // TODO:  選択行の数等のチェック
-        // const ret = getSlecetedRowsInfo(formData.dataRows);
+        // TODO:  選択行の数等のチェック
+        const selectedRowsCount = getSlecetedRowsCount(dbDataRows);
 
         return Object.assign(
             {},
             state,
-            { dbDataRows }
+            { dbDataRows, selectedRowsCount }
             // { formData, formDataEditted },
             // { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
         );
@@ -258,7 +277,7 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
                     ]
                 },
                 {
-                    [DBDataRowKeys.id]: undefined,
+                    // [DBDataRowKeys.id]: undefined,
                     [DBDataRowKeys.unitPrice_1]: undefined,
                     [DBDataRowKeys.unitPrice_2]: undefined,
                     [DBDataRowKeys.unitPrice_3]: undefined,
@@ -306,7 +325,7 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
                     [DBDataRowKeys.unitPrice_2]: unitPrice_2,
                     [DBDataRowKeys.unitPrice_3]: unitPrice_3
                 },
-                { [DBDataRowKeys.id]: index },
+                // { [DBDataRowKeys.id]: index },
                 { [DBDataRowKeys.selected]: false }
             );
         });
