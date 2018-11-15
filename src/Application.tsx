@@ -10,17 +10,18 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 // import 'typeface-roboto';
 // TODO: テーマ変更
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-// import indigo from '@material-ui/core/colors/indigo';
+import indigo from '@material-ui/core/colors/indigo';
 import pink from '@material-ui/core/colors/pink';
 import red from '@material-ui/core/colors/red';
 // import orange from '@material-ui/core/colors/orange';
 // import green from '@material-ui/core/colors/green';
-import blueGrey from '@material-ui/core/colors/blueGrey';
+// import blueGrey from '@material-ui/core/colors/blueGrey';
+import lightBlue from '@material-ui/core/colors/lightBlue';
 
 const theme = createMuiTheme({
     palette: {
-        primary: blueGrey,
-        secondary: pink,
+        primary: indigo,
+        secondary: lightBlue,
         error: red,
         // Used by `getContrastText()` to maximize the contrast between the background and
         // the text.
