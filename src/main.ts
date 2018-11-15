@@ -46,6 +46,7 @@ const createWindow = async () => {
         y,
         minWidth: 800,
         minHeight: 400
+        // titleBarStyle: 'hiddenInset',
     });
 
     if (process.env.NODE_ENV !== 'production') {
