@@ -242,7 +242,7 @@ class AppTopComponent extends React.Component<
         };
     }
     handleOnResize = () => {
-        console.log('handleOnResize');
+        // console.log('handleOnResize');
         this.setState({
             width: window.innerWidth,
             height: window.innerHeight

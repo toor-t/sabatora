@@ -23,9 +23,8 @@ import { Paper, MenuList, MenuItem } from '@material-ui/core';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { DBDataRowKeys, DBDataRow } from '../states/ManageDataState';
 import { Str, BtnLabel } from '../strings';
-// TODO: 実験
 // tslint:disable-next-line:import-name
-import Measure, { ContentRect } from 'react-measure';
+import EventListener from 'react-event-listener';
 
 // Formatter
 const NumberRightFormatter: React.SFC<any> = props => {
@@ -343,8 +342,8 @@ class ManageDataDataGridComponent extends React.Component<
         ];
         this.state = {
             columns,
-            width: 0,
-            height: 0
+            width: window.innerWidth,
+            height: window.innerHeight
         };
         this.rowGetter.bind(this);
         this.rowCount.bind(this);
@@ -426,31 +425,26 @@ class ManageDataDataGridComponent extends React.Component<
     // 		this.props.addSubtotalRow();
     // 	}
     // };
+    handleOnResize = () => {
+        // console.log('handleOnResize');
+        this.setState({
+            width: window.innerWidth,
+            height: window.innerHeight
+        });
+    };
     render() {
         const { width, height } = this.state;
-        const innerHeight = window.innerHeight;
-        console.log(innerHeight);
+        const innerHeight = height;
+        // console.log(innerHeight);
         return (
-            // TODO: 実験
-            // <Measure
-            // 	bounds={true}
-            // 	// tslint:disable-next-line:jsx-no-lambda
-            // 	onResize={(contentRect: ContentRect) => {
-            // 		contentRect.bounds
-            // 			? this.setState({
-            // 				width: contentRect.bounds.width,
-            // 				height: contentRect.bounds.height
-            // 			})
-            // 			: 0;
-            // 	}}
-            // >
-            // 	{({ measureRef }) => (
             <div
                 // ref={measureRef}
                 id="ManageDataDataGrid"
                 className={this.props.classes.content}
                 style={{ fontSize: '0.8125rem' /*, height: innerHeight - 64*/ }}
             >
+                <EventListener target="window" onResize={this.handleOnResize} />
+
                 <ReactDataGrid
                     ref={(node: ReactDataGrid<{}> | null) => {
                         this.grid = node;
@@ -467,7 +461,6 @@ class ManageDataDataGridComponent extends React.Component<
                         }
                     }}
                     columns={this.state.columns}
-                    // tslint:disable-next-line:jsx-no-lambda
                     rowGetter={this.rowGetter}
                     rowsCount={this.rowCount()}
                     rowHeight={ROW_HEIGHT}
@@ -512,10 +505,6 @@ class ManageDataDataGridComponent extends React.Component<
                 />
                 <br />
             </div>
-            // 	)
-            // 		// TODO: 実験
-            // 	}
-            // </Measure>
         );
     }
 }

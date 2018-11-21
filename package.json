@@ -1,6 +1,6 @@
 {
 	"name": "sabatora",
-	"version": "0.7.0",
+	"version": "0.8.0",
 	"description": "sabatora.",
 	"main": "./dist/main.js",
 	"scripts": {
@@ -77,7 +77,7 @@
 		"name": "toor-t",
 		"email": "toor.tutui@gmail.com"
 	},
-	"license": "",
+	"license": "MIT",
 	"bugs": {
 		"url": ""
 	},
