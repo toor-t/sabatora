@@ -169,6 +169,13 @@
     "@types/node" "*"
     "@types/react" "*"
 
+"@types/react-event-listener@^0.4.7":
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/@types/react-event-listener/-/react-event-listener-0.4.7.tgz#f064f47ee026d46bf798cc67a7e90252aacc248b"
+  integrity sha512-s/S5ASsfCJzStiaBxTQQd/PBaZ7idHnd1el3SxEpW7ZKwleiipVqPZcTvD+m8i1Lhf2k82MsG3uS0nS3m+ao3w==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-hot-loader@^3.0.5":
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/@types/react-hot-loader/-/react-hot-loader-3.0.6.tgz#23b1875a327c32cbab705fbf660d8f207ede4d69"
@@ -8367,6 +8374,15 @@ react-event-listener@^0.6.2:
   integrity sha512-21ubz0vpzPL/8YPGkcDs/LFIemxMFPhpXnFKvrm15IA7x/kYzh1Bru3ww/lsZJJ0hCqyhJGjv7Txl/U00Je5SA==
   dependencies:
     "@babel/runtime" "7.0.0-rc.1"
+    prop-types "^15.6.0"
+    warning "^4.0.1"
+
+react-event-listener@^0.6.4:
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/react-event-listener/-/react-event-listener-0.6.4.tgz#d0ea5ed897da1a796616c44b5a8758898140f203"
+  integrity sha512-t7VSjIuUFmN+GeyKb+wm025YLeojVB85kJL6sSs0wEBJddfmKBEQz+CNBZ2zBLKVWkPy/fZXM6U5yvojjYBVYQ==
+  dependencies:
+    "@babel/runtime" "7.0.0"
     prop-types "^15.6.0"
     warning "^4.0.1"
 

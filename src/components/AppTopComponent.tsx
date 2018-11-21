@@ -43,6 +43,9 @@ import NewIcon from '@material-ui/icons/DescriptionOutlined';
 // tslint:disable-next-line:import-name
 import InfoIcon from '@material-ui/icons/InfoOutlined';
 
+// tslint:disable-next-line:import-name
+import EventListener from 'react-event-listener';
+
 import CreateFormContainer from '../containers/CreateFormContainer';
 import ManageDataContainer from '../containers/ManageDataContainer';
 import ConfigContainer from '../containers/ConfigContainer';
@@ -120,7 +123,7 @@ const styles = (theme: Theme) =>
         content: {
             flexGrow: 1,
             backgroundColor: theme.palette.background.default,
-            padding: theme.spacing.unit * 3,
+            padding: theme.spacing.unit * /* 3 */ 2,
             // marginLeft: -drawerWidth,
             transition: theme.transitions.create(['margin'], {
                 easing: theme.transitions.easing.sharp,
@@ -191,6 +194,10 @@ export interface IAppTopComponentDispatchProps {
 }
 interface IAppTopComponentStates {
     anchorEl?: HTMLElement;
+    width: number;
+    height: number;
+    contentWidth: number;
+    contentHeight: number;
 }
 class AppTopComponent extends React.Component<
     IAppTopComponentStateProps &
@@ -205,7 +212,11 @@ class AppTopComponent extends React.Component<
     ) {
         super(props);
         this.state = {
-            anchorEl: undefined
+            anchorEl: undefined,
+            width: window.innerWidth,
+            height: window.innerHeight,
+            contentWidth: window.innerWidth,
+            contentHeight: window.innerHeight - 100 /* TODO: 初期値は適当 */
         };
         // this.handleListButton.bind(this);
         // this.handleMenuOpen.bind(this);
@@ -230,10 +241,20 @@ class AppTopComponent extends React.Component<
             callback();
         };
     }
+    handleOnResize = () => {
+        console.log('handleOnResize');
+        this.setState({
+            width: window.innerWidth,
+            height: window.innerHeight
+        });
+    };
     render() {
         const { classes, theme, selectedIndex } = this.props;
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
+
+        // TODO: 実験
+        console.log(classes.toolbar);
 
         let Content: any = {};
         let AppBarTitle: JSX.Element | string = '';
@@ -371,6 +392,8 @@ class AppTopComponent extends React.Component<
 
         return (
             <div className={classes.root}>
+                <EventListener target="window" onResize={this.handleOnResize} />
+
                 {/* AppBar */}
                 <div id="app-top-component-app-bar">
                     <AppBar
@@ -451,10 +474,14 @@ class AppTopComponent extends React.Component<
                         classes.content
                         // this.props.drawerOpend && classes.contentShift
                     )}
+                    // style={{ width: this.state.width, height: this.state.height }}
                 >
+                    {/* <div id="content-1" style={{ width: '100%', height: '100%' }}> */}
                     <div className={classes.toolbar} id="app-top-component-toolbar" />
-
+                    {/* <div id="content-2" style={{ width: '100%', height: '100%' }}> */}
                     <Content />
+                    {/* </div> */}
+                    {/* </div> */}
                 </main>
             </div>
         );

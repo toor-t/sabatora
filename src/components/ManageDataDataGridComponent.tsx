@@ -428,91 +428,94 @@ class ManageDataDataGridComponent extends React.Component<
     // };
     render() {
         const { width, height } = this.state;
+        const innerHeight = window.innerHeight;
+        console.log(innerHeight);
         return (
             // TODO: 実験
-            <Measure
-                bounds={true}
-                // tslint:disable-next-line:jsx-no-lambda
-                onResize={(contentRect: ContentRect) => {
-                    contentRect.bounds
-                        ? this.setState({
-                              width: contentRect.bounds.width,
-                              height: contentRect.bounds.height
-                          })
-                        : 0;
-                }}
+            // <Measure
+            // 	bounds={true}
+            // 	// tslint:disable-next-line:jsx-no-lambda
+            // 	onResize={(contentRect: ContentRect) => {
+            // 		contentRect.bounds
+            // 			? this.setState({
+            // 				width: contentRect.bounds.width,
+            // 				height: contentRect.bounds.height
+            // 			})
+            // 			: 0;
+            // 	}}
+            // >
+            // 	{({ measureRef }) => (
+            <div
+                // ref={measureRef}
+                id="ManageDataDataGrid"
+                className={this.props.classes.content}
+                style={{ fontSize: '0.8125rem' /*, height: innerHeight - 64*/ }}
             >
-                {({ measureRef }) => (
-                    <div
-                        ref={measureRef}
-                        id="ManageDataDataGrid"
-                        /*className={this.props.classes.content}*/
-                        style={{ fontSize: '0.8125rem', height: '85vh' }}
-                    >
-                        <ReactDataGrid
-                            ref={(node: ReactDataGrid<{}> | null) => {
-                                this.grid = node;
-                            }}
-                            enableCellSelect={true}
-                            cellNavigationMode="changeRow"
-                            rowSelection={{
-                                showCheckbox: true,
-                                enableShiftSelect: true,
-                                onRowsSelected: this.onRowsSelected,
-                                onRowsDeselected: this.onRowsDeselected,
-                                selectBy: {
-                                    isSelectedKey: DBDataRowKeys.selected
-                                }
-                            }}
-                            columns={this.state.columns}
-                            // tslint:disable-next-line:jsx-no-lambda
-                            rowGetter={this.rowGetter}
-                            rowsCount={this.rowCount()}
-                            rowHeight={ROW_HEIGHT}
-                            headerRowHeight={HEADER_ROW_HEIGHT}
-                            minHeight={height - ROW_HEIGHT}
-                            // contextMenu={
-                            //     <Menu.ContextMenu>
-                            //         <Paper>
-                            //             <MenuList>
-                            //                 <MenuItem>hige</MenuItem>
-                            //                 <MenuItem>hoge</MenuItem>
-                            //                 <MenuItem>mushi</MenuItem>
-                            //             </MenuList>
-                            //         </Paper>
-                            //     </Menu.ContextMenu>
-                            // }
-                            onGridRowsUpdated={this.props.onGridRowUpdate}
-                            // onCellSelected={this.handleCellSeceted}
-                            toolbar={
-                                <Toolbar>
-                                    <button
-                                        type="button"
-                                        className="btn"
-                                        onClick={this.handleAddRowBtn}
-                                    >
-                                        <AddCircle />
-                                        {BtnLabel.AddRow}
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn"
-                                        onClick={this.handleDeleteBtn}
-                                        disabled={this.props.selectedRowsCount === 0 ? true : false}
-                                    >
-                                        <RemoveCircle />
-                                        {BtnLabel.DeleteRows}
-                                    </button>
-                                </Toolbar>
-                            }
-                            // rowRenderer={CustomRowRenderer}
-                        />
-                        <br />
-                    </div>
-                )
-                // TODO: 実験
-                }
-            </Measure>
+                <ReactDataGrid
+                    ref={(node: ReactDataGrid<{}> | null) => {
+                        this.grid = node;
+                    }}
+                    enableCellSelect={true}
+                    cellNavigationMode="changeRow"
+                    rowSelection={{
+                        showCheckbox: true,
+                        enableShiftSelect: true,
+                        onRowsSelected: this.onRowsSelected,
+                        onRowsDeselected: this.onRowsDeselected,
+                        selectBy: {
+                            isSelectedKey: DBDataRowKeys.selected
+                        }
+                    }}
+                    columns={this.state.columns}
+                    // tslint:disable-next-line:jsx-no-lambda
+                    rowGetter={this.rowGetter}
+                    rowsCount={this.rowCount()}
+                    rowHeight={ROW_HEIGHT}
+                    headerRowHeight={HEADER_ROW_HEIGHT}
+                    minHeight={
+                        innerHeight -
+                        64 /* AppBar height */ -
+                        56 /* Padding */ -
+                        48 /* Command Bar Height */
+                    }
+                    // contextMenu={
+                    //     <Menu.ContextMenu>
+                    //         <Paper>
+                    //             <MenuList>
+                    //                 <MenuItem>hige</MenuItem>
+                    //                 <MenuItem>hoge</MenuItem>
+                    //                 <MenuItem>mushi</MenuItem>
+                    //             </MenuList>
+                    //         </Paper>
+                    //     </Menu.ContextMenu>
+                    // }
+                    onGridRowsUpdated={this.props.onGridRowUpdate}
+                    // onCellSelected={this.handleCellSeceted}
+                    toolbar={
+                        <Toolbar>
+                            <button type="button" className="btn" onClick={this.handleAddRowBtn}>
+                                <AddCircle />
+                                {BtnLabel.AddRow}
+                            </button>
+                            <button
+                                type="button"
+                                className="btn"
+                                onClick={this.handleDeleteBtn}
+                                disabled={this.props.selectedRowsCount === 0 ? true : false}
+                            >
+                                <RemoveCircle />
+                                {BtnLabel.DeleteRows}
+                            </button>
+                        </Toolbar>
+                    }
+                    // rowRenderer={CustomRowRenderer}
+                />
+                <br />
+            </div>
+            // 	)
+            // 		// TODO: 実験
+            // 	}
+            // </Measure>
         );
     }
 }
