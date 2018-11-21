@@ -6,7 +6,7 @@ import * as React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 
-import { Title } from '../strings';
+import { Title, Str } from '../strings';
 const img = require('../../build/icon.png');
 
 const styles = () =>
@@ -41,9 +41,9 @@ const AboutComponent: React.SFC<IAboutComponentProps & WithStyles<typeof styles>
                 align="center"
             >
                 <br />
-                sabatora.
+                {Str.AppName}
                 <br />
-                (C)2018 toor-t
+                {Str.Copyright}
             </Typography>
         </div>
     );

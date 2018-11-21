@@ -4,6 +4,9 @@
 'use strict';
 
 export namespace Str {
+    export const AppName = 'sabatora.';
+    export const Copyright = '(C) 2008 toor-t';
+
     export const No = 'No.';
     export const Level_1 = '大項目';
     export const Level_2 = '中項目';

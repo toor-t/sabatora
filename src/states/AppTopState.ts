@@ -11,11 +11,11 @@ import { AppTopSelected } from '../components/AppTopComponent';
  */
 export interface IAppTopState {
     drawerOpened: boolean;
-    selected: number;
+    selectedIndex: number;
 }
 const initialState: IAppTopState = {
     drawerOpened: false,
-    selected: AppTopSelected.CreateForm
+    selectedIndex: AppTopSelected.CreateForm
 };
 
 /**
@@ -31,6 +31,6 @@ export const AppTopStateReducer = reducerWithInitialState<IAppTopState>(initialS
         return Object.assign({}, state, { drawerOpened: false });
     })
     // ドロワーメニュー項目選択
-    .case(AppTopActions.selectMenuItem, (state, selected) => {
-        return Object.assign({}, state, { selected });
+    .case(AppTopActions.selectMenuItem, (state, selectedIndex) => {
+        return Object.assign({}, state, { selectedIndex });
     });

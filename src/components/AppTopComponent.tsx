@@ -50,13 +50,12 @@ import AboutContainer from '../containers/AboutContainer';
 
 import { Title, Str, MenuTitle } from '../strings';
 
-const drawerWidth = 240;
+const DRAWER_WIDTH = 240;
 
 const styles = (theme: Theme) =>
     createStyles({
         root: {
             flexGrow: 1,
-            // height: 440,
             zIndex: 1,
             overflow: 'hidden',
             position: 'relative'
@@ -70,8 +69,9 @@ const styles = (theme: Theme) =>
             })
         },
         appBarShift: {
-            marginLeft: drawerWidth,
-            width: `calc(100% - ${drawerWidth}px)`,
+            marginLeft: DRAWER_WIDTH,
+            paddingLeft: 36,
+            width: `calc(100% - ${DRAWER_WIDTH}px)`,
             transition: theme.transitions.create(['width', 'margin'], {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.enteringScreen
@@ -82,13 +82,18 @@ const styles = (theme: Theme) =>
             marginRight: 36,
             outline: 0
         },
+        moreVertButton: {
+            marginLeft: 'auto',
+            marginRight: 12,
+            outline: 0
+        },
         hide: {
             display: 'none'
         },
         drawerPaper: {
             position: 'fixed',
             // whiteSpace: 'nowrap',
-            width: drawerWidth
+            width: DRAWER_WIDTH
             // transition: theme.transitions.create('width', {
             // 	easing: theme.transitions.easing.sharp,
             // 	duration: theme.transitions.duration.enteringScreen
@@ -123,7 +128,7 @@ const styles = (theme: Theme) =>
             })
         },
         contentShift: {
-            marginLeft: drawerWidth,
+            marginLeft: DRAWER_WIDTH,
             transition: theme.transitions.create(['margin'], {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.enteringScreen
@@ -146,7 +151,7 @@ export interface IAppTopComponentStateProps {
     /**
      * ドロワーメニューで選択された項目のインデックス
      */
-    selected: number;
+    selectedIndex: number;
     /**
      * ドロワー開閉状態
      */
@@ -226,14 +231,88 @@ class AppTopComponent extends React.Component<
         };
     }
     render() {
-        const { classes, theme, selected } = this.props;
+        const { classes, theme, selectedIndex } = this.props;
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
 
         let Content: any = {};
-        let AppBarTitle: string = '';
-        let MoreVartMenuContent: JSX.Element = <div />;
-        switch (selected) {
+        let AppBarTitle: JSX.Element | string = '';
+        let MoreVartMenuContent: JSX.Element | null = null;
+
+        // Drawer 定義
+        const _Drawer = (
+            <Drawer
+                variant="temporary"
+                classes={{
+                    paper: classes.drawerPaper
+                }}
+                open={this.props.drawerOpend}
+                anchor="left"
+                onClose={this.props.onCloseDrawer}
+            >
+                <div className={classes.toolbar}>
+                    <IconButton
+                        onClick={this.props.onCloseDrawer}
+                        // tslint:disable-next-line:jsx-no-lambda
+                        onFocus={(e: any) => e.currentTarget.blur()}
+                    >
+                        {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                    </IconButton>
+                </div>
+                <Divider />
+                <List component="nav">
+                    <ListItem
+                        button={true}
+                        onClick={this.handleListButton(
+                            AppTopSelected.CreateForm,
+                            this.props.onSelectMenuItem
+                        )}
+                        selected={this.props.selectedIndex === AppTopSelected.CreateForm}
+                    >
+                        <DescriptionIcon />
+                        <ListItemText primary={AppTopSelected.CreateFormTitle} />
+                    </ListItem>
+                    <ListItem
+                        button={true}
+                        onClick={this.handleListButton(
+                            AppTopSelected.ManageData,
+                            this.props.onSelectMenuItem
+                        )}
+                        selected={this.props.selectedIndex === AppTopSelected.ManageData}
+                    >
+                        <DashboardIcon />
+                        <ListItemText primary={AppTopSelected.ManageDataTitle} />
+                    </ListItem>
+                    <ListItem
+                        button={true}
+                        onClick={this.handleListButton(
+                            AppTopSelected.Config,
+                            this.props.onSelectMenuItem
+                        )}
+                        selected={this.props.selectedIndex === AppTopSelected.Config}
+                    >
+                        <SettingsIcon />
+                        <ListItemText primary={AppTopSelected.ConfigTitle} />
+                    </ListItem>
+                </List>
+                <Divider />
+                <List>
+                    <ListItem
+                        button={true}
+                        onClick={this.handleListButton(
+                            AppTopSelected.About,
+                            this.props.onSelectMenuItem
+                        )}
+                        selected={this.props.selectedIndex === AppTopSelected.About}
+                    >
+                        <InfoIcon />
+                        <ListItemText primary={AppTopSelected.AboutTitle} />
+                    </ListItem>
+                </List>
+            </Drawer>
+        );
+
+        switch (selectedIndex) {
             case AppTopSelected.CreateForm:
                 // 帳票作成
                 Content = CreateFormContainer;
@@ -264,54 +343,52 @@ class AppTopComponent extends React.Component<
                 // TODO: データ管理
                 Content = ManageDataContainer;
                 AppBarTitle = AppTopSelected.ManageDataTitle;
-                MoreVartMenuContent = (
-                    <div style={{ outline: 0 }}>
-                        <MenuItem>ダミー</MenuItem>
-                    </div>
-                );
+                // MoreVartMenuContent = (
+                // 	<div style={{ outline: 0 }}>
+                // 		<MenuItem>ダミー</MenuItem>
+                // 	</div>
+                // );
                 break;
             case AppTopSelected.Config:
                 // TODO: 設定
                 Content = ConfigContainer;
                 AppBarTitle = AppTopSelected.ConfigTitle;
-                MoreVartMenuContent = (
-                    <div style={{ outline: 0 }}>
-                        <MenuItem>ダミー</MenuItem>
-                    </div>
-                );
+                // MoreVartMenuContent = (
+                // 	<div style={{ outline: 0 }}>
+                // 		<MenuItem>ダミー</MenuItem>
+                // 	</div>
+                // );
                 break;
             case AppTopSelected.About:
                 // TODO: About
                 Content = AboutContainer;
                 AppBarTitle = AppTopSelected.AboutTitle;
-                MoreVartMenuContent = (
-                    <div style={{ outline: 0 }}>
-                        <MenuItem>ダミー</MenuItem>
-                    </div>
-                );
+                MoreVartMenuContent = null;
                 break;
             default:
                 break;
         }
+
         return (
             <div className={classes.root}>
+                {/* AppBar */}
                 <div id="app-top-component-app-bar">
                     <AppBar
                         position="fixed"
                         className={classNames(
-                            classes.appBar,
-                            this.props.drawerOpend && classes.appBarShift
+                            classes.appBar
+                            // this.props.drawerOpend && classes.appBarShift
                         )}
                     >
-                        <Toolbar disableGutters={!this.props.drawerOpend}>
+                        <Toolbar disableGutters={/*!this.props.drawerOpend*/ true}>
                             {/* 左上アイコン */}
                             <IconButton
                                 color="inherit"
                                 aria-label="Open drawer"
                                 onClick={this.props.onOpenDrawer}
                                 className={classNames(
-                                    classes.menuButton,
-                                    this.props.drawerOpend && classes.hide
+                                    classes.menuButton
+                                    // this.props.drawerOpend && classes.hide
                                 )}
                                 // tslint:disable-next-line:jsx-no-lambda
                                 onFocus={(e: any) => e.currentTarget.blur()}
@@ -328,111 +405,47 @@ class AppTopComponent extends React.Component<
                                 {AppBarTitle}
                             </Typography>
                             {/* 右上ボタン */}
-                            <div>
-                                <IconButton
-                                    aria-owns={open ? 'menu-appbar' : undefined}
-                                    aria-haspopup="true"
-                                    onClick={this.handleMenuOpen}
-                                    color="inherit"
-                                    // tslint:disable-next-line:jsx-no-lambda
-                                    onFocus={(e: any) => e.currentTarget.blur()}
-                                >
-                                    <MoreVertIcon />
-                                </IconButton>
-                                <Menu
-                                    id="menu-appbar"
-                                    anchorEl={anchorEl}
-                                    anchorOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right'
-                                    }}
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right'
-                                    }}
-                                    open={open}
-                                    onClose={this.handleMenuClose}
-                                >
-                                    {MoreVartMenuContent}
-                                </Menu>
-                            </div>
+                            {MoreVartMenuContent !== null ? (
+                                <div>
+                                    <IconButton
+                                        aria-owns={open ? 'menu-appbar' : undefined}
+                                        aria-haspopup="true"
+                                        onClick={this.handleMenuOpen}
+                                        color="inherit"
+                                        // tslint:disable-next-line:jsx-no-lambda
+                                        onFocus={(e: any) => e.currentTarget.blur()}
+                                        className={classes.moreVertButton}
+                                    >
+                                        <MoreVertIcon />
+                                    </IconButton>
+                                    <Menu
+                                        id="menu-appbar"
+                                        anchorEl={anchorEl}
+                                        anchorOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right'
+                                        }}
+                                        transformOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right'
+                                        }}
+                                        open={open}
+                                        onClose={this.handleMenuClose}
+                                    >
+                                        {MoreVartMenuContent}
+                                    </Menu>
+                                </div>
+                            ) : (
+                                <div />
+                            )}
                         </Toolbar>
                     </AppBar>
                 </div>
-                <Drawer
-                    variant="persistent"
-                    // classes={{
-                    // 	paper: classNames(
-                    // 		classes.drawerPaper,
-                    // 		// !this.props.drawerOpend && classes.drawerPaperClose
-                    // 	)
-                    // }}
-                    classes={{
-                        paper: classes.drawerPaper
-                    }}
-                    open={this.props.drawerOpend}
-                    anchor="left"
-                >
-                    <div className={classes.toolbar}>
-                        <IconButton
-                            onClick={this.props.onCloseDrawer}
-                            // tslint:disable-next-line:jsx-no-lambda
-                            onFocus={(e: any) => e.currentTarget.blur()}
-                        >
-                            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-                        </IconButton>
-                    </div>
-                    <Divider />
-                    <List component="nav">
-                        <ListItem
-                            button={true}
-                            onClick={this.handleListButton(
-                                AppTopSelected.CreateForm,
-                                this.props.onSelectMenuItem
-                            )}
-                            selected={this.props.selected === AppTopSelected.CreateForm}
-                        >
-                            <DescriptionIcon />
-                            <ListItemText primary={AppTopSelected.CreateFormTitle} />
-                        </ListItem>
-                        <ListItem
-                            button={true}
-                            onClick={this.handleListButton(
-                                AppTopSelected.ManageData,
-                                this.props.onSelectMenuItem
-                            )}
-                            selected={this.props.selected === AppTopSelected.ManageData}
-                        >
-                            <DashboardIcon />
-                            <ListItemText primary={AppTopSelected.ManageDataTitle} />
-                        </ListItem>
-                        <ListItem
-                            button={true}
-                            onClick={this.handleListButton(
-                                AppTopSelected.Config,
-                                this.props.onSelectMenuItem
-                            )}
-                            selected={this.props.selected === AppTopSelected.Config}
-                        >
-                            <SettingsIcon />
-                            <ListItemText primary={AppTopSelected.ConfigTitle} />
-                        </ListItem>
-                    </List>
-                    <Divider />
-                    <List>
-                        <ListItem
-                            button={true}
-                            onClick={this.handleListButton(
-                                AppTopSelected.About,
-                                this.props.onSelectMenuItem
-                            )}
-                            selected={this.props.selected === AppTopSelected.About}
-                        >
-                            <InfoIcon />
-                            <ListItemText primary={AppTopSelected.AboutTitle} />
-                        </ListItem>
-                    </List>
-                </Drawer>
+
+                {/* Drawer */}
+                {_Drawer}
+
+                {/* メインコンテンツ */}
                 <main
                     className={classNames(
                         classes.content

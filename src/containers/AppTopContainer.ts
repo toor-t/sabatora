@@ -23,7 +23,7 @@ import { ThunkDispatch } from 'redux-thunk';
 function mapStateToProps(appState: IAppState) {
     // TODO:
     return {
-        selected: appState.appTopState.selected,
+        selectedIndex: appState.appTopState.selectedIndex,
         drawerOpend: appState.appTopState.drawerOpened
     };
 }

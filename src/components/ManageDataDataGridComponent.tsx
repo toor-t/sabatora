@@ -22,7 +22,7 @@ import RemoveCircle from '@material-ui/icons/RemoveCircle';
 import { Paper, MenuList, MenuItem } from '@material-ui/core';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { DBDataRowKeys, DBDataRow } from '../states/ManageDataState';
-import { Str } from '../strings';
+import { Str, BtnLabel } from '../strings';
 // TODO: 実験
 // tslint:disable-next-line:import-name
 import Measure, { ContentRect } from 'react-measure';
@@ -492,7 +492,7 @@ class ManageDataDataGridComponent extends React.Component<
                                         onClick={this.handleAddRowBtn}
                                     >
                                         <AddCircle />
-                                        {'行追加'}
+                                        {BtnLabel.AddRow}
                                     </button>
                                     <button
                                         type="button"
@@ -501,7 +501,7 @@ class ManageDataDataGridComponent extends React.Component<
                                         disabled={this.props.selectedRowsCount === 0 ? true : false}
                                     >
                                         <RemoveCircle />
-                                        {'行削除'}
+                                        {BtnLabel.DeleteRows}
                                     </button>
                                 </Toolbar>
                             }
