@@ -95,12 +95,12 @@ const styles = (theme: Theme) =>
         },
         drawerPaper: {
             position: 'fixed',
-            // whiteSpace: 'nowrap',
-            width: DRAWER_WIDTH
-            // transition: theme.transitions.create('width', {
-            // 	easing: theme.transitions.easing.sharp,
-            // 	duration: theme.transitions.duration.enteringScreen
-            // })
+            whiteSpace: 'nowrap',
+            width: DRAWER_WIDTH,
+            transition: theme.transitions.create('width', {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.enteringScreen
+            })
         },
         // drawerPaperClose: {
         // 	overflowX: 'hidden',
@@ -129,14 +129,14 @@ const styles = (theme: Theme) =>
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.leavingScreen
             })
-        },
-        contentShift: {
-            marginLeft: DRAWER_WIDTH,
-            transition: theme.transitions.create(['margin'], {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.enteringScreen
-            })
         }
+        // contentShift: {
+        // 	marginLeft: DRAWER_WIDTH,
+        // 	transition: theme.transitions.create(['margin'], {
+        // 		easing: theme.transitions.easing.sharp,
+        // 		duration: theme.transitions.duration.enteringScreen
+        // 	})
+        // }
     });
 
 export namespace AppTopSelected {
@@ -196,8 +196,6 @@ interface IAppTopComponentStates {
     anchorEl?: HTMLElement;
     width: number;
     height: number;
-    contentWidth: number;
-    contentHeight: number;
 }
 class AppTopComponent extends React.Component<
     IAppTopComponentStateProps &
@@ -214,9 +212,7 @@ class AppTopComponent extends React.Component<
         this.state = {
             anchorEl: undefined,
             width: window.innerWidth,
-            height: window.innerHeight,
-            contentWidth: window.innerWidth,
-            contentHeight: window.innerHeight - 100 /* TODO: 初期値は適当 */
+            height: window.innerHeight
         };
         // this.handleListButton.bind(this);
         // this.handleMenuOpen.bind(this);
@@ -252,9 +248,6 @@ class AppTopComponent extends React.Component<
         const { classes, theme, selectedIndex } = this.props;
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
-
-        // TODO: 実験
-        console.log(classes.toolbar);
 
         let Content: any = {};
         let AppBarTitle: JSX.Element | string = '';
@@ -474,14 +467,12 @@ class AppTopComponent extends React.Component<
                         classes.content
                         // this.props.drawerOpend && classes.contentShift
                     )}
-                    // style={{ width: this.state.width, height: this.state.height }}
                 >
-                    {/* <div id="content-1" style={{ width: '100%', height: '100%' }}> */}
+                    {/* AppBar(toolbar)の分の空きスペースを確保しておく */}
                     <div className={classes.toolbar} id="app-top-component-toolbar" />
-                    {/* <div id="content-2" style={{ width: '100%', height: '100%' }}> */}
+
+                    {/* コンテンツ */}
                     <Content />
-                    {/* </div> */}
-                    {/* </div> */}
                 </main>
             </div>
         );

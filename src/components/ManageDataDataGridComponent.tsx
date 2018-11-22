@@ -7,18 +7,18 @@ import * as ReactDataGrid from 'react-data-grid';
 import * as React from 'react';
 import { Toolbar, Editors, Menu } from 'react-data-grid-addons';
 import {
-    NormalDataRow,
-    NormalDataRowKeys,
-    TotalPriceRow,
-    TotalPriceRowKeys,
-    SubtotalPriceRow,
-    SubtotalPriceRowKeys
+    NormalDataRow
+    // NormalDataRowKeys,
+    // TotalPriceRow,
+    // TotalPriceRowKeys,
+    // SubtotalPriceRow,
+    // SubtotalPriceRowKeys
 } from '../states/CreateFormState';
 import { DataDocKeys, DataDoc } from '../db';
 import AddCircle from '@material-ui/icons/AddCircle';
 import AddBox from '@material-ui/icons/AddBox';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
-// import * as classNames from 'classnames';
+import * as classNames from 'classnames';
 import { Paper, MenuList, MenuItem } from '@material-ui/core';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { DBDataRowKeys, DBDataRow } from '../states/ManageDataState';
@@ -244,22 +244,18 @@ const styles = (theme: Theme) =>
     });
 
 export interface IManageDataDataGridComponentStateProps {
-    // TODO:
     rows: DBDataRow[] | null;
     selectedRowsCount: number;
-    // autoCompleteOptions: {};
 }
 export interface IManageDataDataGridComponentDispatchProps {
     queryDb: () => void;
     // TODO:
     onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) => void;
     // onSelectedCell: (col: { rowIdx: number; idx: number }) => void;
-    // updateAutoCompleteOptions: (col: { rowData: NormalDataRow; columnDDKey: string }) => void;
     addRow: () => void;
     deleteRows: () => void;
     selectRows: (rows: { rowIdx: number; row: FormData }[]) => void;
     deselectRows: (rows: { rowIdx: number; row: FormData }[]) => void;
-    // addSubtotalRow: () => void;
 }
 interface IManageDataDataGridComponentStates {
     columns: any[];
@@ -285,7 +281,7 @@ class ManageDataDataGridComponent extends React.Component<
             //     name: Str.No,
             //     width: 48,
             //     resizable: false,
-            //     formatter: CenterFormatter
+            // 	formatter: CenterFormatter
             // },
             {
                 key: DBDataRowKeys.level_1,
@@ -347,7 +343,6 @@ class ManageDataDataGridComponent extends React.Component<
         };
         this.rowGetter.bind(this);
         this.rowCount.bind(this);
-        // this.handleCellSeceted.bind(this);
     }
     // ReactDataGridへの参照
     grid: any = {};
@@ -369,37 +364,6 @@ class ManageDataDataGridComponent extends React.Component<
         }
         return this.props.rows.length;
     };
-    // handleCellSeceted = (col: { rowIdx: number; idx: number }) => {
-    // 	// TODO:
-    // 	if (this.props.onSelectedCell) {
-    // 		this.props.onSelectedCell(col);
-    // 	}
-    // 	// TODO: updateAutoCompleteOptions
-    // 	if (
-    // 		this.props.rows &&
-    // 		(this.props.rows[col.rowIdx] as NormalDataRow)[NormalDataRowKeys.price] !== undefined
-    // 	) {
-    // 		// 通常行のみ。合計行等では更新しない
-    // 		if (
-    // 			col.idx > 1 &&
-    // 			this.state.columns[col.idx /* 行選択チェックボックス分 */ - 1]['ddKey'] !==
-    // 			undefined
-    // 		) {
-    // 			// DBに対応するデータがあるカラムのみ。
-    // 			if (this.props.updateAutoCompleteOptions) {
-    // 				this.props.updateAutoCompleteOptions({
-    // 					rowData: this.props.rows[col.rowIdx] as NormalDataRow,
-    // 					columnDDKey:
-    // 						this.state.columns[col.idx - 1 /* チェックボックスの分引く */].ddKey !==
-    // 							undefined
-    // 							? this.state.columns[col.idx - 1 /* チェックボックスの分引く */]
-    // 								.ddKey
-    // 							: ''
-    // 				});
-    // 			}
-    // 		}
-    // 	}
-    // };
     onRowsSelected = (rows: any) => {
         if (this.props.selectRows) {
             this.props.selectRows(rows);
@@ -420,11 +384,6 @@ class ManageDataDataGridComponent extends React.Component<
             this.props.deleteRows();
         }
     };
-    // handleAddSubtotalBtn = (e: any) => {
-    // 	if (this.props.addSubtotalRow) {
-    // 		this.props.addSubtotalRow();
-    // 	}
-    // };
     handleOnResize = () => {
         // console.log('handleOnResize');
         this.setState({
@@ -438,10 +397,9 @@ class ManageDataDataGridComponent extends React.Component<
         // console.log(innerHeight);
         return (
             <div
-                // ref={measureRef}
                 id="ManageDataDataGrid"
                 className={this.props.classes.content}
-                style={{ fontSize: '0.8125rem' /*, height: innerHeight - 64*/ }}
+                style={{ fontSize: '0.8125rem' }}
             >
                 <EventListener target="window" onResize={this.handleOnResize} />
 
@@ -483,10 +441,14 @@ class ManageDataDataGridComponent extends React.Component<
                     //     </Menu.ContextMenu>
                     // }
                     onGridRowsUpdated={this.props.onGridRowUpdate}
-                    // onCellSelected={this.handleCellSeceted}
                     toolbar={
                         <Toolbar>
-                            <button type="button" className="btn" onClick={this.handleAddRowBtn}>
+                            <button
+                                type="button"
+                                className="btn"
+                                onClick={this.handleAddRowBtn}
+                                style={{ marginLeft: 2 }}
+                            >
                                 <AddCircle />
                                 {BtnLabel.AddRow}
                             </button>
@@ -495,6 +457,7 @@ class ManageDataDataGridComponent extends React.Component<
                                 className="btn"
                                 onClick={this.handleDeleteBtn}
                                 disabled={this.props.selectedRowsCount === 0 ? true : false}
+                                style={{ marginLeft: 2 }}
                             >
                                 <RemoveCircle />
                                 {BtnLabel.DeleteRows}

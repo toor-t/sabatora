@@ -85,10 +85,10 @@ class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
             getOptions() === undefined
                 ? undefined
                 : getOptions().length === 0
-                    ? undefined
-                    : getOptions().length < 100
-                        ? getOptions()
-                        : undefined;
+                ? undefined
+                : getOptions().length < 100
+                ? getOptions()
+                : undefined;
         return _options !== undefined ? (
             <AutoCompleteEditor
                 ref={node => (this.autoComplete = node)}
@@ -503,8 +503,7 @@ class CreateFormDataGridComponent extends React.Component<
                     ref={(node: ReactDataGrid<{}> | null) => {
                         this.grid = node;
                     }}
-                    enableCellSelect={true}
-                    cellNavigationMode="changeRow"
+                    columns={this.state.columns}
                     rowSelection={{
                         showCheckbox: true,
                         enableShiftSelect: true,
@@ -514,9 +513,10 @@ class CreateFormDataGridComponent extends React.Component<
                             isSelectedKey: NormalDataRowKeys.selected
                         }
                     }}
-                    columns={this.state.columns}
                     rowGetter={this.rowGetter}
                     rowsCount={this.rowCount()}
+                    enableCellSelect={true}
+                    cellNavigationMode="changeRow"
                     rowHeight={ROW_HEIGHT}
                     headerRowHeight={HEADER_ROW_HEIGHT}
                     minHeight={
@@ -528,7 +528,12 @@ class CreateFormDataGridComponent extends React.Component<
                     onCellSelected={this.handleCellSeceted}
                     toolbar={
                         <Toolbar>
-                            <button type="button" className="btn" onClick={this.handleAddRowBtn}>
+                            <button
+                                type="button"
+                                className="btn"
+                                onClick={this.handleAddRowBtn}
+                                style={{ marginLeft: 2 }}
+                            >
                                 <AddCircle />
                                 {this.props.selectedRowsCount === 1
                                     ? BtnLabel.InsertRow
@@ -538,6 +543,7 @@ class CreateFormDataGridComponent extends React.Component<
                                 type="button"
                                 className="btn"
                                 onClick={this.handleAddSubtotalBtn}
+                                style={{ marginLeft: 2 }}
                             >
                                 <AddBox />
                                 {this.props.selectedRowsCount === 1
@@ -549,6 +555,7 @@ class CreateFormDataGridComponent extends React.Component<
                                 className="btn"
                                 onClick={this.handleDeleteBtn}
                                 disabled={this.props.selectedRowsCount === 0 ? true : false}
+                                style={{ marginLeft: 2 }}
                             >
                                 <RemoveCircle />
                                 {BtnLabel.DeleteRows}
