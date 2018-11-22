@@ -5,7 +5,7 @@
 
 import * as ReactDataGrid from 'react-data-grid';
 import * as React from 'react';
-import { Toolbar, Editors, Menu } from 'react-data-grid-addons';
+import { Toolbar, Editors, Menu, Data } from 'react-data-grid-addons';
 import {
     NormalDataRow
     // NormalDataRowKeys,
@@ -408,7 +408,7 @@ class ManageDataDataGridComponent extends React.Component<
                         this.grid = node;
                     }}
                     enableCellSelect={true}
-                    cellNavigationMode="changeRow"
+                    // cellNavigationMode="changeRow"
                     rowSelection={{
                         showCheckbox: true,
                         enableShiftSelect: true,

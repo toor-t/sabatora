@@ -516,7 +516,7 @@ class CreateFormDataGridComponent extends React.Component<
                     rowGetter={this.rowGetter}
                     rowsCount={this.rowCount()}
                     enableCellSelect={true}
-                    cellNavigationMode="changeRow"
+                    // cellNavigationMode="changeRow"
                     rowHeight={ROW_HEIGHT}
                     headerRowHeight={HEADER_ROW_HEIGHT}
                     minHeight={
