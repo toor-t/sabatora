@@ -17,7 +17,7 @@ const ConfigComponent: React.SFC<IConfigComponentProps> = props => {
     return (
         <div>
             <Typography
-                variant="title"
+                variant="h6"
                 color="inherit"
                 style={{ flexGrow: 1 }}
                 noWrap={true}

@@ -413,7 +413,7 @@ class AppTopComponent extends React.Component<
                             </IconButton>
                             {/* タイトル */}
                             <Typography
-                                variant="title"
+                                variant="h6"
                                 color="inherit"
                                 style={{ flexGrow: 1 }}
                                 noWrap={true}

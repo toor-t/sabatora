@@ -173,7 +173,7 @@ const PrintFormComponent: React.SFC<
             <main>
                 <div id="PrintFormComponent">
                     {/* タイトル表示 */}
-                    <Typography variant="display1" align="center">
+                    <Typography variant="h4" align="center">
                         {title}
                     </Typography>
 

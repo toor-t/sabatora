@@ -34,7 +34,7 @@ const AboutComponent: React.SFC<IAboutComponentProps & WithStyles<typeof styles>
                 <img src={img} className={props.classes.img} />
             </div>
             <Typography
-                variant="title"
+                variant="h6"
                 color="inherit"
                 style={{ flexGrow: 1 }}
                 noWrap={true}

@@ -99,7 +99,7 @@ const CreateFormComponent: React.SFC<
                     <div id="CreateFormComponent">
                         {!edittingTitle ? (
                             // タイトル通常表示
-                            <Typography variant="display1" align="center">
+                            <Typography variant="h4" align="center">
                                 {title}
                                 <IconButton
                                     className={classes.button}
