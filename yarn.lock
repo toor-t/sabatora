@@ -4716,6 +4716,11 @@ immutability-helper@^2.8.1:
   dependencies:
     invariant "^2.2.0"
 
+immutable@^4.0.0-rc.12:
+  version "4.0.0-rc.12"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.0.0-rc.12.tgz#ca59a7e4c19ae8d9bf74a97bdf0f6e2f2a5d0217"
+  integrity sha512-0M2XxkZLx/mi3t8NVwIm1g8nHoEmM9p9UBl/G9k4+hm0kBgOVdMV/B3CY5dQ8qG8qc80NN4gDV4HQv6FTJ5q7A==
+
 import-lazy@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/import-lazy/-/import-lazy-2.1.0.tgz#05698e3d45c88e8d7e9d92cb0584e77f096f3e43"
@@ -8284,17 +8289,15 @@ rc@^1.0.1, rc@^1.1.2, rc@^1.1.6, rc@^1.2.1, rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-data-grid-addons@^4.0.9:
-  version "4.0.9"
-  resolved "https://registry.yarnpkg.com/react-data-grid-addons/-/react-data-grid-addons-4.0.9.tgz#acd90339dd10d4ad2ac7d8d9a35f569d2c83c870"
-  integrity sha512-7wXXnnGN8JCPA5A4dCOLvrJ8PjAyqnNmdM0u7jQvbHmQAxEEiw03eFbP/m2AipNKrBFWtDa1TBP0QbmmD82vEg==
-  dependencies:
-    react-data-grid "^4.0.9"
+react-data-grid-addons@^5.0.5:
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/react-data-grid-addons/-/react-data-grid-addons-5.0.5.tgz#b8c0b3483324d76a6f0fdeeb8610e137dba1c7cf"
+  integrity sha512-TrgGzty1ok1qrLWxE3tGWwETfy/nBuH+AxrxsRUw8BZoF4GpuNUrfLhae5YqBEwXwaA/8ezz9WQTHN1FCyPkVw==
 
-react-data-grid@^4.0.9:
-  version "4.0.9"
-  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-4.0.9.tgz#ecc1de8bcf3838f4f8d30a1f49dde6875247a3db"
-  integrity sha512-OEzsGRlLPzxfw2XiFNPmfOPZSAfGHqOQcN4GkDJDVfDtUcsgrvUhV9uKQGyGfehswvwEEuDhN3K1Ob7Vrquj5Q==
+react-data-grid@^5.0.5:
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-5.0.5.tgz#529f5acd4750ae0461e9da66f9f30d6f597eed76"
+  integrity sha512-OR4LDoOpN4yj3NexaxYFS2OEIYFUk2V5lascPTHgtTMwwkb163tEPqQSertkv2YAJu+YBzIm8epW8+UMip1LPw==
 
 react-deep-force-update@^2.1.1:
   version "2.1.3"
