@@ -8,17 +8,16 @@ import * as url from 'url';
 import './db_main';
 import './file_io_main';
 import './print_main';
-
 const ElectronStore = require('electron-store');
 
 export let win: BrowserWindow | null;
 
-// TODO: 設定
+// 設定(ウィンドウ位置とサイズ)取得
 const config = new ElectronStore({
     defaults: {
         bounds: {
-            width: 800,
-            height: 600
+            width: 800, // ウィンドウ幅デフォルト
+            height: 600 // ウィンドウ高さデフォルト
         }
     }
 });
