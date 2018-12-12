@@ -27,7 +27,6 @@ export interface IAboutComponentProps {
 
 const AboutComponent: React.SFC<IAboutComponentProps & WithStyles<typeof styles>> = props => {
     // TODO:
-    const { checked, onChange } = props;
     return (
         <div>
             <div className={props.classes.div}>

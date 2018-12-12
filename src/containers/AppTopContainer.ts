@@ -10,7 +10,6 @@ import AppTopComponent, {
     IAppTopComponentDispatchProps
 } from '../components/AppTopComponent';
 import { IAppState } from '../store';
-import { CreateFormActions } from '../actions/CreateFormAction';
 import {
     saveFormWorker,
     openFormWithConfirmWorker,

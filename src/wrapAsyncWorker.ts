@@ -2,7 +2,7 @@
 import { AsyncActionCreators } from 'typescript-fsa';
 
 // https://github.com/aikoven/typescript-fsa/issues/5#issuecomment-255347353
-function wrapAsyncWorker<TParameters, TSuccess, TError>(
+export function wrapAsyncWorker<TParameters, TSuccess, TError>(
     asyncAction: AsyncActionCreators<TParameters, TSuccess, TError>,
     worker: (params: TParameters) => Promise<TSuccess>
 ) {
@@ -58,4 +58,4 @@ export const wrapThunkAsyncActionParamVoidWorker = <TSuccess, TError>(
         );
     };
 };
-export default wrapAsyncWorker;
+// export default wrapAsyncWorker;

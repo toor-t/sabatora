@@ -5,7 +5,7 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { ManageDataActions } from '../actions/ManageDataAction';
 import * as db from '../db';
-import wrapAsyncWorker, { wrapThunkAsyncActionWorker } from '../wrapAsyncWorker';
+import { wrapThunkAsyncActionWorker } from '../wrapAsyncWorker';
 import { queryDb, updateDb, insertDb, removeDb } from '../db_renderer';
 import immutabilityHelper from 'immutability-helper';
 

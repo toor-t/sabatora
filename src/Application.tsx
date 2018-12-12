@@ -10,7 +10,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 // TODO: テーマ変更
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import indigo from '@material-ui/core/colors/indigo';
-import pink from '@material-ui/core/colors/pink';
+// import pink from '@material-ui/core/colors/pink';
 import red from '@material-ui/core/colors/red';
 // import orange from '@material-ui/core/colors/orange';
 // import green from '@material-ui/core/colors/green';
@@ -35,7 +35,7 @@ const theme = createMuiTheme({
     }
 });
 
-const Application: React.SFC = () => {
+const Application: React.FunctionComponent = () => {
     return (
         <React.Fragment>
             <CssBaseline>

@@ -52,7 +52,7 @@
 		"productName": "sabatora",
 		"appId": "app.shirohige.sabatora",
 		"mac": {
-			"category": "your.app.category.type"
+			"category": "Utility"
 		},
 		"directories": {
 			"output": "release"

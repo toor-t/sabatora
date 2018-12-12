@@ -13,7 +13,7 @@ const mainElement = document.createElement('div');
 document.body.appendChild(mainElement);
 
 // Render components
-const render = (Component: any) => {
+const render = (Component: React.FunctionComponent) => {
     ReactDOM.render(
         <Provider store={store}>
             <Component />

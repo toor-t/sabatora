@@ -3,8 +3,6 @@
  */
 'use strict';
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
-import { Action } from 'typescript-fsa';
 import { CreateFormActions } from '../actions/CreateFormAction';
 import CreateFormComponent, {
     ICreateFormComponentStateProps,
@@ -65,7 +63,6 @@ function mergeProps(
     ICreateFormComponentDispatchProps &
     INotifyComponentDispatchProps {
     const { dispatch } = dispatchProps;
-    const { formDataEditted } = stateProps;
 
     return {
         // TODO: 実験中

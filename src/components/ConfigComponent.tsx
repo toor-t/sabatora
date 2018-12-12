@@ -13,7 +13,6 @@ export interface IConfigComponentProps {
 }
 const ConfigComponent: React.SFC<IConfigComponentProps> = props => {
     // TODO:
-    const { checked, onChange } = props;
     return (
         <div>
             <Typography

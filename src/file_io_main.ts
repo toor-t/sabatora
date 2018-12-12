@@ -2,7 +2,7 @@
  * file_io_main
  */
 'use strict';
-import { app, dialog, ipcMain } from 'electron';
+import { dialog, ipcMain } from 'electron';
 import { win } from './main';
 import { OpenForm, SaveForm } from './file_io';
 import * as fs from 'fs';
