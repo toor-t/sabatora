@@ -199,26 +199,27 @@ const getSlecetedRowsInfo = (rows: FormDataRow[]): { count: number; firstIdx: nu
  * CreateFormStateReducer
  */
 export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(initialState)
-    // 行追加
+    /**
+     * 行追加
+     */
     .case(CreateFormActions.addRow, state => {
-        // TODO:
-        // console.log('addRow');
         const dataRows = state.formData.dataRows.slice();
         const rowsCount = dataRows.length;
         let insertIdx = -1;
-        // TODO:
+
         if (state.formDataSelectedRowsCount !== 1) {
             // デフォルトは最終行（合計表示行）の一つ前に追加
-            insertIdx = rowsCount - 1;
+            insertIdx = rowsCount - 1; // 追加位置のインデックス
         } else if (
             state.formDataFirstSelectedRowIdx > -1 &&
             state.formDataFirstSelectedRowIdx < rowsCount
         ) {
-            // TODO: 選択行の前に挿入する
-            insertIdx = state.formDataFirstSelectedRowIdx;
+            // 選択行の前に挿入する
+            insertIdx = state.formDataFirstSelectedRowIdx; // 挿入する位置のインデックス
         }
 
         if (insertIdx > -1) {
+            // 実際に行を追加・挿入する
             const row = Object.assign({}, initialDataRow, {
                 id: rowsCount /* TODO:  これじゃダメ、どうすべき？ */
             });
@@ -231,13 +232,10 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         // 合計を計算
         const totalPrice = calcTotalPrice(dataRows);
-
         const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
-
-        // TODO: 編集済みフラグセット
+        // 編集済みフラグセット
         const formDataEditted = true;
-
-        // TODO:  選択行の数等のチェック
+        // 選択行の数等のチェック
         const rowsInfo = getSlecetedRowsInfo(formData.dataRows);
 
         return Object.assign(
@@ -251,46 +249,46 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         );
     })
 
-    // 小計行追加
+    /**
+     * 小計行追加
+     */
     .case(CreateFormActions.addSubtotalRow, state => {
-        // TODO:
         const dataRows = state.formData.dataRows.slice();
         const rowsCount = dataRows.length;
         let insertIdx = -1;
-        // TODO:
+
         if (state.formDataSelectedRowsCount !== 1) {
             // デフォルトは最終行（合計表示行）の一つ前に追加
-            insertIdx = rowsCount - 1;
+            insertIdx = rowsCount - 1; // 追加位置のインデックス
         } else if (
             state.formDataFirstSelectedRowIdx > -1 &&
             state.formDataFirstSelectedRowIdx < rowsCount
         ) {
-            // TODO: 選択行の前に挿入する
-            insertIdx = state.formDataFirstSelectedRowIdx;
+            // 選択行の前に挿入する
+            insertIdx = state.formDataFirstSelectedRowIdx; // 挿入する位置のインデックス
         }
 
         if (insertIdx > -1) {
-            dataRows.splice(insertIdx, 0, {
+            // 実際に小計行を追加・挿入する
+            const subtotalRow = {
                 id: -1,
                 labelSubtotalPrice: Str.SubtotalPrice,
                 subtotalPrice: 0,
                 selected: false
-            });
+            };
+            dataRows.splice(insertIdx, 0, subtotalRow);
         } else {
             // 何もせずリターン (通常来ない)
             console.log(`ABNORMAL firstIdx=${state.formDataFirstSelectedRowIdx}`);
             return state;
         }
 
-        // 合計を計算
+        // 合計を計算 (ここで追加した小計行の小計も計算される)
         const totalPrice = calcTotalPrice(dataRows);
-
         const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
-
-        // TODO: 編集済みフラグセット
+        // 編集済みフラグセット
         const formDataEditted = true;
-
-        // TODO:  選択行の数等のチェック
+        // 選択行の数等のチェック
         const ret = getSlecetedRowsInfo(formData.dataRows);
 
         return Object.assign(
@@ -301,29 +299,27 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         );
     })
 
-    // 行削除
+    /**
+     * 行削除
+     */
     .case(CreateFormActions.deleteRows, state => {
-        // TODO:
         const dataRows: (NormalDataRow | TotalPriceRow | SubtotalPriceRow)[] = [];
 
         for (const dataRowIdx in state.formData.dataRows) {
             if (
                 !(state.formData.dataRows[dataRowIdx] as NormalDataRow)[NormalDataRowKeys.selected]
             ) {
-                // 残す行
+                // 残す行なのでpushして保存する
                 dataRows.push(state.formData.dataRows[dataRowIdx]);
             }
         }
 
         // 合計を計算
         const totalPrice = calcTotalPrice(dataRows);
-
         const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
-
-        // TODO: 編集済みフラグセット
+        // 編集済みフラグセット
         const formDataEditted = true;
-
-        // TODO:  選択行の数等のチェック
+        // 選択行の数等のチェック
         const ret = getSlecetedRowsInfo(formData.dataRows);
 
         return Object.assign(
@@ -334,9 +330,10 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         );
     })
 
-    // グリッド行更新
+    /**
+     * グリッド行更新
+     */
     .case(CreateFormActions.updateGridRow, (state, e) => {
-        // TODO:
         const dataRows = state.formData.dataRows.slice();
 
         // tslint:disable-next-line:no-increment-decrement
@@ -363,14 +360,14 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
                 const _unitPrice = !e.updated[NormalDataRowKeys.unitPrice]
                     ? rowToUpdate[NormalDataRowKeys.unitPrice]
                     : e.updated[NormalDataRowKeys.unitPrice] === ''
-                        ? 0
-                        : e.updated[NormalDataRowKeys.unitPrice];
+                    ? 0
+                    : e.updated[NormalDataRowKeys.unitPrice];
                 // console.log(e.updated[NormalDataRowKeys.unitPrice]);
                 const _num = !e.updated[NormalDataRowKeys.num]
                     ? rowToUpdate[NormalDataRowKeys.num]
                     : e.updated[NormalDataRowKeys.num] === ''
-                        ? 0
-                        : e.updated[NormalDataRowKeys.num];
+                    ? 0
+                    : e.updated[NormalDataRowKeys.num];
                 // console.log(e.updated[NormalDataRowKeys.num]);
 
                 e.updated[NormalDataRowKeys.price] = Number(_unitPrice) * Number(_num);
@@ -382,34 +379,33 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         }
         // 合計を計算
         const totalPrice = calcTotalPrice(dataRows);
-
-        // TODO: 編集済みフラグセット
+        const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
+        // 編集済みフラグセット
         const formDataEditted = true;
 
-        const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
         return Object.assign({}, state, { formData, formDataEditted });
     })
 
-    // 帳票読込 (開始)
+    /**
+     * 帳票読込 (開始)
+     */
     .case(CreateFormActions.openForm.started, state => {
         // TODO:
         return state;
     })
-    // 帳票読込 (完了)
+    /**
+     * 帳票読込 (完了)
+     */
     .case(CreateFormActions.openForm.done, (state, payload) => {
-        // TODO:
-        // console.log(payload.result);
+        // TODO: 読みこんだデータのフォーマットチェック等が必要!!
         const loadFormData = JSON.parse(payload.result.toString());
         // console.log(loadFormData);
 
-        // TODO: 実験 完了時に通知を出してみる。
+        // 読み込み完了通知を出す
         const notify = NotifyContext.defaultNotify('帳票読込完了', CreateFormActions.closeNotify);
-        // const notify = new NotifyContext('帳票読込完了', 1, true, 300, 'テストですよ');
-
         // TODO:  選択行の数等のチェック (てか、ロード時は全部解除すべきか？)
         const ret = getSlecetedRowsInfo(loadFormData.dataRows);
-
-        // TODO: 編集済みフラグリセット
+        // 編集済みフラグリセット
         const formDataEditted = false;
 
         return Object.assign(
@@ -420,23 +416,27 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
             { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
         );
     })
-    // 帳票読込 (失敗)
+    /**
+     * 帳票読込 (失敗)
+     */
     .case(CreateFormActions.openForm.failed, (state, payload) => {
         // TODO:
-        // console.log(payload.error);
 
         // TODO: キャンセル時
         if (payload.error === 'CANCELED') {
             return state;
         }
-        // TODO: 実験　失敗時に通知を出してみる。
+        // 読み込み失敗通知
         const notify = NotifyContext.defaultNotify('帳票読込失敗', CreateFormActions.closeNotify);
 
         return Object.assign({}, state, { notify });
     })
-    // 帳票読込確認
+
+    /**
+     * 帳票読込確認
+     */
     .case(CreateFormActions.confirmOpenForm, state => {
-        // TODO:
+        // TODO: メッセージの内容確認。及び、メッセージの定義をstrings.tsに移す。
         const notify = new NotifyContext(
             '現在の帳票は変更されています。保存せずに帳票読込を行いますか？（現在の帳票の変更内容は破棄されます)',
             1,
@@ -454,28 +454,29 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         return Object.assign({}, state, { notify });
     })
 
-    // 帳票保存 (開始)
+    /**
+     * 帳票保存 (開始)
+     */
     .case(CreateFormActions.saveForm.started, state => {
-        // TODO:
-        // console.log('CreateFormActions.saveForm.started');
-        // FormDataを送る
+        // 現在のFormDataを保存用にmainプロセスに送る
         saveForm_sendFormData(state.formData);
 
         return state;
     })
-    // 帳票保存 (完了)
+    /**
+     * 帳票保存 (完了)
+     */
     .case(CreateFormActions.saveForm.done, (state, payload) => {
-        // TODO:
-        // console.log('CreateFormActions.saveForm.done');
-        // TODO: 実験 完了時に通知を出してみる。
+        // 保存完了通知
         const notify = NotifyContext.defaultNotify('帳票保存完了', CreateFormActions.closeNotify);
-
-        // TODO: 編集済みフラグリセット
+        // 編集済みフラグリセット
         const formDataEditted = false;
 
         return Object.assign({}, state, { notify, formDataEditted });
     })
-    // 帳票保存 (失敗)
+    /**
+     * 帳票保存 (失敗)
+     */
     .case(CreateFormActions.saveForm.failed, (state, payload) => {
         // TODO:
         // console.log('CreateFormActions.saveForm.failed');
@@ -483,7 +484,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         if (payload.error === 'CANCELED') {
             return state;
         }
-        // TODO: 実験 失敗時に通知を出してみる。
+        // 保存失敗通知
         const notify = NotifyContext.defaultNotify('帳票保存失敗', CreateFormActions.closeNotify);
 
         return Object.assign({}, state, { notify });

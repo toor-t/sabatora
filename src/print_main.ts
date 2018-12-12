@@ -26,7 +26,10 @@ function sleep(waitMSec: number, callbackFunc: () => void) {
         }
     }, 1);
 }
-// TODO:
+
+/**
+ * 帳票印刷リクエスト待ち受け
+ */
 const printForm_request = ipcMain.on(PrintForm.Request, (event: any, arg: any) => {
     // TODO:
     // TODO: 実験：waitしてみる
@@ -48,6 +51,9 @@ const printForm_request = ipcMain.on(PrintForm.Request, (event: any, arg: any) =
     });
 });
 
+/**
+ * 帳票印刷
+ */
 const printForm = (): Promise<{}> => {
     return new Promise((resolve, reject) => {
         if (win) {
