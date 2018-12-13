@@ -38,23 +38,32 @@ const conf_db: Nedb = new DataStore({
 });
 
 // TODO:
+/**
+ * Query DB Request listener
+ */
 const queryDb_request = ipcMain.on(QueryDb.Request, (event: any, arg: any) => {
     // TODO:
-    queryDb(arg[0], arg[1]).then(
-        result => {
+    const asyncFunc = async () => {
+        event.sender.send(QueryDb.Reply, 'Request received.');
+        try {
+            const result = await queryDb(arg[0], arg[1]);
             if (win) {
                 win.webContents.send(QueryDb.Result, result);
             }
-        },
-        reject => {
+        } catch (reject) {
             // TODO:
             if (win) {
                 win.webContents.send(QueryDb.Reject, reject);
             }
         }
-    );
-    event.sender.send(QueryDb.Reply, 'Request received.');
+    };
+    asyncFunc().then();
 });
+/**
+ * Query DB
+ * @param query
+ * @param projection
+ */
 const queryDb = (query: any, projection: string[] = []): Promise<{}> => {
     return new Promise((resolve, reject) => {
         // query生成
@@ -114,24 +123,33 @@ const queryDb = (query: any, projection: string[] = []): Promise<{}> => {
     });
 };
 
-// TODO: UpdateDb
+// TODO:
+/**
+ * Update DB Request listener
+ */
 const updateDb_request = ipcMain.on(UpdateDb.Request, (event: any, arg: any) => {
-    // TODO:
-    updateDb(arg[0], arg[1]).then(
-        result => {
+    const asyncFunc = async () => {
+        event.sender.send(UpdateDb.Reply, 'Request received.');
+        try {
+            // TODO:
+            const result = await updateDb(arg[0], arg[1]);
             if (win) {
                 win.webContents.send(UpdateDb.Result, result);
             }
-        },
-        reject => {
+        } catch (reject) {
             // TODO:
             if (win) {
                 win.webContents.send(UpdateDb.Reject, reject);
             }
         }
-    );
-    event.sender.send(UpdateDb.Reply, 'Request received.');
+    };
+    asyncFunc().then();
 });
+/**
+ * Update DB
+ * @param query
+ * @param update
+ */
 const updateDb = (query: any, update: any): Promise<{}> => {
     return new Promise((resolve, reject) => {
         // query生成
@@ -183,24 +201,32 @@ const updateDb = (query: any, update: any): Promise<{}> => {
     });
 };
 
-// TODO: InsertDb
+// TODO:
+/**
+ * Insert DB Request listener
+ */
 const insertDb_request = ipcMain.on(InsertDb.Request, (event: any, arg: any) => {
-    // TODO:
-    insertDb(arg[0]).then(
-        result => {
+    const asyncFunc = async () => {
+        event.sender.send(InsertDb.Reply, 'Request received.');
+        try {
+            // TODO:
+            const result = await insertDb(arg[0]);
             if (win) {
                 win.webContents.send(InsertDb.Result, result);
             }
-        },
-        reject => {
+        } catch (reject) {
             // TODO:
             if (win) {
                 win.webContents.send(InsertDb.Reject, reject);
             }
         }
-    );
-    event.sender.send(InsertDb.Reply, 'Request received.');
+    };
+    asyncFunc().then();
 });
+/**
+ * Insert DB
+ * @param doc
+ */
 const insertDb = (doc: any): Promise<{}> => {
     return new Promise((resolve, reject) => {
         data_db.insert(doc, (err: any, document: any) => {
@@ -213,24 +239,32 @@ const insertDb = (doc: any): Promise<{}> => {
     });
 };
 
-// TODO: RemoveDb
+// TODO:
+/**
+ * Remove DB Request listener
+ */
 const removeDb_request = ipcMain.on(RemoveDb.Request, (event: any, arg: any) => {
-    // TODO:
-    removeDb(arg[0]).then(
-        result => {
+    const asyncFunc = async () => {
+        event.sender.send(RemoveDb.Reply, 'Request received.');
+        try {
+            // TODO:
+            const result = await removeDb(arg[0]);
             if (win) {
                 win.webContents.send(RemoveDb.Result, result);
             }
-        },
-        reject => {
+        } catch (reject) {
             // TODO:
             if (win) {
                 win.webContents.send(RemoveDb.Reject, reject);
             }
         }
-    );
-    event.sender.send(RemoveDb.Reply, 'Request received.');
+    };
+    asyncFunc().then();
 });
+/**
+ * Remove DB
+ * @param query
+ */
 const removeDb = (query: any): Promise<{}> => {
     return new Promise((resolve, reject) => {
         data_db.remove(query, (err: any, n: number) => {
@@ -244,28 +278,36 @@ const removeDb = (query: any): Promise<{}> => {
 };
 
 // TODO:
+/**
+ * Update AutoCompleteOptions Request listener
+ */
 const updateAutoCompleteOptions_request = ipcMain.on(
     UpdateAutoCompleteOptions.Request,
     (event: any, arg: any) => {
-        // TODO:
-        // console.log(`updateAutoCompleteOptions-request=${arg}`);
-        updateAutoCompleteOptions(arg[0], arg[1]).then(
-            result => {
+        const asyncFunc = async () => {
+            event.sender.send(UpdateAutoCompleteOptions.Reply, 'Request received.');
+            try {
+                // TODO:
+                // console.log(`updateAutoCompleteOptions-request=${arg}`);
+                const result = await updateAutoCompleteOptions(arg[0], arg[1]);
                 if (win) {
                     win.webContents.send(UpdateAutoCompleteOptions.Result, result);
                 }
-            },
-            reject => {
+            } catch (reject) {
                 // TODO:
                 if (win) {
                     win.webContents.send(UpdateAutoCompleteOptions.Reject, reject);
                 }
             }
-        );
-        event.sender.send(UpdateAutoCompleteOptions.Reply, 'Request received.');
+        };
+        asyncFunc().then();
     }
 );
-
+/**
+ * Update AutoCompleteOptions
+ * @param query
+ * @param projection
+ */
 const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promise<{}> => {
     return new Promise((resolve, reject) => {
         // query生成
