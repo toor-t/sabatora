@@ -45,7 +45,7 @@ function mapStateToProps(
  * @param dispatch
  */
 function mapDispatchToProps(
-    dispatch: ThunkDispatch<IAppState, undefined, Action<any>>
+    dispatch: ThunkDispatch<IAppState, undefined, Action>
 ): ICreateFormComponentDispatchProps & INotifyComponentDispatchProps {
     // TODO:
     return {

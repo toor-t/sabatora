@@ -17,6 +17,9 @@ import Slide from '@material-ui/core/Slide';
 // tslint:disable-next-line:import-name
 import CloseIcon from '@material-ui/icons/Close';
 import { ActionCreator } from 'typescript-fsa';
+import { ThunkDispatch } from 'redux-thunk';
+import { Action } from 'redux';
+import { IAppState } from '../store';
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -25,7 +28,10 @@ const styles = (theme: Theme) =>
         }
     });
 
-type ThunkActionType = (() => (dispatch: any, getState: () => any) => any);
+type ThunkActionType = (() => (
+    dispatch: ThunkDispatch<IAppState, undefined, Action<void>>,
+    getState: () => IAppState
+) => void);
 type ThunkDispatchActionType = ThunkActionType | ActionCreator<void> | undefined;
 
 export class NotifyContext {
@@ -118,7 +124,7 @@ export interface INotifyComponentStateProps {
     notifyContext: NotifyContext;
 }
 export interface INotifyComponentDispatchProps {
-    dispatch?: any;
+    dispatch?: any /*ThunkDispatch<IAppState, undefined, Action<void>> */; // TODO: ここの any を止める手段を検討すること！
 }
 interface INotifyComponentStates {}
 class NotifyComponent extends React.Component<

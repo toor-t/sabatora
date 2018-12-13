@@ -6,14 +6,6 @@
 import * as ReactDataGrid from 'react-data-grid';
 import * as React from 'react';
 import { Toolbar, Editors, Menu, Data } from 'react-data-grid-addons';
-import {
-    NormalDataRow
-    // NormalDataRowKeys,
-    // TotalPriceRow,
-    // TotalPriceRowKeys,
-    // SubtotalPriceRow,
-    // SubtotalPriceRowKeys
-} from '../states/CreateFormState';
 import { DataDocKeys, DataDoc } from '../db';
 import AddCircle from '@material-ui/icons/AddCircle';
 import AddBox from '@material-ui/icons/AddBox';
@@ -26,8 +18,17 @@ import { Str, BtnLabel } from '../strings';
 // tslint:disable-next-line:import-name
 import EventListener from 'react-event-listener';
 
-// Formatter
-const NumberRightFormatter: React.SFC<any> = props => {
+/**
+ * Formatter
+ */
+
+/**
+ * IFormatterProps
+ */
+interface IFormatterProps {
+    value: any;
+}
+const NumberRightFormatter: React.SFC<IFormatterProps> = props => {
     if ((typeof props.value === 'number' && !isNaN(props.value)) || !isNaN(Number(props.value))) {
         const formattedValue: string = String(props.value).replace(
             /(\d)(?=(\d\d\d)+(?!\d))/g,
@@ -45,28 +46,28 @@ const NumberRightFormatter: React.SFC<any> = props => {
         </div>
     );
 };
-const RightFormatter: React.SFC<any> = props => {
+const RightFormatter: React.SFC<IFormatterProps> = props => {
     return (
         <div title={props.value} className="text-right">
             {props.value}
         </div>
     );
 };
-const CenterFormatter: React.SFC<any> = props => {
+const CenterFormatter: React.SFC<IFormatterProps> = props => {
     return (
         <div title={props.value} className="text-center">
             {props.value}
         </div>
     );
 };
-const BoldNumberRightFormatter: React.SFC<any> = props => {
+const BoldNumberRightFormatter: React.SFC<IFormatterProps> = props => {
     return (
         <strong>
             <NumberRightFormatter {...props} />
         </strong>
     );
 };
-const BoldRightFormatter: React.SFC<any> = props => {
+const BoldRightFormatter: React.SFC<IFormatterProps> = props => {
     return (
         <strong>
             <RightFormatter {...props} />
@@ -254,11 +255,11 @@ export interface IManageDataDataGridComponentDispatchProps {
     // onSelectedCell: (col: { rowIdx: number; idx: number }) => void;
     addRow: () => void;
     deleteRows: () => void;
-    selectRows: (rows: { rowIdx: number; row: FormData }[]) => void;
-    deselectRows: (rows: { rowIdx: number; row: FormData }[]) => void;
+    selectRows: (rows: { rowIdx: number; row: DBDataRow }[]) => void;
+    deselectRows: (rows: { rowIdx: number; row: DBDataRow }[]) => void;
 }
 interface IManageDataDataGridComponentStates {
-    columns: any[];
+    columns: (ReactDataGrid.Column<DBDataRow> & { ddKey?: string })[];
     width: number;
     height: number;
 }
@@ -275,7 +276,7 @@ class ManageDataDataGridComponent extends React.Component<
     ) {
         super(props);
         // カラム定義
-        const columns: (ReactDataGrid.Column<NormalDataRow> & { ddKey?: string })[] = [
+        const columns: (ReactDataGrid.Column<DBDataRow> & { ddKey?: string })[] = [
             // {
             //     key: DBDataRowKeys.id,
             //     name: Str.No,
@@ -345,12 +346,12 @@ class ManageDataDataGridComponent extends React.Component<
         this.rowCount.bind(this);
     }
     // ReactDataGridへの参照
-    grid: any = {};
+    grid: ReactDataGrid<DBDataRow> | null = null;
 
     rowGetter = (i: number) => {
         if (this.props.rows === null) {
             // 通常呼ばれないはずだが念のため
-            return {};
+            return {} as DBDataRow;
         }
         return this.props.rows[i];
     };
@@ -364,22 +365,22 @@ class ManageDataDataGridComponent extends React.Component<
         }
         return this.props.rows.length;
     };
-    onRowsSelected = (rows: any) => {
+    onRowsSelected = (rows: { rowIdx: number; row: DBDataRow }[]) => {
         if (this.props.selectRows) {
             this.props.selectRows(rows);
         }
     };
-    onRowsDeselected = (rows: any) => {
+    onRowsDeselected = (rows: { rowIdx: number; row: DBDataRow }[]) => {
         if (this.props.deselectRows) {
             this.props.deselectRows(rows);
         }
     };
-    handleAddRowBtn = (e: any) => {
+    handleAddRowBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
         if (this.props.addRow) {
             this.props.addRow();
         }
     };
-    handleDeleteBtn = (e: any) => {
+    handleDeleteBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
         if (this.props.deleteRows) {
             this.props.deleteRows();
         }
@@ -404,7 +405,7 @@ class ManageDataDataGridComponent extends React.Component<
                 <EventListener target="window" onResize={this.handleOnResize} />
 
                 <ReactDataGrid
-                    ref={(node: ReactDataGrid<{}> | null) => {
+                    ref={(node: ReactDataGrid<DBDataRow> | null) => {
                         this.grid = node;
                     }}
                     enableCellSelect={true}

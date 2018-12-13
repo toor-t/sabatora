@@ -383,7 +383,7 @@ export interface ICreateFormDataGridComponentStateProps {
 export interface ICreateFormDataGridComponentDispatchProps {
     onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) => void;
     onSelectedCell: (col: { rowIdx: number; idx: number }) => void;
-    updateAutoCompleteOptions: (col: { rowData: NormalDataRow; columnDDKey: string }) => void;
+    updateAutoCompleteOptions: (col: { rowData: NormalDataRow; columnDDKey?: string }) => void;
     addRow: () => void;
     deleteRows: () => void;
     selectRows: (rows: { rowIdx: number; row: FormDataRow }[]) => void;
@@ -391,7 +391,7 @@ export interface ICreateFormDataGridComponentDispatchProps {
     addSubtotalRow: () => void;
 }
 interface ICreateFormDataGridComponentStates {
-    columns: any[];
+    columns: (ReactDataGrid.Column<NormalDataRow> & { ddKey?: string })[];
 }
 class CreateFormDataGridComponent extends React.Component<
     ICreateFormDataGridComponentStateProps &
@@ -472,7 +472,7 @@ class CreateFormDataGridComponent extends React.Component<
         this.handleCellSeceted.bind(this);
     }
     // ReactDataGridへの参照
-    grid: any = {};
+    grid: ReactDataGrid<FormDataRow> | null = null;
 
     rowGetter = (i: number) => {
         return !this.props.rows ? [] : this.props.rows[i];
@@ -505,19 +505,19 @@ class CreateFormDataGridComponent extends React.Component<
             }
         }
     };
-    onRowsSelected = (rows: any) => {
+    onRowsSelected = (rows: { rowIdx: number; row: FormDataRow }[]) => {
         this.props.selectRows(rows);
     };
-    onRowsDeselected = (rows: any) => {
+    onRowsDeselected = (rows: { rowIdx: number; row: FormDataRow }[]) => {
         this.props.deselectRows(rows);
     };
-    handleAddRowBtn = (e: any) => {
+    handleAddRowBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
         this.props.addRow();
     };
-    handleDeleteBtn = (e: any) => {
+    handleDeleteBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
         this.props.deleteRows();
     };
-    handleAddSubtotalBtn = (e: any) => {
+    handleAddSubtotalBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
         this.props.addSubtotalRow();
     };
 
@@ -527,10 +527,8 @@ class CreateFormDataGridComponent extends React.Component<
             param.row[SubtotalPriceRowKeys.labelSubtotalPrice]
         ) {
             // 合計行、小計行では編集禁止
-            // console.log('not editable');
             return false;
         }
-        // console.log('editable');
         return true;
     };
 
@@ -548,7 +546,7 @@ class CreateFormDataGridComponent extends React.Component<
                 style={{ fontSize: '0.8125rem' }}
             >
                 <MyReactDataGrid /* TODO: 標準のtypesファイルに onCheckCellIsEditable の定義が無いための苦肉の策。 */
-                    ref={(node: ReactDataGrid<{}> | null) => {
+                    ref={(node: ReactDataGrid<FormDataRow> | null) => {
                         this.grid = node;
                     }}
                     columns={this.state.columns}
