@@ -32,22 +32,23 @@ function sleep(waitMSec: number, callbackFunc: () => void) {
  */
 const printForm_request = ipcMain.on(PrintForm.Request, (event: any, arg: any) => {
     // TODO:
+    event.sender.send(PrintForm.Reply, 'Request received.');
     // TODO: 実験：waitしてみる
     sleep(200, () => {
-        printForm().then(
-            result => {
-                if (win) {
+        const asyncFunc = async () => {
+            if (win) {
+                try {
+                    const result = await printForm();
                     win.webContents.send(PrintForm.Result, result);
-                }
-            },
-            reject => {
-                // TODO:
-                if (win) {
+                } catch (reject) {
+                    // TODO:
                     win.webContents.send(PrintForm.Reject, reject);
                 }
+            } else {
+                // TODO: 以上状態
             }
-        );
-        event.sender.send(PrintForm.Reply, 'Request received.');
+        };
+        asyncFunc().then();
     });
 });
 
@@ -57,20 +58,20 @@ const printForm_request = ipcMain.on(PrintForm.Request, (event: any, arg: any) =
 const printForm = (): Promise<{}> => {
     return new Promise((resolve, reject) => {
         if (win) {
-            //
+            // 印刷処理
             win.webContents.print(
                 { silent: false, printBackground: false, deviceName: '' },
                 (success: boolean) => {
-                    if (!success) {
+                    if (success) {
+                        console.log('印刷終了');
+                        resolve('印刷完了');
+                    } else {
                         // TODO:  失敗した場合エラー表示する
                         console.log('帳票印刷失敗');
                         reject('印刷失敗');
                     }
-                    console.log('印刷終了');
-                    resolve('印刷完了');
                 }
             );
-            // console.log('webContents.print() end!!');
         } else {
             // TODO:
             reject('印刷異常終了');

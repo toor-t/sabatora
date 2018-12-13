@@ -27,27 +27,32 @@ function sleep(waitMSec: number, callbackFunc: () => void) {
     }, 1);
 }
 // TODO:
+/**
+ * 帳票読込リクエスト待ち受け
+ */
 const openForm_request = ipcMain.on(OpenForm.Request, (event: any, arg: any) => {
     // TODO:
+    event.sender.send(OpenForm.Reply, 'Request received.');
     // TODO: 実験：waitしてみる
     sleep(200, () => {
-        openForm().then(
-            result => {
-                if (win) {
+        const asyncFunc = async () => {
+            if (win) {
+                try {
+                    const result = await openForm();
                     win.webContents.send(OpenForm.Result, result);
-                }
-            },
-            reject => {
-                // TODO:
-                if (win) {
+                } catch (reject) {
+                    // TODO:
                     win.webContents.send(OpenForm.Reject, reject);
                 }
             }
-        );
-        event.sender.send(OpenForm.Reply, 'Request received.');
+        };
+        asyncFunc().then();
     });
 });
 
+/**
+ * 帳票読込
+ */
 const openForm = (): Promise<{}> => {
     return new Promise((resolve, reject) => {
         if (win) {
@@ -92,30 +97,31 @@ const openForm = (): Promise<{}> => {
 };
 
 // TODO:
+/**
+ * 帳票保存リクエスト待ち受け
+ */
 const saveForm_request = ipcMain.on(SaveForm.Request, (event: any, arg: any) => {
-    // TODO:
-    // console.log('saveForm_request');
-    // console.log(event);
-    // console.log(arg);
+    event.sender.send(SaveForm.Reply, 'Request received.');
     // TODO: 実験：waitしてみる
     sleep(200, () => {
-        saveForm(arg[0]).then(
-            result => {
-                if (win) {
+        const asyncFunc = async () => {
+            if (win) {
+                try {
+                    const result = await saveForm(arg[0]);
                     win.webContents.send(SaveForm.Result, result);
-                }
-            },
-            reject => {
-                // TODO:
-                if (win) {
+                } catch (reject) {
                     win.webContents.send(SaveForm.Reject, reject);
                 }
             }
-        );
-        event.sender.send(SaveForm.Reply, 'Request received.');
+        };
+        asyncFunc().then();
     });
 });
 
+/**
+ * 帳票保存
+ * @param formData
+ */
 const saveForm = (formData: any): Promise<{}> => {
     return new Promise((resolve, reject) => {
         if (win) {
