@@ -17,6 +17,8 @@ import { ThunkDispatch } from 'redux-thunk';
 import { IAppState } from '../store';
 import { printForm } from '../print_renderer';
 import { Str, BtnLabel, Message } from '../strings';
+import { Action } from 'redux';
+import { DataDoc, DataDocKeys } from '../db';
 
 // NormalDataRowKeys
 export namespace NormalDataRowKeys {
@@ -692,7 +694,21 @@ export const updateAutoCompleteOptionsWorker = wrapThunkAsyncActionWorker<
 >(
     CreateFormActions.updateAutoCompleteOptions,
     ({ rowData, columnDDKey }): Promise<{}> => {
-        const _rowData = Object.assign({}, rowData, { [columnDDKey]: undefined });
+        const _rowData: DataDoc = Object.assign(
+            {},
+            {
+                [DataDocKeys.level_1]: rowData[NormalDataRowKeys.level_1],
+                [DataDocKeys.level_2]: rowData[NormalDataRowKeys.level_2],
+                [DataDocKeys.level_3]: rowData[NormalDataRowKeys.level_3],
+                [DataDocKeys.itemName]: rowData[NormalDataRowKeys.itemName],
+                [DataDocKeys.unitPrice]: [
+                    0 // TODO: unitPrice はクエリに使われないのでダミー
+                ]
+            },
+            {
+                [columnDDKey]: undefined
+            }
+        );
         return updateAutoCompleteOptions(_rowData);
     }
 );
@@ -700,7 +716,7 @@ export const updateAutoCompleteOptionsWorker = wrapThunkAsyncActionWorker<
 /**
  * TODO: 非同期帳票読込
  */
-export const openFormWorker = wrapThunkAsyncActionParamVoidWorker<Buffer, {}>(
+export const openFormWorker = wrapThunkAsyncActionParamVoidWorker<Buffer, string>(
     CreateFormActions.openForm,
     openForm
 );
@@ -708,7 +724,7 @@ export const openFormWorker = wrapThunkAsyncActionParamVoidWorker<Buffer, {}>(
 /**
  * TODO: 非同期帳票保存
  */
-export const saveFormWorker = wrapThunkAsyncActionParamVoidWorker<{}, {}>(
+export const saveFormWorker = wrapThunkAsyncActionParamVoidWorker<void, string>(
     CreateFormActions.saveForm,
     saveForm
 );
@@ -717,7 +733,7 @@ export const saveFormWorker = wrapThunkAsyncActionParamVoidWorker<{}, {}>(
  * TODO: 確認付き帳票読込 ※ここに置くべきか？要検討
  */
 export const openFormWithConfirmWorker = () => (
-    dispatch: ThunkDispatch<IAppState, {}, any>,
+    dispatch: ThunkDispatch<IAppState, undefined, Action>,
     getState: () => IAppState
 ) => {
     const { formDataEditted } = getState().createFormState;
@@ -735,7 +751,7 @@ export const openFormWithConfirmWorker = () => (
  * TODO: 確認付き新規帳票作成 ※ここに置くべきか？要検討
  */
 export const newFormWithConfirmWorker = () => (
-    dispatch: ThunkDispatch<IAppState, {}, any>,
+    dispatch: ThunkDispatch<IAppState, undefined, Action>,
     getState: () => IAppState
 ) => {
     const { formDataEditted } = getState().createFormState;
@@ -753,7 +769,7 @@ export const newFormWithConfirmWorker = () => (
  * TODO: 印刷処理ワーカー
  */
 export const printFormWorker = () => (
-    dispatch: ThunkDispatch<IAppState, {}, any>,
+    dispatch: ThunkDispatch<IAppState, undefined, Action>,
     getState: () => IAppState
 ) => {
     // 印刷開始

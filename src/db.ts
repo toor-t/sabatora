@@ -12,6 +12,7 @@ export namespace DataDocKeys {
 }
 
 export interface DataDoc {
+    [key: string]: string | number[];
     // TODO:
     [DataDocKeys.level_1]: string; // 大1
     [DataDocKeys.level_2]: string; // 中2

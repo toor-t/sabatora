@@ -71,11 +71,11 @@ export const CreateFormActions = {
     /**
      * 帳票保存
      */
-    saveForm: actionCreator.async<void, {}, {}>('SAVE_FORM'),
+    saveForm: actionCreator.async<void, void, string>('SAVE_FORM'),
     /**
      * 帳票読込
      */
-    openForm: actionCreator.async<void, Buffer, {}>('OPEN_FORM'),
+    openForm: actionCreator.async<void, Buffer, string>('OPEN_FORM'),
     /**
      * 新規帳票作成
      */

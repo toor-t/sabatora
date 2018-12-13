@@ -152,17 +152,13 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
         const dbDataRows = state.dbDataRows.slice();
         dbDataRows.unshift(insertRow);
         // TODO: DBに追加
-        const insertDoc = Object.assign(
+        const insertDoc: db.DataDoc = Object.assign(
             {},
-            insertRow,
             {
-                // [DBDataRowKeys.id]: undefined,
-                [DBDataRowKeys.unitPrice_1]: undefined,
-                [DBDataRowKeys.unitPrice_2]: undefined,
-                [DBDataRowKeys.unitPrice_3]: undefined,
-                [DBDataRowKeys.selected]: undefined
-            },
-            {
+                [db.DataDocKeys.level_1]: insertRow[DBDataRowKeys.level_1],
+                [db.DataDocKeys.level_2]: insertRow[DBDataRowKeys.level_2],
+                [db.DataDocKeys.level_3]: insertRow[DBDataRowKeys.level_3],
+                [db.DataDocKeys.itemName]: insertRow[DBDataRowKeys.itemName],
                 [db.DataDocKeys.unitPrice]: [
                     insertRow[DBDataRowKeys.unitPrice_1],
                     insertRow[DBDataRowKeys.unitPrice_2],
@@ -170,7 +166,8 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
                 ]
             }
         );
-        insertDb(insertDoc).then();
+
+        insertDb(insertDoc as db.DataDoc).then();
 
         return Object.assign({}, state, { dbDataRows });
     })
@@ -192,17 +189,17 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
             } else {
                 // 消す行
                 // TODO: DBから削除する
-                const removeQuery = Object.assign(
+                const removeQuery: db.DataDoc = Object.assign(
                     {},
-                    state.dbDataRows[dbDataRowIdx],
                     {
-                        // [DBDataRowKeys.id]: undefined,
-                        [DBDataRowKeys.unitPrice_1]: undefined,
-                        [DBDataRowKeys.unitPrice_2]: undefined,
-                        [DBDataRowKeys.unitPrice_3]: undefined,
-                        [DBDataRowKeys.selected]: undefined
-                    },
-                    {
+                        [db.DataDocKeys.level_1]:
+                            state.dbDataRows[dbDataRowIdx][DBDataRowKeys.level_1],
+                        [db.DataDocKeys.level_2]:
+                            state.dbDataRows[dbDataRowIdx][DBDataRowKeys.level_2],
+                        [db.DataDocKeys.level_3]:
+                            state.dbDataRows[dbDataRowIdx][DBDataRowKeys.level_3],
+                        [db.DataDocKeys.itemName]:
+                            state.dbDataRows[dbDataRowIdx][DBDataRowKeys.itemName],
                         [db.DataDocKeys.unitPrice]: [
                             state.dbDataRows[dbDataRowIdx][DBDataRowKeys.unitPrice_1],
                             state.dbDataRows[dbDataRowIdx][DBDataRowKeys.unitPrice_2],
@@ -255,25 +252,35 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
             }
             const updatedRow = immutabilityHelper(dataRows[i], { $merge: e.updated });
             // TODO: データベースアップデート
-            const update = Object.assign(
+            const update: db.DataDoc = Object.assign(
                 {},
-                updatedRow,
                 {
+                    [db.DataDocKeys.level_1]: updatedRow[DBDataRowKeys.level_1],
+                    [db.DataDocKeys.level_2]: updatedRow[DBDataRowKeys.level_2],
+                    [db.DataDocKeys.level_3]: updatedRow[DBDataRowKeys.level_3],
+                    [db.DataDocKeys.itemName]: updatedRow[DBDataRowKeys.itemName],
                     [db.DataDocKeys.unitPrice]: [
                         updatedRow[DBDataRowKeys.unitPrice_1],
                         updatedRow[DBDataRowKeys.unitPrice_2],
                         updatedRow[DBDataRowKeys.unitPrice_3]
                     ]
-                },
-                {
-                    // [DBDataRowKeys.id]: undefined,
-                    [DBDataRowKeys.unitPrice_1]: undefined,
-                    [DBDataRowKeys.unitPrice_2]: undefined,
-                    [DBDataRowKeys.unitPrice_3]: undefined,
-                    [DBDataRowKeys.selected]: undefined
                 }
             );
-            updateDb(dataRows[i], update).then(); // TODO: エラー処理等必要！
+            const dataDoc: db.DataDoc = Object.assign(
+                {},
+                {
+                    [db.DataDocKeys.level_1]: dataRows[i][DBDataRowKeys.level_1],
+                    [db.DataDocKeys.level_2]: dataRows[i][DBDataRowKeys.level_2],
+                    [db.DataDocKeys.level_3]: dataRows[i][DBDataRowKeys.level_3],
+                    [db.DataDocKeys.itemName]: dataRows[i][DBDataRowKeys.itemName],
+                    [db.DataDocKeys.unitPrice]: [
+                        dataRows[i][DBDataRowKeys.unitPrice_1],
+                        dataRows[i][DBDataRowKeys.unitPrice_2],
+                        dataRows[i][DBDataRowKeys.unitPrice_3]
+                    ]
+                }
+            );
+            updateDb(dataDoc, update).then(); // TODO: エラー処理等必要！
 
             dataRows[i] = Object.assign({}, updatedRow, {
                 [db.DataDocKeys.unitPrice]: [
@@ -391,7 +398,9 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
  * Query DB Worker
  */
 export const queryDbWorker = wrapThunkAsyncActionWorker<
-    { query: db.DataDoc; projection: any[] },
-    {},
-    {}
->(ManageDataActions.queryDb, queryDb);
+    { query: db.DataDoc; projection: string[] },
+    db.DataDoc[],
+    string
+>(ManageDataActions.queryDb, (params: { query: db.DataDoc; projection: string[] }) => {
+    return queryDb(params.query, params.projection);
+});

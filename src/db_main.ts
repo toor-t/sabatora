@@ -41,7 +41,7 @@ const conf_db: Nedb = new DataStore({
 /**
  * Query DB Request listener
  */
-const queryDb_request = ipcMain.on(QueryDb.Request, (event: any, arg: any) => {
+const queryDb_request = ipcMain.on(QueryDb.Request, (event: any, arg: any[]) => {
     // TODO:
     const asyncFunc = async () => {
         event.sender.send(QueryDb.Reply, 'Request received.');
@@ -64,7 +64,7 @@ const queryDb_request = ipcMain.on(QueryDb.Request, (event: any, arg: any) => {
  * @param query
  * @param projection
  */
-const queryDb = (query: any, projection: string[] = []): Promise<{}> => {
+const queryDb = (query: DataDoc, projection: string[] = []): Promise<DataDoc[]> => {
     return new Promise((resolve, reject) => {
         // query生成
         let _query = {};
@@ -102,14 +102,14 @@ const queryDb = (query: any, projection: string[] = []): Promise<{}> => {
             }
         }
         data_db
-            .find(_query, _projection)
+            .find<DataDoc>(_query, _projection as DataDoc)
             .sort({
                 [DataDocKeys.level_1]: 1,
                 [DataDocKeys.level_2]: 1,
                 [DataDocKeys.level_3]: 1,
                 [DataDocKeys.itemName]: 1
             })
-            .exec((err, docs: any[]) => {
+            .exec((err, docs: DataDoc[]) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -146,7 +146,7 @@ const updateDb_request = ipcMain.on(UpdateDb.Request, (event: any, arg: any) => 
  * @param query
  * @param update
  */
-const updateDb = (query: any, update: any): Promise<{}> => {
+const updateDb = (query: DataDoc, update: DataDoc): Promise<DataDoc[]> => {
     return new Promise((resolve, reject) => {
         // query生成
         let _query = {};
@@ -168,13 +168,18 @@ const updateDb = (query: any, update: any): Promise<{}> => {
                     break;
             }
         }
-        data_db.update(_query, update, {}, (err: any, numAffected: any, docs: any, upsert: any) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(docs);
+        data_db.update<DataDoc>(
+            _query,
+            update,
+            {},
+            (err: Error, numAffected: number, docs: DataDoc[], upsert: boolean) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(docs);
+                }
             }
-        });
+        );
     });
 };
 
@@ -204,9 +209,9 @@ const insertDb_request = ipcMain.on(InsertDb.Request, (event: any, arg: any) => 
  * Insert DB
  * @param doc
  */
-const insertDb = (doc: any): Promise<{}> => {
+const insertDb = (doc: DataDoc): Promise<DataDoc> => {
     return new Promise((resolve, reject) => {
-        data_db.insert(doc, (err: any, document: any) => {
+        data_db.insert<DataDoc>(doc, (err: Error, document: DataDoc) => {
             if (err) {
                 reject(err);
             } else {
@@ -242,9 +247,9 @@ const removeDb_request = ipcMain.on(RemoveDb.Request, (event: any, arg: any) => 
  * Remove DB
  * @param query
  */
-const removeDb = (query: any): Promise<{}> => {
+const removeDb = (query: DataDoc): Promise<number> => {
     return new Promise((resolve, reject) => {
-        data_db.remove(query, (err: any, n: number) => {
+        data_db.remove(query, (err: Error, n: number) => {
             if (err) {
                 reject(err);
             } else {
@@ -284,7 +289,7 @@ const updateAutoCompleteOptions_request = ipcMain.on(
  * @param query
  * @param projection
  */
-const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promise<{}> => {
+const updateAutoCompleteOptions = (query: DataDoc, projection: string[] = []): Promise<{}> => {
     return new Promise((resolve, reject) => {
         // query生成
         let _query = {};
@@ -321,7 +326,7 @@ const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promi
                     break;
             }
         }
-        data_db.find(_query, _projection, (err, docs: any[]) => {
+        data_db.find<DataDoc>(_query, _projection as DataDoc, (err, docs: DataDoc[]) => {
             if (err) {
                 reject(err);
             } else {
@@ -338,19 +343,22 @@ const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promi
                 let autoCompleteOptions = {};
                 for (const key in projectionKeys) {
                     let result: string[] = [];
-                    if (projectionKeys[key] !== DataDocKeys.unitPrice) {
+                    const currentKey = projectionKeys[key];
+                    if (currentKey !== DataDocKeys.unitPrice) {
                         const newDocs: string[] = [];
                         for (let i = 0; i < docs.length; i = i + 1) {
                             const doc = docs[i];
-                            newDocs.push(doc[projectionKeys[key]]);
+                            newDocs.push(doc[currentKey] as string);
                         }
                         result = Array.from(new Set(newDocs)).sort();
-                    } else if (projectionKeys[key] === DataDocKeys.unitPrice) {
+                    } else if (currentKey === DataDocKeys.unitPrice) {
                         if (docs.length !== 1) {
                             // 複数候補がある場合は無視する
                             continue;
                         }
-                        result = docs[0][projectionKeys[key]];
+                        result = docs[0][currentKey].map((value, index, array) => {
+                            return value.toString();
+                        });
                     }
 
                     const _options: {}[] = [];

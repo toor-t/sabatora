@@ -119,7 +119,7 @@ const CreateFormComponent: React.SFC<
                                     placeholder="Title"
                                     defaultValue={title}
                                     // tslint:disable-next-line:jsx-no-lambda
-                                    onBlur={(e: any) => {
+                                    onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
                                         endEdittingTitle(e.target.value);
                                     }}
                                     inputProps={{

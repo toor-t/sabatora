@@ -3,10 +3,13 @@
  */
 'use strict';
 import { ipcRenderer } from 'electron';
-import { UpdateAutoCompleteOptions, QueryDb, UpdateDb, InsertDb, RemoveDb } from './db';
+import { UpdateAutoCompleteOptions, QueryDb, UpdateDb, InsertDb, RemoveDb, DataDoc } from './db';
 
 // AutoCompleteOptions
-export const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promise<{}> => {
+export const updateAutoCompleteOptions = (
+    query: DataDoc,
+    projection: string[] = []
+): Promise<{}> => {
     return new Promise((resolve, reject) => {
         const resultListener = (event: any, result: any) => {
             // console.log(`updateAutoCompleteOptions-result=${{ ...result }}`);
@@ -40,7 +43,7 @@ export const updateAutoCompleteOptions = (query: any, projection: string[] = [])
 };
 
 // dbQuery
-export const queryDb = (query: any, projection: string[] = []): Promise<{}> => {
+export const queryDb = (query: DataDoc, projection: string[] = []): Promise<DataDoc[]> => {
     return new Promise((resolve, reject) => {
         const resultListener = (event: any, result: any) => {
             // console.log(`QueryDb-result=${{ ...result }}`);
@@ -74,7 +77,7 @@ export const queryDb = (query: any, projection: string[] = []): Promise<{}> => {
 };
 
 // dbUpdate
-export const updateDb = (query: any, update: any): Promise<{}> => {
+export const updateDb = (query: DataDoc, update: DataDoc): Promise<DataDoc[]> => {
     return new Promise((resolve, reject) => {
         const resultListener = (event: any, result: any) => {
             // console.log(`UpdateDb-result=${{ ...result }}`);
@@ -108,7 +111,7 @@ export const updateDb = (query: any, update: any): Promise<{}> => {
 };
 
 // dbInsert
-export const insertDb = (doc: any): Promise<{}> => {
+export const insertDb = (doc: DataDoc): Promise<DataDoc> => {
     return new Promise((resolve, reject) => {
         const resultListener = (event: any, result: any) => {
             // console.log(`InsertDb-result=${{ ...result }}`);
@@ -142,7 +145,7 @@ export const insertDb = (doc: any): Promise<{}> => {
 };
 
 // dbRemove
-export const removeDb = (query: any): Promise<{}> => {
+export const removeDb = (query: DataDoc): Promise<number> => {
     return new Promise((resolve, reject) => {
         const resultListener = (event: any, result: any) => {
             // console.log(`RemoveDb-result=${{ ...result }}`);

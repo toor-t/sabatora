@@ -17,6 +17,7 @@ import {
     printFormWorker
 } from '../states/CreateFormState';
 import { ThunkDispatch } from 'redux-thunk';
+import { Action } from 'redux';
 
 /**
  * mapStateToProps
@@ -34,7 +35,7 @@ function mapStateToProps(appState: IAppState) {
  * @param dispatch
  */
 function mapDispatchToProps(
-    dispatch: ThunkDispatch<IAppState, {}, any>
+    dispatch: ThunkDispatch<IAppState, undefined, Action<any>>
 ): IAppTopComponentDispatchProps {
     // TODO:
     return {

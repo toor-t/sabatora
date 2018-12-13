@@ -15,8 +15,8 @@ import {
 
 import { IAppState } from '../store';
 import { updateAutoCompleteOptionsWorker, FormDataRow } from '../states/CreateFormState';
-import { Dispatch } from 'react';
-import { ThunkAction } from 'redux-thunk';
+import { ThunkDispatch } from 'redux-thunk';
+import { Action } from 'redux';
 
 /**
  * mapStateToProps
@@ -45,10 +45,12 @@ function mapStateToProps(
  * @param dispatch
  */
 function mapDispatchToProps(
-    dispatch: any /*Dispatch<Action<any>>*/
+    dispatch: ThunkDispatch<IAppState, undefined, Action<any>>
 ): ICreateFormComponentDispatchProps & INotifyComponentDispatchProps {
     // TODO:
     return {
+        dispatch, // NotifyComponent に dispatchを渡す必要があるため。
+
         onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col)),
         onGridRowUpdate: (e: any) => dispatch(CreateFormActions.updateGridRow(e)),
         updateAutoCompleteOptions: (c: any) => dispatch(updateAutoCompleteOptionsWorker(c)),
@@ -63,62 +65,51 @@ function mapDispatchToProps(
         endEdittingTitle: (title: string) => dispatch(CreateFormActions.endEdittingTitle(title))
     };
 }
-/**
- * mergeProps
- * @param stateProps
- * @param dispatchProps
- * @param ownProps
- */
-function mergeProps(
-    stateProps: ICreateFormComponentStateProps & INotifyComponentStateProps,
-    dispatchProps: any,
-    ownProps: any
-): ICreateFormComponentStateProps &
-    INotifyComponentStateProps &
-    ICreateFormComponentDispatchProps &
-    INotifyComponentDispatchProps {
-    const { dispatch } = dispatchProps;
+// /**
+//  * mergeProps
+//  * @param stateProps
+//  * @param dispatchProps
+//  * @param ownProps
+//  */
+// function mergeProps(
+// 	stateProps: ICreateFormComponentStateProps & INotifyComponentStateProps,
+// 	dispatchProps: any,
+// 	ownProps: any
+// ): ICreateFormComponentStateProps &
+// 	INotifyComponentStateProps &
+// 	ICreateFormComponentDispatchProps &
+// 	INotifyComponentDispatchProps {
+// 	const { dispatch } = dispatchProps;
 
-    return {
-        // TODO:
-        dispatch,
+// 	return {
+// 		// TODO:
+// 		dispatch,
 
-        // State Props
-        ...stateProps,
+// 		// State Props
+// 		...stateProps,
 
-        // Dispatch Props
-        onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col)),
-        onGridRowUpdate: (e: any) => dispatch(CreateFormActions.updateGridRow(e)),
-        updateAutoCompleteOptions: (c: any) => dispatch(updateAutoCompleteOptionsWorker(c)),
-        addRow: () => dispatch(CreateFormActions.addRow()),
-        deleteRows: () => dispatch(CreateFormActions.deleteRows()),
-        selectRows: (rows: { rowIdx: number; row: FormDataRow }[]) =>
-            dispatch(CreateFormActions.selectRows(rows)),
-        deselectRows: (rows: { rowIdx: number; row: FormDataRow }[]) =>
-            dispatch(CreateFormActions.deselectRows(rows)),
-        addSubtotalRow: () => dispatch(CreateFormActions.addSubtotalRow()),
-        startEdittingTitle: () => dispatch(CreateFormActions.startEdittingTitle()),
-        endEdittingTitle: (title: string) => dispatch(CreateFormActions.endEdittingTitle(title)),
+// 		// Dispatch Props
+// 		onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col)),
+// 		onGridRowUpdate: (e: any) => dispatch(CreateFormActions.updateGridRow(e)),
+// 		updateAutoCompleteOptions: (c: any) => dispatch(updateAutoCompleteOptionsWorker(c)),
+// 		addRow: () => dispatch(CreateFormActions.addRow()),
+// 		deleteRows: () => dispatch(CreateFormActions.deleteRows()),
+// 		selectRows: (rows: { rowIdx: number; row: FormDataRow }[]) =>
+// 			dispatch(CreateFormActions.selectRows(rows)),
+// 		deselectRows: (rows: { rowIdx: number; row: FormDataRow }[]) =>
+// 			dispatch(CreateFormActions.deselectRows(rows)),
+// 		addSubtotalRow: () => dispatch(CreateFormActions.addSubtotalRow()),
+// 		startEdittingTitle: () => dispatch(CreateFormActions.startEdittingTitle()),
+// 		endEdittingTitle: (title: string) => dispatch(CreateFormActions.endEdittingTitle(title)),
 
-        // Own Props
-        ...ownProps
-    };
-}
+// 		// Own Props
+// 		...ownProps
+// 	};
+// }
 /**
  * connect
  */
-export default connect<
-    ICreateFormComponentStateProps & INotifyComponentStateProps,
-    {},
-    {},
-    ICreateFormComponentStateProps &
-        INotifyComponentStateProps &
-        ICreateFormComponentDispatchProps &
-        INotifyComponentDispatchProps,
-    IAppState
->(
+export default connect(
     mapStateToProps,
-    // mapDispatchToProps,
-    null,
-    mergeProps
+    mapDispatchToProps
 )(CreateFormComponent);

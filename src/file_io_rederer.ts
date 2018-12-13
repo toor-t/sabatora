@@ -40,7 +40,7 @@ export const openForm = (): Promise<Buffer> => {
 };
 
 // SaveForm
-export const saveForm = (): Promise<{}> => {
+export const saveForm = (): Promise<void> => {
     return new Promise((resolve, reject) => {
         const resultListener = (event: any, result: any) => {
             // console.log(`SaveForm-result=${{ ...result }}`);

@@ -21,8 +21,8 @@ const styles = () =>
 
 export interface IAboutComponentProps {
     // TODO:
-    checked?: boolean;
-    onChange?: (e: any) => any;
+    // checked?: boolean;
+    // onChange?: (e: any) => any;
 }
 
 const AboutComponent: React.SFC<IAboutComponentProps & WithStyles<typeof styles>> = props => {

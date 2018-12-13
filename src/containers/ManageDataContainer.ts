@@ -33,7 +33,7 @@ function mapStateToProps(appState: IAppState): IManageDataComponentStateProps {
  * @param dispatch
  */
 function mapDispatchToProps(
-    dispatch: ThunkDispatch<IAppState, {}, any>
+    dispatch: ThunkDispatch<IAppState, undefined, Action<any>>
 ): IManageDataComponentDispatchProps {
     // TODO:
     return {

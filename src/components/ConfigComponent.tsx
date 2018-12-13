@@ -8,8 +8,8 @@ import { Title } from '../strings';
 
 export interface IConfigComponentProps {
     // TODO:
-    checked?: boolean;
-    onChange?: (e: any) => any;
+    // checked?: boolean;
+    // onChange?: (e: any) => any;
 }
 const ConfigComponent: React.SFC<IConfigComponentProps> = props => {
     // TODO:

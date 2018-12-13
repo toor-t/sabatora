@@ -225,7 +225,7 @@ class AppTopComponent extends React.Component<
             this.props.onCloseDrawer();
         };
     }
-    handleMenuOpen = (event: any) => {
+    handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         this.setState({ anchorEl: event.currentTarget });
     };
     handleMenuClose = () => {
@@ -249,7 +249,7 @@ class AppTopComponent extends React.Component<
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
 
-        let Content: any = {};
+        let Content: any = {}; // TODO: any は止める
         let AppBarTitle: JSX.Element | string = '';
         let MoreVartMenuContent: JSX.Element | null = null;
 
@@ -268,7 +268,7 @@ class AppTopComponent extends React.Component<
                     <IconButton
                         onClick={this.props.onCloseDrawer}
                         // tslint:disable-next-line:jsx-no-lambda
-                        onFocus={(e: any) => e.currentTarget.blur()}
+                        onFocus={(e: React.FormEvent<HTMLElement>) => e.currentTarget.blur()}
                     >
                         {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                     </IconButton>
@@ -407,7 +407,9 @@ class AppTopComponent extends React.Component<
                                     // this.props.drawerOpend && classes.hide
                                 )}
                                 // tslint:disable-next-line:jsx-no-lambda
-                                onFocus={(e: any) => e.currentTarget.blur()}
+                                onFocus={(e: React.FocusEvent<HTMLElement>) =>
+                                    e.currentTarget.blur()
+                                }
                             >
                                 <MenuIcon />
                             </IconButton>
@@ -429,7 +431,9 @@ class AppTopComponent extends React.Component<
                                         onClick={this.handleMenuOpen}
                                         color="inherit"
                                         // tslint:disable-next-line:jsx-no-lambda
-                                        onFocus={(e: any) => e.currentTarget.blur()}
+                                        onFocus={(e: React.FocusEvent<HTMLElement>) =>
+                                            e.currentTarget.blur()
+                                        }
                                         className={classes.moreVertButton}
                                     >
                                         <MoreVertIcon />

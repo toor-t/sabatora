@@ -85,7 +85,7 @@ const ManageDataComponent: React.SFC<
             <main>
                 <div
                     // tslint:disable-next-line:jsx-no-lambda
-                    onLoad={(e: any) => {
+                    onLoad={(e: React.SyntheticEvent<HTMLDivElement>) => {
                         props.queryDb();
                     }}
                 >
