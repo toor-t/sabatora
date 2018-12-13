@@ -16,7 +16,7 @@ import { NotifyContext } from '../components/NotifyComponent';
 import { ThunkDispatch } from 'redux-thunk';
 import { IAppState } from '../store';
 import { printForm } from '../print_renderer';
-import { Str } from '../strings';
+import { Str, BtnLabel, Message } from '../strings';
 
 // NormalDataRowKeys
 export namespace NormalDataRowKeys {
@@ -118,15 +118,16 @@ const initialDataRow: FormDataRow = {
 const initialState: ICreateFormState = {
     formData: {
         dataRows: [
+            // 空行
             initialDataRow,
-
+            // 合計行
             {
                 id: -1,
                 [TotalPriceRowKeys.labelTotalPrice]: Str.TotalPrice,
                 [TotalPriceRowKeys.totalPrice]: 0
             }
         ],
-        title: '無題',
+        title: Str.InitialFormTitle,
         totalPrice: 0
     },
     formDataEditted: false,
@@ -192,9 +193,9 @@ const getSlecetedRowsInfo = (rows: FormDataRow[]): { count: number; firstIdx: nu
             }
         }
     }
-    // console.log(`count=${count}, firstIdx=${firstIdx}`);
     return { count, firstIdx };
 };
+
 /**
  * CreateFormStateReducer
  */
@@ -402,7 +403,10 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         // console.log(loadFormData);
 
         // 読み込み完了通知を出す
-        const notify = NotifyContext.defaultNotify('帳票読込完了', CreateFormActions.closeNotify);
+        const notify = NotifyContext.defaultNotify(
+            Message.OpenFormDone,
+            CreateFormActions.closeNotify
+        );
         // TODO:  選択行の数等のチェック (てか、ロード時は全部解除すべきか？)
         const ret = getSlecetedRowsInfo(loadFormData.dataRows);
         // 編集済みフラグリセット
@@ -427,7 +431,10 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
             return state;
         }
         // 読み込み失敗通知
-        const notify = NotifyContext.defaultNotify('帳票読込失敗', CreateFormActions.closeNotify);
+        const notify = NotifyContext.defaultNotify(
+            Message.OpenFormFailed,
+            CreateFormActions.closeNotify
+        );
 
         return Object.assign({}, state, { notify });
     })
@@ -438,13 +445,13 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     .case(CreateFormActions.confirmOpenForm, state => {
         // TODO: メッセージの内容確認。及び、メッセージの定義をstrings.tsに移す。
         const notify = new NotifyContext(
-            '現在の帳票は変更されています。保存せずに帳票読込を行いますか？（現在の帳票の変更内容は破棄されます)',
+            Message.ConfirmOpenForm,
             1,
             true,
             0,
             '',
-            'キャンセル',
-            '続行',
+            BtnLabel.Cancel,
+            BtnLabel.Accept,
             undefined,
             undefined,
             CreateFormActions.closeNotify,
@@ -468,7 +475,10 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
      */
     .case(CreateFormActions.saveForm.done, (state, payload) => {
         // 保存完了通知
-        const notify = NotifyContext.defaultNotify('帳票保存完了', CreateFormActions.closeNotify);
+        const notify = NotifyContext.defaultNotify(
+            Message.SaveFormDone,
+            CreateFormActions.closeNotify
+        );
         // 編集済みフラグリセット
         const formDataEditted = false;
 
@@ -485,54 +495,58 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
             return state;
         }
         // 保存失敗通知
-        const notify = NotifyContext.defaultNotify('帳票保存失敗', CreateFormActions.closeNotify);
+        const notify = NotifyContext.defaultNotify(
+            Message.SaveFormFailed,
+            CreateFormActions.closeNotify
+        );
 
         return Object.assign({}, state, { notify });
     })
 
-    // 帳票印刷開始
+    /**
+     * 帳票印刷開始
+     */
     .case(CreateFormActions.startPrintForm, state => {
-        // TODO:
-        // console.log('startPrintForm');
-
         // TODO: プリント用画面に切り替える
         const printing = true;
         return Object.assign({}, state, { printing });
     })
-    // 帳票印刷終了
+    /**
+     * 帳票印刷終了
+     */
     .case(CreateFormActions.endPrintForm, state => {
-        // TODO:
-        // console.log('endPrintForm');
-
         // TODO: プリント用画面を終了
         const printing = false;
         return Object.assign({}, state, { printing });
     })
-    // 新規帳票作成
+
+    /**
+     * 新規帳票作成
+     */
     .case(CreateFormActions.newForm, (state /*, force*/) => {
         // TODO: 初期データを復元する
         const formData = initialState.formData;
-        // console.log(formData);
         // 編集状態解除
         const formDataEditted = false;
-
         // 確認ダイアログが表示されているなら消す
         // TODO:
         const notify = state.notify.open ? state.notify.closedNotify() : state.notify;
 
         return Object.assign({}, state, { formData, formDataEditted }, { notify });
     })
-    // 新規帳票作成確認
+    /**
+     * 新規帳票作成確認
+     */
     .case(CreateFormActions.confirmNewForm, state => {
         // TODO:
         const notify = new NotifyContext(
-            '現在の帳票は変更されています。保存せずに新規帳票作成を行いますか？（現在の帳票の変更内容は破棄されます)',
+            Message.ConfirmNewForm,
             1,
             true,
             0,
             '',
-            'キャンセル',
-            '続行',
+            BtnLabel.Cancel,
+            BtnLabel.Accept,
             undefined,
             undefined,
             CreateFormActions.closeNotify,
@@ -542,13 +556,17 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         return Object.assign({}, state, { notify });
     })
 
-    // セル選択
+    /**
+     * セル選択
+     */
     .case(CreateFormActions.selectCell, (state, col) => {
         // TODO:
         return Object.assign({}, state, { sellectedCell: col });
     })
 
-    // 行選択
+    /**
+     * 行選択
+     */
     .case(CreateFormActions.selectRows, (state, rows) => {
         // TODO:
         const dataRows = state.formData.dataRows.map((value, index, array) => {
@@ -578,7 +596,9 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         );
     })
 
-    // 行選択解除
+    /**
+     * 行選択解除
+     */
     .case(CreateFormActions.deselectRows, (state, rows) => {
         // TODO:
         const dataRows = state.formData.dataRows.map((value, index, array) => {
@@ -605,57 +625,66 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         );
     })
 
-    // タイトル編集開始
+    /**
+     * タイトル編集開始
+     */
     .case(CreateFormActions.startEdittingTitle, state => {
-        // TODO:
-
         return Object.assign({}, state, { edittingTitle: true });
     })
 
-    // タイトル編集終了
+    /**
+     * タイトル編集終了
+     */
     .case(CreateFormActions.endEdittingTitle, (state, title) => {
         const formData = Object.assign({}, state.formData, { title });
-
-        // TODO: 編集済みフラグセット
+        // 編集済みフラグセット
         const formDataEditted = true;
 
         return Object.assign({}, state, { formData, formDataEditted }, { edittingTitle: false });
     })
 
-    // AutoCompleteOptions更新 (開始)
+    /**
+     * AutoCompleteOptions更新 (開始)
+     */
     .case(CreateFormActions.updateAutoCompleteOptions.started, (state, cell) => {
         // TODO:
-        // console.log('CreateFormActions.updateAutoCompleteOptions.started');
         return state;
     })
-    // AutoCompleteOptions更新 (完了)
+    /**
+     * AutoCompleteOptions更新 (完了)
+     */
     .case(CreateFormActions.updateAutoCompleteOptions.done, (state, done) => {
         // TODO:
-        // console.log('CreateFormActions.updateAutoCompleteOptions.done');
-        // console.log(done);
         return Object.assign({}, state, { autoCompleteOptions: done.result });
     })
-    // AutoCompleteOptions更新 (失敗)
+    /**
+     * AutoCompleteOptions更新 (失敗)
+     */
     .case(CreateFormActions.updateAutoCompleteOptions.failed, (state, error) => {
         // TODO:
-        // console.log('CreateFormActions.updateAutoCompleteOptions.failed');
         return state;
     })
 
-    // TODO: 通知が閉じられた
+    /**
+     * TODO: 通知が閉じられた
+     */
     .case(CreateFormActions.closeNotify, state => {
         // TODO:
         const notify = state.notify.closedNotify();
         return Object.assign({}, state, { notify });
     })
-    // TODO: 通知のクローズボタンがクリックされた
+    /**
+     * TODO: 通知のクローズボタンがクリックされた
+     */
     .case(CreateFormActions.clickNotifyCloseButton, state => {
         // TODO:
         const notify = state.notify.closedNotify();
         return Object.assign({}, state, { notify });
     });
 
-// 非同期でautoCompleteOptionsを更新する
+/**
+ * 非同期でautoCompleteOptionsを更新する
+ */
 export const updateAutoCompleteOptionsWorker = wrapThunkAsyncActionWorker<
     { rowData: NormalDataRow; columnDDKey: string },
     {},
@@ -663,31 +692,34 @@ export const updateAutoCompleteOptionsWorker = wrapThunkAsyncActionWorker<
 >(
     CreateFormActions.updateAutoCompleteOptions,
     ({ rowData, columnDDKey }): Promise<{}> => {
-        // console.log(columnDDKey);
         const _rowData = Object.assign({}, rowData, { [columnDDKey]: undefined });
-        // console.log(_rowData);
         return updateAutoCompleteOptions(_rowData);
     }
 );
 
-// TODO: 非同期帳票読込
+/**
+ * TODO: 非同期帳票読込
+ */
 export const openFormWorker = wrapThunkAsyncActionParamVoidWorker<Buffer, {}>(
     CreateFormActions.openForm,
     openForm
 );
 
-// TODO: 非同期帳票保存
+/**
+ * TODO: 非同期帳票保存
+ */
 export const saveFormWorker = wrapThunkAsyncActionParamVoidWorker<{}, {}>(
     CreateFormActions.saveForm,
     saveForm
 );
 
-// TODO: 確認付き帳票読込 ※ここに置くべきか？要検討
+/**
+ * TODO: 確認付き帳票読込 ※ここに置くべきか？要検討
+ */
 export const openFormWithConfirmWorker = () => (
     dispatch: ThunkDispatch<IAppState, {}, any>,
     getState: () => IAppState
 ) => {
-    // console.log('openFormWithConfirm');
     const { formDataEditted } = getState().createFormState;
 
     if (formDataEditted) {
@@ -695,17 +727,17 @@ export const openFormWithConfirmWorker = () => (
         dispatch(CreateFormActions.confirmOpenForm());
     } else {
         // 未編集なのでこのまま読込処理へ
-        // openFormWorker(dispatch, void {});
         dispatch(openFormWorker());
     }
 };
 
-// TODO: 確認付き新規帳票作成 ※ここに置くべきか？要検討
+/**
+ * TODO: 確認付き新規帳票作成 ※ここに置くべきか？要検討
+ */
 export const newFormWithConfirmWorker = () => (
     dispatch: ThunkDispatch<IAppState, {}, any>,
     getState: () => IAppState
 ) => {
-    // console.log('newFormWithConfirm');
     const { formDataEditted } = getState().createFormState;
 
     if (formDataEditted) {
@@ -717,12 +749,13 @@ export const newFormWithConfirmWorker = () => (
     }
 };
 
-// TODO: 印刷処理ワーカー
+/**
+ * TODO: 印刷処理ワーカー
+ */
 export const printFormWorker = () => (
     dispatch: ThunkDispatch<IAppState, {}, any>,
     getState: () => IAppState
 ) => {
-    // console.log('printFormWorker');
     // 印刷開始
     dispatch(CreateFormActions.startPrintForm());
     return printForm().then(

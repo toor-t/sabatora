@@ -18,9 +18,10 @@ const initialState: IAboutState = {
 /**
  * AboutStateReducer
  */
-export const AboutStateReducer = reducerWithInitialState<IAboutState>(initialState).case(
-    AboutActions.updateValue,
-    (state, checked) => {
+export const AboutStateReducer = reducerWithInitialState<IAboutState>(initialState)
+    /**
+     * TODO: dummy
+     */
+    .case(AboutActions.updateValue, (state, checked) => {
         return Object.assign({}, state, { checked });
-    }
-);
+    });

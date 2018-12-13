@@ -17,6 +17,10 @@ import { queryDbWorker } from '../states/ManageDataState';
 import { DataDoc } from '../db';
 import { ThunkDispatch } from 'redux-thunk';
 
+/**
+ * mapStateToProps
+ * @param appState
+ */
 function mapStateToProps(appState: IAppState): IManageDataComponentStateProps {
     // TODO:
     return {
@@ -24,6 +28,10 @@ function mapStateToProps(appState: IAppState): IManageDataComponentStateProps {
         selectedRowsCount: appState.manageDataState.selectedRowsCount
     };
 }
+/**
+ * mapDispatchToProps
+ * @param dispatch
+ */
 function mapDispatchToProps(
     dispatch: ThunkDispatch<IAppState, {}, any>
 ): IManageDataComponentDispatchProps {
@@ -37,6 +45,9 @@ function mapDispatchToProps(
         deselectRows: (rows: any) => dispatch(ManageDataActions.deselectRows(rows))
     };
 }
+/**
+ * connect
+ */
 export default connect(
     mapStateToProps,
     mapDispatchToProps

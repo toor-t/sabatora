@@ -71,7 +71,9 @@ const getSlecetedRowsCount = (rows: DBDataRow[]): number => {
  * ManageDataStateReducer
  */
 export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(initialState)
-    // 行選択
+    /**
+     * 行選択
+     */
     .case(ManageDataActions.selectRows, (state, rows) => {
         // TODO:
         if (state.dbDataRows === null) {
@@ -88,19 +90,15 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
             return Object.assign({}, array[index]);
         });
 
-        // const formData = Object.assign({}, state.formData, { dataRows });
-
         // TODO:  選択行の数チェック
         const selectedRowsCount = getSlecetedRowsCount(dbDataRows);
 
-        return Object.assign(
-            {},
-            state,
-            { dbDataRows, selectedRowsCount }
-            // { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
-        );
+        return Object.assign({}, state, { dbDataRows, selectedRowsCount });
     })
-    // 行選択解除
+
+    /**
+     * 行選択解除
+     */
     .case(ManageDataActions.deselectRows, (state, rows) => {
         // TODO:
         if (state.dbDataRows === null) {
@@ -117,24 +115,23 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
             return Object.assign({}, array[index]);
         });
 
-        // const formData = Object.assign({}, state.formData, { dataRows });
-
         // TODO:  選択行の数等のチェック
         const selectedRowsCount = getSlecetedRowsCount(dbDataRows);
 
-        return Object.assign(
-            {},
-            state,
-            { dbDataRows, selectedRowsCount }
-            // { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
-        );
+        return Object.assign({}, state, { dbDataRows, selectedRowsCount });
     })
-    // セル選択
+
+    /**
+     * セル選択
+     */
     .case(ManageDataActions.selectCell, (state, payload) => {
         // TODO:
         return state;
     })
-    // 行追加
+
+    /**
+     * 行追加
+     */
     .case(ManageDataActions.addRow, state => {
         if (state.dbDataRows === null) {
             return state;
@@ -154,7 +151,7 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
         };
         const dbDataRows = state.dbDataRows.slice();
         dbDataRows.unshift(insertRow);
-        // TODO: 実験 DBに追加
+        // TODO: DBに追加
         const insertDoc = Object.assign(
             {},
             insertRow,
@@ -177,7 +174,10 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
 
         return Object.assign({}, state, { dbDataRows });
     })
-    // 行削除
+
+    /**
+     * 行削除
+     */
     .case(ManageDataActions.deleteRows, state => {
         // TODO:
         if (state.dbDataRows === null) {
@@ -214,26 +214,15 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
             }
         }
 
-        // // 合計を計算
-        // const totalPrice = calcTotalPrice(dataRows);
-
-        // const formData = Object.assign({}, state.formData, { totalPrice, dataRows });
-
-        // // TODO: 編集済みフラグセット
-        // const formDataEditted = true;
-
         // TODO:  選択行の数等のチェック
         const selectedRowsCount = getSlecetedRowsCount(dbDataRows);
 
-        return Object.assign(
-            {},
-            state,
-            { dbDataRows, selectedRowsCount }
-            // { formData, formDataEditted },
-            // { formDataSelectedRowsCount: ret.count, formDataFirstSelectedRowIdx: ret.firstIdx }
-        );
+        return Object.assign({}, state, { dbDataRows, selectedRowsCount });
     })
-    // グリッド行更新
+
+    /**
+     * グリッド行更新
+     */
     .case(ManageDataActions.updateGridRow, (state, e) => {
         // TODO:
         if (state.dbDataRows === null) {
@@ -265,7 +254,7 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
                 });
             }
             const updatedRow = immutabilityHelper(dataRows[i], { $merge: e.updated });
-            // TODO: 実験 データベースアップデート
+            // TODO: データベースアップデート
             const update = Object.assign(
                 {},
                 updatedRow,
@@ -285,7 +274,7 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
                 }
             );
             updateDb(dataRows[i], update).then(); // TODO: エラー処理等必要！
-            // TODO: 実験終わり
+
             dataRows[i] = Object.assign({}, updatedRow, {
                 [db.DataDocKeys.unitPrice]: [
                     updatedRow[DBDataRowKeys.unitPrice_1],
@@ -293,25 +282,23 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
                     updatedRow[DBDataRowKeys.unitPrice_3]
                 ]
             });
-
-            // TODO: データベースアップデート
         }
-
-        // TODO: 編集済みフラグセット
-        // const formDataEditted = true;
 
         return Object.assign({}, state, { dbDataRows: dataRows });
     })
-    // デーベースクエリー (開始)
+
+    /**
+     * デーベースクエリー (開始)
+     */
     .case(ManageDataActions.queryDb.started, (state, param) => {
         // TODO:
-        console.log('ManageDataActions.queryDb.started');
         return state;
     })
-    // データベースクエリー (完了)
+    /**
+     * データベースクエリー (完了)
+     */
     .case(ManageDataActions.queryDb.done, (state, payload) => {
         // TODO:
-        console.log('ManageDataActions.queryDb.done');
         const dbDocs = payload.result as db.DataDoc[];
         const dbDataRows = dbDocs.map<DBDataRow>((value, index, array) => {
             const unitPrice_1 = value[db.DataDocKeys.unitPrice][0];
@@ -332,53 +319,77 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
 
         return Object.assign({}, state, { dbDataRows });
     })
-    // データベースクエリー (失敗)
+    /**
+     * データベースクエリー (失敗)
+     */
     .case(ManageDataActions.queryDb.failed, (state, payload) => {
         // TODO:
         console.log('ManageDataActions.queryDb.failed');
         return state;
     })
-    // データベースバックアップ (開始)
+
+    /**
+     * データベースバックアップ (開始)
+     */
     .case(ManageDataActions.backupDb.started, state => {
         // TODO:
         return state;
     })
-    // データベースバックアップ (完了)
+    /**
+     * データベースバックアップ (完了)
+     */
     .case(ManageDataActions.backupDb.done, (state, payload) => {
         // TODO:
         return state;
     })
-    // データベースバックアップ (失敗)
+    /**
+     * データベースバックアップ (失敗)
+     */
     .case(ManageDataActions.backupDb.failed, (state, payload) => {
         // TODO:
         return state;
     })
-    // データベースリストア (開始)
+
+    /**
+     * データベースリストア (開始)
+     */
     .case(ManageDataActions.restoreDb.started, state => {
         // TODO:
         return state;
     })
-    // データベースリストア (完了)
+    /**
+     * データベースリストア (完了)
+     */
     .case(ManageDataActions.restoreDb.done, (state, payload) => {
         // TODO:
         return state;
     })
-    // データベースリストア (失敗)
+    /**
+     * データベースリストア (失敗)
+     */
     .case(ManageDataActions.restoreDb.failed, (state, payload) => {
         // TODO:
         return state;
     })
-    // 通知が閉じられた
+
+    /**
+     * 通知が閉じられた
+     */
     .case(ManageDataActions.closeNotify, state => {
         // TODO:
         return state;
     })
-    // 通知クローズボタンが押された
+    /**
+     * 通知クローズボタンが押された
+     */
     .case(ManageDataActions.clickNotifyCloseButton, state => {
         // TODO:
         return state;
     });
 
+/**
+ * Query DB Worker
+ */
 export const queryDbWorker = wrapThunkAsyncActionWorker<
     { query: db.DataDoc; projection: any[] },
     {},

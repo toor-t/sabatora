@@ -11,16 +11,27 @@ import { ConfigActions } from '../actions/ConfigAction';
 import ConfigComponent, { IConfigComponentProps } from '../components/ConfigComponent';
 import { IAppState } from '../store';
 
+/**
+ * mapStateToProps
+ * @param appState
+ */
 function mapStateToProps(appState: IAppState): IConfigComponentProps {
     // TODO:
     return { checked: appState.configState.checked };
 }
+/**
+ * mapDispatchToProps
+ * @param dispatch
+ */
 function mapDispatchToProps(dispatch: Dispatch<Action<any>>): IConfigComponentProps {
     // TODO:
     return {
         onChange: (e: any) => dispatch(ConfigActions.updateValue(e.target.checked))
     };
 }
+/**
+ * connect
+ */
 export default connect(
     mapStateToProps,
     mapDispatchToProps

@@ -17,6 +17,7 @@ export namespace Str {
     export const Price = '価格';
     export const SubtotalPrice = '小計';
     export const TotalPrice = '合計';
+    export const InitialFormTitle = '新規帳票';
 }
 
 export namespace Title {
@@ -39,4 +40,17 @@ export namespace BtnLabel {
     export const AddSubtotalRow = '小計行追加';
     export const InsertSubtotalRow = '小計行挿入';
     export const DeleteRows = '行削除';
+    export const Cancel = 'キャンセル';
+    export const Accept = '続行';
+}
+
+export namespace Message {
+    export const ConfirmOpenForm =
+        '現在の帳票は変更されています。保存せずに帳票読込を行いますか？（現在の帳票の変更内容は破棄されます)';
+    export const ConfirmNewForm =
+        '現在の帳票は変更されています。保存せずに新規帳票作成を行いますか？（現在の帳票の変更内容は破棄されます)';
+    export const SaveFormDone = '帳票保存完了';
+    export const SaveFormFailed = '帳票保存失敗';
+    export const OpenFormDone = '帳票読込完了';
+    export const OpenFormFailed = '帳票読込失敗';
 }

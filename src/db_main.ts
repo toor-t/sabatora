@@ -86,8 +86,6 @@ const queryDb = (query: any, projection: string[] = []): Promise<{}> => {
                     break;
             }
         }
-        // console.log('_query=');
-        // console.log(_query);
         // projection生成
         let _projection = {};
         for (const key in projection) {
@@ -103,8 +101,6 @@ const queryDb = (query: any, projection: string[] = []): Promise<{}> => {
                     break;
             }
         }
-        // console.log('_projection');
-        // console.log(_projection);
         data_db
             .find(_query, _projection)
             .sort({
@@ -172,25 +168,6 @@ const updateDb = (query: any, update: any): Promise<{}> => {
                     break;
             }
         }
-        // console.log('_query=');
-        // console.log(_query);
-        // projection生成
-        // let _projection = {};
-        // for (const key in projection) {
-        // 	switch (projection[key]) {
-        // 		case DataDocKeys.level_1:
-        // 		case DataDocKeys.level_2:
-        // 		case DataDocKeys.level_3:
-        // 		case DataDocKeys.itemName:
-        // 		case DataDocKeys.unitPrice:
-        // 			_projection = Object.assign(_projection, { [projection[key]]: 1 });
-        // 			break;
-        // 		default:
-        // 			break;
-        // 	}
-        // }
-        // console.log('_projection');
-        // console.log(_projection);
         data_db.update(_query, update, {}, (err: any, numAffected: any, docs: any, upsert: any) => {
             if (err) {
                 reject(err);
@@ -288,7 +265,6 @@ const updateAutoCompleteOptions_request = ipcMain.on(
             event.sender.send(UpdateAutoCompleteOptions.Reply, 'Request received.');
             try {
                 // TODO:
-                // console.log(`updateAutoCompleteOptions-request=${arg}`);
                 const result = await updateAutoCompleteOptions(arg[0], arg[1]);
                 if (win) {
                     win.webContents.send(UpdateAutoCompleteOptions.Result, result);
@@ -330,8 +306,6 @@ const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promi
                     break;
             }
         }
-        // console.log('_query=');
-        // console.log(_query);
         // projection生成
         let _projection = {};
         for (const key in projection) {
@@ -347,14 +321,10 @@ const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promi
                     break;
             }
         }
-        // console.log('_projection');
-        // console.log(_projection);
         data_db.find(_query, _projection, (err, docs: any[]) => {
             if (err) {
                 reject(err);
             } else {
-                // console.log('docs=');
-                // console.log(docs);
                 let projectionKeys = projection;
                 if (projectionKeys.length === 0) {
                     projectionKeys = [
@@ -365,8 +335,6 @@ const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promi
                         DataDocKeys.unitPrice
                     ];
                 }
-                // console.log('projectionKeys=');
-                // console.log(projectionKeys);
                 let autoCompleteOptions = {};
                 for (const key in projectionKeys) {
                     let result: string[] = [];
@@ -392,15 +360,10 @@ const updateAutoCompleteOptions = (query: any, projection: string[] = []): Promi
                             title: result[i]
                         });
                     }
-                    // console.log('_options=');
-                    // console.log(_options);
-                    //
                     autoCompleteOptions = Object.assign(autoCompleteOptions, {
                         [projectionKeys[key]]: _options
                     });
                 }
-                // console.log('autoCompleteOptions=');
-                // console.log(autoCompleteOptions);
                 resolve(autoCompleteOptions);
             }
         });

@@ -15,7 +15,13 @@ import {
 
 import { IAppState } from '../store';
 import { updateAutoCompleteOptionsWorker, FormDataRow } from '../states/CreateFormState';
+import { Dispatch } from 'react';
+import { ThunkAction } from 'redux-thunk';
 
+/**
+ * mapStateToProps
+ * @param appState
+ */
 function mapStateToProps(
     appState: IAppState
 ): ICreateFormComponentStateProps & INotifyComponentStateProps {
@@ -34,6 +40,10 @@ function mapStateToProps(
         // printing: true,
     };
 }
+/**
+ * mapDispatchToProps
+ * @param dispatch
+ */
 function mapDispatchToProps(
     dispatch: any /*Dispatch<Action<any>>*/
 ): ICreateFormComponentDispatchProps & INotifyComponentDispatchProps {
@@ -53,7 +63,12 @@ function mapDispatchToProps(
         endEdittingTitle: (title: string) => dispatch(CreateFormActions.endEdittingTitle(title))
     };
 }
-// TODO:実験
+/**
+ * mergeProps
+ * @param stateProps
+ * @param dispatchProps
+ * @param ownProps
+ */
 function mergeProps(
     stateProps: ICreateFormComponentStateProps & INotifyComponentStateProps,
     dispatchProps: any,
@@ -65,7 +80,7 @@ function mergeProps(
     const { dispatch } = dispatchProps;
 
     return {
-        // TODO: 実験中
+        // TODO:
         dispatch,
 
         // State Props
@@ -89,6 +104,9 @@ function mergeProps(
         ...ownProps
     };
 }
+/**
+ * connect
+ */
 export default connect<
     ICreateFormComponentStateProps & INotifyComponentStateProps,
     {},

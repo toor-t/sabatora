@@ -16,9 +16,12 @@ import {
     newFormWithConfirmWorker,
     printFormWorker
 } from '../states/CreateFormState';
-// TODO: 実験用
 import { ThunkDispatch } from 'redux-thunk';
 
+/**
+ * mapStateToProps
+ * @param appState
+ */
 function mapStateToProps(appState: IAppState) {
     // TODO:
     return {
@@ -26,6 +29,10 @@ function mapStateToProps(appState: IAppState) {
         drawerOpend: appState.appTopState.drawerOpened
     };
 }
+/**
+ * mapDispatchToProps
+ * @param dispatch
+ */
 function mapDispatchToProps(
     dispatch: ThunkDispatch<IAppState, {}, any>
 ): IAppTopComponentDispatchProps {
@@ -40,6 +47,9 @@ function mapDispatchToProps(
         onPrintForm: () => dispatch(printFormWorker())
     };
 }
+/**
+ * connect
+ */
 export default connect<IAppTopComponentStateProps, IAppTopComponentDispatchProps, {}, IAppState>(
     mapStateToProps,
     mapDispatchToProps
