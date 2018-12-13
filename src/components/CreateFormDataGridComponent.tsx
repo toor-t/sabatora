@@ -43,7 +43,7 @@ class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
     ICustomAutoCompleteEditorProps & any,
     ICustomAutoCompleteEditorStates
 > {
-    constructor(props: any) {
+    constructor(props: ICustomAutoCompleteEditorProps & any) {
         super(props);
         this.state = {
             // 現状空
@@ -101,8 +101,21 @@ class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
     }
 }
 
-// Formatter
-const NumberRightFormatter: React.SFC<any> = props => {
+/**
+ * Formatter
+ */
+
+/**
+ * IFormatterProps
+ */
+interface IFormatterProps {
+    value: any;
+}
+/**
+ * Number Right Formatter
+ * @param props
+ */
+const NumberRightFormatter: React.SFC<IFormatterProps> = props => {
     if ((typeof props.value === 'number' && !isNaN(props.value)) || !isNaN(Number(props.value))) {
         const formattedValue: string = String(props.value).replace(
             /(\d)(?=(\d\d\d)+(?!\d))/g,
@@ -120,28 +133,44 @@ const NumberRightFormatter: React.SFC<any> = props => {
         </div>
     );
 };
-const RightFormatter: React.SFC<any> = props => {
+/**
+ * Right Formatter
+ * @param props
+ */
+const RightFormatter: React.SFC<IFormatterProps> = props => {
     return (
         <div title={props.value} className="text-right">
             {props.value}
         </div>
     );
 };
-const CenterFormatter: React.SFC<any> = props => {
+/**
+ * Center Formatter
+ * @param props
+ */
+const CenterFormatter: React.SFC<IFormatterProps> = props => {
     return (
         <div title={props.value} className="text-center">
             {props.value}
         </div>
     );
 };
-const BoldNumberRightFormatter: React.SFC<any> = props => {
+/**
+ * Bold Number Right Formatter
+ * @param props
+ */
+const BoldNumberRightFormatter: React.SFC<IFormatterProps> = props => {
     return (
         <strong>
             <NumberRightFormatter {...props} />
         </strong>
     );
 };
-const BoldRightFormatter: React.SFC<any> = props => {
+/**
+ * Bold Right Formatter
+ * @param props
+ */
+const BoldRightFormatter: React.SFC<IFormatterProps> = props => {
     return (
         <strong>
             <RightFormatter {...props} />
@@ -149,29 +178,52 @@ const BoldRightFormatter: React.SFC<any> = props => {
     );
 };
 
-// Row render
+/**
+ * Row render
+ */
+
+/**
+ * ICustomRowRenderProps
+ */
+interface ICustomRowRendererProps {
+    grid: CreateFormDataGridComponent;
+    idx: number;
+    columns: /*ReactDataGrid.Column<FormDataRow>*/ any[];
+    row: FormDataRow;
+}
+/**
+ * ICustomRowRenderStates
+ */
 interface ICustomRowRendererStates {
     grid: CreateFormDataGridComponent;
 }
-class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
-    constructor(props: any) {
+class CustomRowRenderer extends React.Component<ICustomRowRendererProps, ICustomRowRendererStates> {
+    constructor(props: ICustomRowRendererProps) {
         super(props);
         this.state = {
             grid: this.props.grid
         };
+        this.row = null;
     }
 
-    row: any;
+    row: ReactDataGrid.Row | null;
 
-    shouldComponentUpdate(nextProps: any) {
-        return this.row.shouldComponentUpdate(nextProps);
-    }
-    setScrollLeft = (scrollBy: any) => {
-        // if you want freeze columns to work, you need to make sure you implement this as apass through
-        if (this.row.setScrollLeft) {
-            this.row.setScrollLeft(scrollBy);
+    shouldComponentUpdate = (
+        nextProps: Readonly<ICustomRowRendererProps>,
+        nextState: Readonly<ICustomRowRendererStates>,
+        nextContext: any
+    ) => {
+        if (this.row && this.row !== null && this.row.shouldComponentUpdate) {
+            return this.row.shouldComponentUpdate(nextProps, nextState, nextContext);
         }
+        return false;
     };
+    // setScrollLeft = (scrollBy: any) => {
+    // 	// if you want freeze columns to work, you need to make sure you implement this as apass through
+    // 	if (this.row && this.row !== null && this.row.setScrollLeft) {
+    // 		this.row.setScrollLeft(scrollBy);
+    // 	}
+    // };
     getRowStyle = () => {
         return {
             backgroundColor: this.getRowBackground()
@@ -195,7 +247,9 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
 
             let width = 0;
             for (let i = 1; i < columns.length - 1; i = i + 1) {
-                width += columns[i].width;
+                if (columns[i]['width'] !== undefined) {
+                    width += columns[i]['width'];
+                }
             }
             // 左端のカラムの情報
             const l_column = Object.assign(
@@ -232,14 +286,12 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
             _columns.push(l_column);
             _columns.push(r_column);
             return (
-                // <div>
                 <ReactDataGrid.Row
                     ref={node => (this.row = node)}
                     forceUpdate={true}
                     columns={_columns}
                     {...other}
                 />
-                // </div>
             );
         }
         if (this.props.row[SubtotalPriceRowKeys.subtotalPrice] !== undefined) {
@@ -248,7 +300,9 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
 
             let width = 0;
             for (let i = 1; i < columns.length - 1; i = i + 1) {
-                width += columns[i].width;
+                if (columns[i]['width'] !== undefined) {
+                    width += columns[i]['width'];
+                }
             }
             // 左端のカラムの情報
             const l_column = Object.assign(
@@ -285,22 +339,16 @@ class CustomRowRenderer extends React.Component<any, ICustomRowRendererStates> {
             _columns.push(l_column);
             _columns.push(r_column);
             return (
-                // <div>
                 <ReactDataGrid.Row
                     ref={node => (this.row = node)}
                     forceUpdate={true}
                     columns={_columns}
                     {...other}
                 />
-                // </div>
             );
         }
         // 通常行
-        return (
-            // <div>
-            <ReactDataGrid.Row ref={node => (this.row = node)} columns={_columns} {...other} />
-            // </div>
-        );
+        return <ReactDataGrid.Row ref={node => (this.row = node)} columns={_columns} {...other} />;
     }
 }
 

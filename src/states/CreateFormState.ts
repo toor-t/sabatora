@@ -39,6 +39,8 @@ export namespace NormalDataRowKeys {
     export const invalid = 'invalid'; // : boolean;
 }
 export interface NormalDataRow {
+    [key: string]: number | string | boolean;
+
     [NormalDataRowKeys.id]: number;
 
     [NormalDataRowKeys.level_1]: string; // 大項目
@@ -62,6 +64,8 @@ export namespace TotalPriceRowKeys {
     export const totalPrice = 'totalPrice';
 }
 export interface TotalPriceRow {
+    [key: string]: number | string;
+
     [TotalPriceRowKeys.id]: number;
     [TotalPriceRowKeys.labelTotalPrice]: string;
     [TotalPriceRowKeys.totalPrice]: number;
@@ -72,11 +76,15 @@ export namespace SubtotalPriceRowKeys {
     export const id = 'id';
     export const labelSubtotalPrice = 'labelSubtotalPrice';
     export const subtotalPrice = 'subtotalPrice';
+    export const selected = 'selected';
 }
 export interface SubtotalPriceRow {
+    [key: string]: number | string | boolean;
+
     [SubtotalPriceRowKeys.id]: number;
     [SubtotalPriceRowKeys.labelSubtotalPrice]: string;
     [SubtotalPriceRowKeys.subtotalPrice]: number;
+    [SubtotalPriceRowKeys.selected]: boolean;
 }
 
 export type FormDataRow = NormalDataRow | SubtotalPriceRow | TotalPriceRow;
@@ -273,7 +281,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         if (insertIdx > -1) {
             // 実際に小計行を追加・挿入する
-            const subtotalRow = {
+            const subtotalRow: SubtotalPriceRow = {
                 id: -1,
                 labelSubtotalPrice: Str.SubtotalPrice,
                 subtotalPrice: 0,
