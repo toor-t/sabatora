@@ -55,7 +55,7 @@ const printForm_request = ipcMain.on(PrintForm.Request, (event: Event, arg: any)
 /**
  * 帳票印刷
  */
-const printForm = (): Promise<{}> => {
+const printForm = (): Promise<string> => {
     return new Promise((resolve, reject) => {
         if (win) {
             // 印刷処理

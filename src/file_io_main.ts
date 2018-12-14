@@ -92,7 +92,7 @@ const openForm = (): Promise<Buffer> => {
             );
         } else {
             // TODO:
-            reject({});
+            reject('ERROR');
         }
     });
 };
