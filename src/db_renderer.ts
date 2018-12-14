@@ -2,7 +2,7 @@
  * db_renderer
  */
 'use strict';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, Event } from 'electron';
 import { UpdateAutoCompleteOptions, QueryDb, UpdateDb, InsertDb, RemoveDb, DataDoc } from './db';
 
 // AutoCompleteOptions
@@ -11,7 +11,7 @@ export const updateAutoCompleteOptions = (
     projection: string[] = []
 ): Promise<{}> => {
     return new Promise((resolve, reject) => {
-        const resultListener = (event: any, result: any) => {
+        const resultListener = (event: Event, result: any) => {
             // console.log(`updateAutoCompleteOptions-result=${{ ...result }}`);
             resolve(result);
 
@@ -20,7 +20,7 @@ export const updateAutoCompleteOptions = (
             ipcRenderer.removeListener(UpdateAutoCompleteOptions.Reject, rejectListener);
         };
         ipcRenderer.once(UpdateAutoCompleteOptions.Result, resultListener);
-        const rejectListener = (event: any, result: any) => {
+        const rejectListener = (event: Event, result: any) => {
             // console.log(`updateAutoCompleteOptions-result=${{ ...result }}`);
             reject(result);
 
@@ -29,7 +29,7 @@ export const updateAutoCompleteOptions = (
             ipcRenderer.removeListener(UpdateAutoCompleteOptions.Result, resultListener);
         };
         ipcRenderer.once(UpdateAutoCompleteOptions.Reject, rejectListener);
-        const replyListener = (event: any, reply: any) => {
+        const replyListener = (event: Event, reply: any) => {
             /* TODO: */
             // console.log(`updateAutoCompleteOptions-reply = ${reply}`);
             // Remove Listner
@@ -45,7 +45,7 @@ export const updateAutoCompleteOptions = (
 // dbQuery
 export const queryDb = (query: DataDoc, projection: string[] = []): Promise<DataDoc[]> => {
     return new Promise((resolve, reject) => {
-        const resultListener = (event: any, result: any) => {
+        const resultListener = (event: Event, result: any) => {
             // console.log(`QueryDb-result=${{ ...result }}`);
             resolve(result);
 
@@ -54,7 +54,7 @@ export const queryDb = (query: DataDoc, projection: string[] = []): Promise<Data
             ipcRenderer.removeListener(QueryDb.Reject, rejectListener);
         };
         ipcRenderer.once(QueryDb.Result, resultListener);
-        const rejectListener = (event: any, result: any) => {
+        const rejectListener = (event: Event, result: any) => {
             // console.log(`QueryDb-result=${{ ...result }}`);
             reject(result);
 
@@ -63,7 +63,7 @@ export const queryDb = (query: DataDoc, projection: string[] = []): Promise<Data
             ipcRenderer.removeListener(QueryDb.Result, resultListener);
         };
         ipcRenderer.once(QueryDb.Reject, rejectListener);
-        const replyListener = (event: any, reply: any) => {
+        const replyListener = (event: Event, reply: any) => {
             /* TODO: */
             // console.log(`QueryDb-reply = ${reply}`);
             // Remove Listner
@@ -79,7 +79,7 @@ export const queryDb = (query: DataDoc, projection: string[] = []): Promise<Data
 // dbUpdate
 export const updateDb = (query: DataDoc, update: DataDoc): Promise<DataDoc[]> => {
     return new Promise((resolve, reject) => {
-        const resultListener = (event: any, result: any) => {
+        const resultListener = (event: Event, result: any) => {
             // console.log(`UpdateDb-result=${{ ...result }}`);
             resolve(result);
 
@@ -88,7 +88,7 @@ export const updateDb = (query: DataDoc, update: DataDoc): Promise<DataDoc[]> =>
             ipcRenderer.removeListener(UpdateDb.Reject, rejectListener);
         };
         ipcRenderer.once(UpdateDb.Result, resultListener);
-        const rejectListener = (event: any, result: any) => {
+        const rejectListener = (event: Event, result: any) => {
             // console.log(`UpdateDb-result=${{ ...result }}`);
             reject(result);
 
@@ -97,7 +97,7 @@ export const updateDb = (query: DataDoc, update: DataDoc): Promise<DataDoc[]> =>
             ipcRenderer.removeListener(UpdateDb.Result, resultListener);
         };
         ipcRenderer.once(UpdateDb.Reject, rejectListener);
-        const replyListener = (event: any, reply: any) => {
+        const replyListener = (event: Event, reply: any) => {
             /* TODO: */
             // console.log(`UpdateDb-reply = ${reply}`);
             // Remove Listner
@@ -113,7 +113,7 @@ export const updateDb = (query: DataDoc, update: DataDoc): Promise<DataDoc[]> =>
 // dbInsert
 export const insertDb = (doc: DataDoc): Promise<DataDoc> => {
     return new Promise((resolve, reject) => {
-        const resultListener = (event: any, result: any) => {
+        const resultListener = (event: Event, result: any) => {
             // console.log(`InsertDb-result=${{ ...result }}`);
             resolve(result);
 
@@ -122,7 +122,7 @@ export const insertDb = (doc: DataDoc): Promise<DataDoc> => {
             ipcRenderer.removeListener(InsertDb.Reject, rejectListener);
         };
         ipcRenderer.once(InsertDb.Result, resultListener);
-        const rejectListener = (event: any, result: any) => {
+        const rejectListener = (event: Event, result: any) => {
             // console.log(`InsertDb-result=${{ ...result }}`);
             reject(result);
 
@@ -131,7 +131,7 @@ export const insertDb = (doc: DataDoc): Promise<DataDoc> => {
             ipcRenderer.removeListener(InsertDb.Result, resultListener);
         };
         ipcRenderer.once(InsertDb.Reject, rejectListener);
-        const replyListener = (event: any, reply: any) => {
+        const replyListener = (event: Event, reply: any) => {
             /* TODO: */
             // console.log(`InsertDb-reply = ${reply}`);
             // Remove Listner
@@ -147,7 +147,7 @@ export const insertDb = (doc: DataDoc): Promise<DataDoc> => {
 // dbRemove
 export const removeDb = (query: DataDoc): Promise<number> => {
     return new Promise((resolve, reject) => {
-        const resultListener = (event: any, result: any) => {
+        const resultListener = (event: Event, result: any) => {
             // console.log(`RemoveDb-result=${{ ...result }}`);
             resolve(result);
 
@@ -156,7 +156,7 @@ export const removeDb = (query: DataDoc): Promise<number> => {
             ipcRenderer.removeListener(RemoveDb.Reject, rejectListener);
         };
         ipcRenderer.once(RemoveDb.Result, resultListener);
-        const rejectListener = (event: any, result: any) => {
+        const rejectListener = (event: Event, result: any) => {
             // console.log(`RemoveDb-result=${{ ...result }}`);
             reject(result);
 
@@ -165,7 +165,7 @@ export const removeDb = (query: DataDoc): Promise<number> => {
             ipcRenderer.removeListener(RemoveDb.Result, resultListener);
         };
         ipcRenderer.once(RemoveDb.Reject, rejectListener);
-        const replyListener = (event: any, reply: any) => {
+        const replyListener = (event: Event, reply: any) => {
             /* TODO: */
             // console.log(`RemoveDb-reply = ${reply}`);
             // Remove Listner

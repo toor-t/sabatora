@@ -8,6 +8,7 @@ import * as db from '../db';
 import { wrapThunkAsyncActionWorker } from '../wrapAsyncWorker';
 import { queryDb, updateDb, insertDb, removeDb } from '../db_renderer';
 import immutabilityHelper from 'immutability-helper';
+import { IAppState } from '../store';
 
 // DBDataRowKeys
 export namespace DBDataRowKeys {
@@ -398,6 +399,7 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
  * Query DB Worker
  */
 export const queryDbWorker = wrapThunkAsyncActionWorker<
+    IAppState,
     { query: db.DataDoc; projection: string[] },
     db.DataDoc[],
     string

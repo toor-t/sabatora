@@ -3,7 +3,7 @@
  */
 'use strict';
 import { PrintForm } from './print';
-import { ipcMain } from 'electron';
+import { ipcMain, Event } from 'electron';
 import { win } from './main';
 
 // TODO:
@@ -30,7 +30,7 @@ function sleep(waitMSec: number, callbackFunc: () => void) {
 /**
  * 帳票印刷リクエスト待ち受け
  */
-const printForm_request = ipcMain.on(PrintForm.Request, (event: any, arg: any) => {
+const printForm_request = ipcMain.on(PrintForm.Request, (event: Event, arg: any) => {
     // TODO:
     event.sender.send(PrintForm.Reply, 'Request received.');
     // TODO: 実験：waitしてみる

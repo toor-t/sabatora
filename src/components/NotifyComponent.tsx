@@ -176,7 +176,7 @@ class NotifyComponent extends React.Component<
     render() {
         const { classes } = this.props;
 
-        let Notify = {};
+        let Notify: JSX.Element = <div />;
         switch (this.props.notifyContext.type) {
             case 0: // Snackbar
                 Notify = (

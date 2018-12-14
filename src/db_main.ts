@@ -2,7 +2,7 @@
  * db_main
  */
 'use strict';
-import { app, ipcMain } from 'electron';
+import { app, ipcMain, Event } from 'electron';
 import * as DataStore from 'nedb';
 import { win } from './main';
 
@@ -41,7 +41,7 @@ const conf_db: Nedb = new DataStore({
 /**
  * Query DB Request listener
  */
-const queryDb_request = ipcMain.on(QueryDb.Request, (event: any, arg: any[]) => {
+const queryDb_request = ipcMain.on(QueryDb.Request, (event: Event, arg: any[]) => {
     // TODO:
     const asyncFunc = async () => {
         event.sender.send(QueryDb.Reply, 'Request received.');
@@ -123,7 +123,7 @@ const queryDb = (query: DataDoc, projection: string[] = []): Promise<DataDoc[]> 
 /**
  * Update DB Request listener
  */
-const updateDb_request = ipcMain.on(UpdateDb.Request, (event: any, arg: any) => {
+const updateDb_request = ipcMain.on(UpdateDb.Request, (event: Event, arg: any) => {
     const asyncFunc = async () => {
         event.sender.send(UpdateDb.Reply, 'Request received.');
         try {
@@ -187,7 +187,7 @@ const updateDb = (query: DataDoc, update: DataDoc): Promise<DataDoc[]> => {
 /**
  * Insert DB Request listener
  */
-const insertDb_request = ipcMain.on(InsertDb.Request, (event: any, arg: any) => {
+const insertDb_request = ipcMain.on(InsertDb.Request, (event: Event, arg: any) => {
     const asyncFunc = async () => {
         event.sender.send(InsertDb.Reply, 'Request received.');
         try {
@@ -225,7 +225,7 @@ const insertDb = (doc: DataDoc): Promise<DataDoc> => {
 /**
  * Remove DB Request listener
  */
-const removeDb_request = ipcMain.on(RemoveDb.Request, (event: any, arg: any) => {
+const removeDb_request = ipcMain.on(RemoveDb.Request, (event: Event, arg: any) => {
     const asyncFunc = async () => {
         event.sender.send(RemoveDb.Reply, 'Request received.');
         try {
@@ -265,7 +265,7 @@ const removeDb = (query: DataDoc): Promise<number> => {
  */
 const updateAutoCompleteOptions_request = ipcMain.on(
     UpdateAutoCompleteOptions.Request,
-    (event: any, arg: any) => {
+    (event: Event, arg: any) => {
         const asyncFunc = async () => {
             event.sender.send(UpdateAutoCompleteOptions.Reply, 'Request received.');
             try {

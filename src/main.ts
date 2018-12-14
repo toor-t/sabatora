@@ -2,7 +2,7 @@
  * main
  */
 'use strict';
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Event } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import './db_main';
@@ -69,12 +69,12 @@ const createWindow = async () => {
         win = null;
     });
 
-    win.on('resize', (ev: any) => {
+    win.on('resize', (ev: Event) => {
         if (win) {
             config.set('bounds', win.getBounds());
         }
     });
-    win.on('move', (ev: any) => {
+    win.on('move', (ev: Event) => {
         if (win) {
             config.set('bounds', win.getBounds());
         }

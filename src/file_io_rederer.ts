@@ -2,13 +2,14 @@
  * file_io_renderer
  */
 'use strict';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, Event } from 'electron';
 import { OpenForm, SaveForm } from './file_io';
+import { IFormData } from './states/CreateFormState';
 
 // OpenForm
 export const openForm = (): Promise<Buffer> => {
     return new Promise((resolve, reject) => {
-        const resultListener = (event: any, result: any) => {
+        const resultListener = (event: Event, result: any) => {
             // console.log(`OpenForm-result=${{ ...result }}`);
             resolve(result);
 
@@ -17,7 +18,7 @@ export const openForm = (): Promise<Buffer> => {
             ipcRenderer.removeListener(OpenForm.Reject, rejectListener);
         };
         ipcRenderer.once(OpenForm.Result, resultListener);
-        const rejectListener = (event: any, result: any) => {
+        const rejectListener = (event: Event, result: any) => {
             // console.log(`OpenForm-result=${{ ...result }}`);
             reject(result);
 
@@ -26,7 +27,7 @@ export const openForm = (): Promise<Buffer> => {
             ipcRenderer.removeListener(OpenForm.Result, resultListener);
         };
         ipcRenderer.once(OpenForm.Reject, rejectListener);
-        const replyListener = (event: any, reply: any) => {
+        const replyListener = (event: Event, reply: any) => {
             /* TODO: */
             // console.log(`OpenForm-reply = ${reply}`);
             // Remove Listner
@@ -42,7 +43,7 @@ export const openForm = (): Promise<Buffer> => {
 // SaveForm
 export const saveForm = (): Promise<void> => {
     return new Promise((resolve, reject) => {
-        const resultListener = (event: any, result: any) => {
+        const resultListener = (event: Event, result: any) => {
             // console.log(`SaveForm-result=${{ ...result }}`);
             resolve(result);
 
@@ -51,7 +52,7 @@ export const saveForm = (): Promise<void> => {
             ipcRenderer.removeListener(SaveForm.Reject, rejectListener);
         };
         ipcRenderer.once(SaveForm.Result, resultListener);
-        const rejectListener = (event: any, result: any) => {
+        const rejectListener = (event: Event, result: any) => {
             // console.log(`SaveForm-result=${{ ...result }}`);
             reject(result);
 
@@ -60,7 +61,7 @@ export const saveForm = (): Promise<void> => {
             ipcRenderer.removeListener(SaveForm.Result, resultListener);
         };
         ipcRenderer.once(SaveForm.Reject, rejectListener);
-        const replyListener = (event: any, reply: any) => {
+        const replyListener = (event: Event, reply: any) => {
             /* TODO: */
             // console.log(`SaveForm-reply = ${reply}`);
             // Remove Listner
@@ -73,6 +74,6 @@ export const saveForm = (): Promise<void> => {
         // ipcRenderer.send(SaveForm.Request, []);
     });
 };
-export const saveForm_sendFormData = (formData: any) => {
+export const saveForm_sendFormData = (formData: IFormData) => {
     ipcRenderer.send(SaveForm.Request, [formData]);
 };

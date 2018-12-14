@@ -2,10 +2,11 @@
  * file_io_main
  */
 'use strict';
-import { dialog, ipcMain } from 'electron';
+import { dialog, ipcMain, Event } from 'electron';
 import { win } from './main';
 import { OpenForm, SaveForm } from './file_io';
 import * as fs from 'fs';
+import { IFormData } from './states/CreateFormState';
 
 // setIntervalを使う方法
 function sleep(waitMSec: number, callbackFunc: () => void) {
@@ -30,7 +31,7 @@ function sleep(waitMSec: number, callbackFunc: () => void) {
 /**
  * 帳票読込リクエスト待ち受け
  */
-const openForm_request = ipcMain.on(OpenForm.Request, (event: any, arg: any) => {
+const openForm_request = ipcMain.on(OpenForm.Request, (event: Event, arg: any) => {
     // TODO:
     event.sender.send(OpenForm.Reply, 'Request received.');
     // TODO: 実験：waitしてみる
@@ -100,7 +101,7 @@ const openForm = (): Promise<{}> => {
 /**
  * 帳票保存リクエスト待ち受け
  */
-const saveForm_request = ipcMain.on(SaveForm.Request, (event: any, arg: any) => {
+const saveForm_request = ipcMain.on(SaveForm.Request, (event: Event, arg: any) => {
     event.sender.send(SaveForm.Reply, 'Request received.');
     // TODO: 実験：waitしてみる
     sleep(200, () => {
@@ -122,7 +123,7 @@ const saveForm_request = ipcMain.on(SaveForm.Request, (event: any, arg: any) => 
  * 帳票保存
  * @param formData
  */
-const saveForm = (formData: any): Promise<{}> => {
+const saveForm = (formData: IFormData): Promise<{}> => {
     return new Promise((resolve, reject) => {
         if (win) {
             // ファイル保存ダイアログを表示する

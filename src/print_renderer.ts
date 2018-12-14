@@ -3,13 +3,13 @@
  */
 'use strict';
 import { PrintForm } from './print';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, Event } from 'electron';
 
 // TODO:
 // PrintForm
 export const printForm = (): Promise<void> => {
     return new Promise((resolve, reject) => {
-        const resultListener = (event: any, result: any) => {
+        const resultListener = (event: Event, result: any) => {
             // console.log(`PrintForm-result=${{ ...result }}`);
             resolve(result);
 
@@ -18,7 +18,7 @@ export const printForm = (): Promise<void> => {
             ipcRenderer.removeListener(PrintForm.Reject, rejectListener);
         };
         ipcRenderer.once(PrintForm.Result, resultListener);
-        const rejectListener = (event: any, result: any) => {
+        const rejectListener = (event: Event, result: any) => {
             // console.log(`PrintForm-result=${{ ...result }}`);
             reject(result);
 
@@ -27,7 +27,7 @@ export const printForm = (): Promise<void> => {
             ipcRenderer.removeListener(PrintForm.Result, resultListener);
         };
         ipcRenderer.once(PrintForm.Reject, rejectListener);
-        const replyListener = (event: any, reply: any) => {
+        const replyListener = (event: Event, reply: any) => {
             /* TODO: */
             // console.log(`PrintForm-reply = ${reply}`);
             // // TODO: 実験 リプライ時に李ソルブ扱いにしてみる。キャンセル時処理のため。->ダメでした。

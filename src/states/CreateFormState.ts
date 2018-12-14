@@ -90,14 +90,20 @@ export interface SubtotalPriceRow {
 export type FormDataRow = NormalDataRow | SubtotalPriceRow | TotalPriceRow;
 
 /**
+ * IFormData
+ */
+export interface IFormData {
+    dataRows: FormDataRow[];
+    title: string;
+    totalPrice: number;
+}
+
+/**
  * ICreateFormState
  */
 export interface ICreateFormState {
-    formData: {
-        dataRows: FormDataRow[];
-        title: string;
-        totalPrice: number;
-    };
+    formData: IFormData;
+
     formDataEditted: boolean; // 帳票データが編集済みか？
     edittingTitle: boolean;
 
@@ -154,10 +160,10 @@ const initialState: ICreateFormState = {
 
 /**
  * 合計・小計計算
- * @param  {any[]} rows
+ * @param  {FormDataRow[]} rows
  * @returns number
  */
-function calcTotalPrice(rows: any[]): number {
+function calcTotalPrice(rows: FormDataRow[]): number {
     let sumPrice: number = 0;
     let subSumPrice: number = 0;
     let id: number = 1;
@@ -166,8 +172,8 @@ function calcTotalPrice(rows: any[]): number {
             rows[i][NormalDataRowKeys.price] !== undefined
             // && !rows[i][NormalDataRowKeys.price_isEmpty]
         ) {
-            sumPrice += rows[i][NormalDataRowKeys.price];
-            subSumPrice += rows[i][NormalDataRowKeys.price];
+            sumPrice += rows[i][NormalDataRowKeys.price] as number;
+            subSumPrice += rows[i][NormalDataRowKeys.price] as number;
             // TODO: No.を更新する処理
             rows[i][NormalDataRowKeys.id] = id;
             id += 1;
@@ -352,8 +358,6 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
             if ((dataRows[i] as any)[NormalDataRowKeys.price] !== undefined) {
                 const rowToUpdate: NormalDataRow = dataRows[i] as NormalDataRow;
                 // TODO: 価格を計算
-                // console.log(`unitPrice=${e.updated[FormDataRowKeys.unitPrice]}`);
-                // console.log(`num=${e.updated[FormDataRowKeys.num]}`);
                 if (e.updated[NormalDataRowKeys.unitPrice]) {
                     e.updated[NormalDataRowKeys.unitPrice] = String(
                         e.updated[NormalDataRowKeys.unitPrice]
@@ -373,13 +377,11 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
                     : e.updated[NormalDataRowKeys.unitPrice] === ''
                     ? 0
                     : e.updated[NormalDataRowKeys.unitPrice];
-                // console.log(e.updated[NormalDataRowKeys.unitPrice]);
                 const _num = !e.updated[NormalDataRowKeys.num]
                     ? rowToUpdate[NormalDataRowKeys.num]
                     : e.updated[NormalDataRowKeys.num] === ''
                     ? 0
                     : e.updated[NormalDataRowKeys.num];
-                // console.log(e.updated[NormalDataRowKeys.num]);
 
                 e.updated[NormalDataRowKeys.price] = Number(_unitPrice) * Number(_num);
                 // e.updated[NormalDataRowKeys.price_isEmpty] = false;
@@ -696,6 +698,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
  * 非同期でautoCompleteOptionsを更新する
  */
 export const updateAutoCompleteOptionsWorker = wrapThunkAsyncActionWorker<
+    IAppState,
     { rowData: NormalDataRow; columnDDKey?: string },
     {},
     {}
@@ -726,7 +729,7 @@ export const updateAutoCompleteOptionsWorker = wrapThunkAsyncActionWorker<
 /**
  * TODO: 非同期帳票読込
  */
-export const openFormWorker = wrapThunkAsyncActionParamVoidWorker<Buffer, string>(
+export const openFormWorker = wrapThunkAsyncActionParamVoidWorker<IAppState, Buffer, string>(
     CreateFormActions.openForm,
     openForm
 );
@@ -734,7 +737,7 @@ export const openFormWorker = wrapThunkAsyncActionParamVoidWorker<Buffer, string
 /**
  * TODO: 非同期帳票保存
  */
-export const saveFormWorker = wrapThunkAsyncActionParamVoidWorker<void, string>(
+export const saveFormWorker = wrapThunkAsyncActionParamVoidWorker<IAppState, void, string>(
     CreateFormActions.saveForm,
     saveForm
 );
