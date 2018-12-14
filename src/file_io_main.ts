@@ -54,7 +54,7 @@ const openForm_request = ipcMain.on(OpenForm.Request, (event: Event, arg: any) =
 /**
  * 帳票読込
  */
-const openForm = (): Promise<{}> => {
+const openForm = (): Promise<Buffer> => {
     return new Promise((resolve, reject) => {
         if (win) {
             // ファイル読込ダイアログを表示する
@@ -72,7 +72,7 @@ const openForm = (): Promise<{}> => {
                     if (filename && filename[0]) {
                         // console.log(filename[0]);
                         // ファイルオープン
-                        const data = fs.readFile(filename[0], (err, data) => {
+                        fs.readFile(filename[0], (err, data) => {
                             if (err) {
                                 // エラー
                                 // TODO:
@@ -123,7 +123,7 @@ const saveForm_request = ipcMain.on(SaveForm.Request, (event: Event, arg: any) =
  * 帳票保存
  * @param formData
  */
-const saveForm = (formData: IFormData): Promise<{}> => {
+const saveForm = (formData: IFormData): Promise<void> => {
     return new Promise((resolve, reject) => {
         if (win) {
             // ファイル保存ダイアログを表示する
@@ -153,7 +153,7 @@ const saveForm = (formData: IFormData): Promise<{}> => {
                                 reject(err);
                             } else {
                                 // TODO:
-                                resolve({});
+                                resolve();
                             }
                         });
                     } else {
