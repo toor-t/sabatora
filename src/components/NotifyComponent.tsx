@@ -124,7 +124,7 @@ export interface INotifyComponentStateProps {
     notifyContext: NotifyContext;
 }
 export interface INotifyComponentDispatchProps {
-    dispatch?: any /*ThunkDispatch<IAppState, undefined, Action<void>> */; // TODO: ここの any を止める手段を検討すること！
+    dispatch?: ThunkDispatch<IAppState, undefined, Action<void>>;
 }
 interface INotifyComponentStates {}
 class NotifyComponent extends React.Component<
@@ -132,25 +132,25 @@ class NotifyComponent extends React.Component<
     INotifyComponentStates,
     any
 > {
-    handleCloseButtonClick = (event: any) => {
+    handleCloseButtonClick = (event: React.MouseEvent<HTMLElement>) => {
         // TODO:
         this.props.notifyContext.onCloseButtonClick &&
             this.props.dispatch &&
-            this.props.dispatch(this.props.notifyContext.onCloseButtonClick());
+            this.props.dispatch(this.props.notifyContext.onCloseButtonClick() as any); // TODO: この as any を止める方法は無いものか
     };
 
-    handleCancelButtonClick = (event: any) => {
+    handleCancelButtonClick = (event: React.MouseEvent<HTMLElement>) => {
         // TODO:
         this.props.notifyContext.onCancelButtonClick &&
             this.props.dispatch &&
-            this.props.dispatch(this.props.notifyContext.onCancelButtonClick());
+            this.props.dispatch(this.props.notifyContext.onCancelButtonClick() as any); // TODO: この as any を止める方法は無いものか
     };
 
-    handleOKButtonClick = (event: any) => {
+    handleOKButtonClick = (event: React.MouseEvent<HTMLElement>) => {
         // TODO:
         this.props.notifyContext.onOKButtonClick &&
             this.props.dispatch &&
-            this.props.dispatch(this.props.notifyContext.onOKButtonClick());
+            this.props.dispatch(this.props.notifyContext.onOKButtonClick() as any); // TODO: この as any を止める方法は無いものか
     };
 
     handleSnackbarClose = (event: React.SyntheticEvent, reason: string) => {
@@ -160,13 +160,13 @@ class NotifyComponent extends React.Component<
         // TODO:
         this.props.notifyContext.onNotificationClose &&
             this.props.dispatch &&
-            this.props.dispatch(this.props.notifyContext.onNotificationClose());
+            this.props.dispatch(this.props.notifyContext.onNotificationClose() as any); // TODO: この as any を止める方法は無いものか
     };
 
     handleDialogClose = () => {
         this.props.notifyContext.onNotificationClose &&
             this.props.dispatch &&
-            this.props.dispatch(this.props.notifyContext.onNotificationClose());
+            this.props.dispatch(this.props.notifyContext.onNotificationClose() as any); // TODO: この as any を止める方法は無いものか
     };
 
     dialogTransition = (props: {}) => {

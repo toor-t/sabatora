@@ -17,7 +17,6 @@ import CreateIcon from '@material-ui/icons/Create';
 import {
     FormDataRow,
     TotalPriceRowKeys,
-    TotalPriceRow,
     SubtotalPriceRowKeys,
     NormalDataRowKeys
 } from '../states/CreateFormState';
@@ -63,7 +62,7 @@ const styles = (theme: Theme) =>
 
 export interface IPrintFormComponentStateProps {
     title: string;
-    rows: any[];
+    rows: FormDataRow[];
 }
 
 export interface IPrintFormComponentDispatchProps {}

@@ -10,9 +10,7 @@ const { AutoComplete: AutoCompleteEditor, SimpleTextEditor } = Editors;
 import {
     NormalDataRow,
     NormalDataRowKeys,
-    TotalPriceRow,
     TotalPriceRowKeys,
-    SubtotalPriceRow,
     SubtotalPriceRowKeys,
     FormDataRow
 } from '../states/CreateFormState';
@@ -375,7 +373,7 @@ const styles = (theme: Theme) =>
     });
 
 export interface ICreateFormDataGridComponentStateProps {
-    rows: {}[];
+    rows: FormDataRow[];
     autoCompleteOptions: {};
     selectedRowsCount: number;
     firstSelectedRowIdx: number;

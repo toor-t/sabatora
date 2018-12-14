@@ -14,9 +14,14 @@ import {
 } from '../components/NotifyComponent';
 
 import { IAppState } from '../store';
-import { updateAutoCompleteOptionsWorker, FormDataRow } from '../states/CreateFormState';
+import {
+    updateAutoCompleteOptionsWorker,
+    FormDataRow,
+    NormalDataRow
+} from '../states/CreateFormState';
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
+import * as ReactDataGrid from 'react-data-grid';
 
 /**
  * mapStateToProps
@@ -37,7 +42,6 @@ function mapStateToProps(
         formDataEditted: appState.createFormState.formDataEditted,
         // TODO:
         printing: appState.createFormState.printing
-        // printing: true,
     };
 }
 /**
@@ -51,9 +55,12 @@ function mapDispatchToProps(
     return {
         dispatch, // NotifyComponent に dispatchを渡す必要があるため。
 
-        onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col)),
-        onGridRowUpdate: (e: any) => dispatch(CreateFormActions.updateGridRow(e)),
-        updateAutoCompleteOptions: (c: any) => dispatch(updateAutoCompleteOptionsWorker(c)),
+        onSelectedCell: (col: { rowIdx: number; idx: number }) =>
+            dispatch(CreateFormActions.selectCell(col)),
+        onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) =>
+            dispatch(CreateFormActions.updateGridRow(e)),
+        updateAutoCompleteOptions: (c: { rowData: NormalDataRow; columnDDKey?: string }) =>
+            dispatch(updateAutoCompleteOptionsWorker(c)),
         addRow: () => dispatch(CreateFormActions.addRow()),
         deleteRows: () => dispatch(CreateFormActions.deleteRows()),
         selectRows: (rows: { rowIdx: number; row: FormDataRow }[]) =>
@@ -65,47 +72,6 @@ function mapDispatchToProps(
         endEdittingTitle: (title: string) => dispatch(CreateFormActions.endEdittingTitle(title))
     };
 }
-// /**
-//  * mergeProps
-//  * @param stateProps
-//  * @param dispatchProps
-//  * @param ownProps
-//  */
-// function mergeProps(
-// 	stateProps: ICreateFormComponentStateProps & INotifyComponentStateProps,
-// 	dispatchProps: any,
-// 	ownProps: any
-// ): ICreateFormComponentStateProps &
-// 	INotifyComponentStateProps &
-// 	ICreateFormComponentDispatchProps &
-// 	INotifyComponentDispatchProps {
-// 	const { dispatch } = dispatchProps;
-
-// 	return {
-// 		// TODO:
-// 		dispatch,
-
-// 		// State Props
-// 		...stateProps,
-
-// 		// Dispatch Props
-// 		onSelectedCell: (col: any) => dispatch(CreateFormActions.selectCell(col)),
-// 		onGridRowUpdate: (e: any) => dispatch(CreateFormActions.updateGridRow(e)),
-// 		updateAutoCompleteOptions: (c: any) => dispatch(updateAutoCompleteOptionsWorker(c)),
-// 		addRow: () => dispatch(CreateFormActions.addRow()),
-// 		deleteRows: () => dispatch(CreateFormActions.deleteRows()),
-// 		selectRows: (rows: { rowIdx: number; row: FormDataRow }[]) =>
-// 			dispatch(CreateFormActions.selectRows(rows)),
-// 		deselectRows: (rows: { rowIdx: number; row: FormDataRow }[]) =>
-// 			dispatch(CreateFormActions.deselectRows(rows)),
-// 		addSubtotalRow: () => dispatch(CreateFormActions.addSubtotalRow()),
-// 		startEdittingTitle: () => dispatch(CreateFormActions.startEdittingTitle()),
-// 		endEdittingTitle: (title: string) => dispatch(CreateFormActions.endEdittingTitle(title)),
-
-// 		// Own Props
-// 		...ownProps
-// 	};
-// }
 /**
  * connect
  */

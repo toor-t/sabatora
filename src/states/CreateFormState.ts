@@ -696,13 +696,13 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
  * 非同期でautoCompleteOptionsを更新する
  */
 export const updateAutoCompleteOptionsWorker = wrapThunkAsyncActionWorker<
-    { rowData: NormalDataRow; columnDDKey: string },
+    { rowData: NormalDataRow; columnDDKey?: string },
     {},
     {}
 >(
     CreateFormActions.updateAutoCompleteOptions,
     ({ rowData, columnDDKey }): Promise<{}> => {
-        const _rowData: DataDoc = Object.assign(
+        let _rowData: DataDoc = Object.assign(
             {},
             {
                 [DataDocKeys.level_1]: rowData[NormalDataRowKeys.level_1],
@@ -712,11 +712,13 @@ export const updateAutoCompleteOptionsWorker = wrapThunkAsyncActionWorker<
                 [DataDocKeys.unitPrice]: [
                     0 // TODO: unitPrice はクエリに使われないのでダミー
                 ]
-            },
-            {
-                [columnDDKey]: undefined
             }
         );
+        if (columnDDKey) {
+            _rowData = Object.assign(_rowData, {
+                [columnDDKey]: undefined
+            });
+        }
         return updateAutoCompleteOptions(_rowData);
     }
 );

@@ -4,8 +4,7 @@
  */
 'use strict';
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
-import { Action } from 'typescript-fsa';
+import { Action } from 'redux';
 // TODO:
 import { ManageDataActions } from '../actions/ManageDataAction';
 import ManageDataComponent, {
@@ -13,9 +12,10 @@ import ManageDataComponent, {
     IManageDataComponentDispatchProps
 } from '../components/ManageDataComponent';
 import { IAppState } from '../store';
-import { queryDbWorker } from '../states/ManageDataState';
+import { queryDbWorker, DBDataRow } from '../states/ManageDataState';
 import { DataDoc } from '../db';
 import { ThunkDispatch } from 'redux-thunk';
+import * as ReactDataGrid from 'react-data-grid';
 
 /**
  * mapStateToProps
@@ -33,16 +33,27 @@ function mapStateToProps(appState: IAppState): IManageDataComponentStateProps {
  * @param dispatch
  */
 function mapDispatchToProps(
-    dispatch: ThunkDispatch<IAppState, undefined, Action<any>>
+    dispatch: ThunkDispatch<IAppState, undefined, Action>
 ): IManageDataComponentDispatchProps {
     // TODO:
     return {
         queryDb: () => dispatch(queryDbWorker({ query: <DataDoc>{}, projection: [] })),
-        onGridRowUpdate: (e: any) => dispatch(ManageDataActions.updateGridRow(e)),
+        onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) =>
+            dispatch(ManageDataActions.updateGridRow(e)),
         addRow: () => dispatch(ManageDataActions.addRow()),
         deleteRows: () => dispatch(ManageDataActions.deleteRows()),
-        selectRows: (rows: any) => dispatch(ManageDataActions.selectRows(rows)),
-        deselectRows: (rows: any) => dispatch(ManageDataActions.deselectRows(rows))
+        selectRows: (
+            rows: {
+                rowIdx: number;
+                row: DBDataRow;
+            }[]
+        ) => dispatch(ManageDataActions.selectRows(rows)),
+        deselectRows: (
+            rows: {
+                rowIdx: number;
+                row: DBDataRow;
+            }[]
+        ) => dispatch(ManageDataActions.deselectRows(rows))
     };
 }
 /**

@@ -5,7 +5,6 @@
 'use strict';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { Action } from 'typescript-fsa';
 // TODO:
 import { ConfigActions } from '../actions/ConfigAction';
 import ConfigComponent, { IConfigComponentProps } from '../components/ConfigComponent';
@@ -17,16 +16,18 @@ import { IAppState } from '../store';
  */
 function mapStateToProps(appState: IAppState): IConfigComponentProps {
     // TODO:
-    return { checked: appState.configState.checked };
+    return {
+        // checked: appState.configState.checked
+    };
 }
 /**
  * mapDispatchToProps
  * @param dispatch
  */
-function mapDispatchToProps(dispatch: Dispatch<Action<any>>): IConfigComponentProps {
+function mapDispatchToProps(dispatch: Dispatch): IConfigComponentProps {
     // TODO:
     return {
-        onChange: (e: any) => dispatch(ConfigActions.updateValue(e.target.checked))
+        // onChange: (e: any) => dispatch(ConfigActions.updateValue(e.target.checked))
     };
 }
 /**

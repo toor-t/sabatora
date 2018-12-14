@@ -55,7 +55,7 @@ export const CreateFormActions = {
      * オートコンプリート候補更新
      */
     updateAutoCompleteOptions: actionCreator.async<
-        { rowData: NormalDataRow; columnDDKey: string },
+        { rowData: NormalDataRow; columnDDKey?: string },
         {}
     >('UPDATE_AUTO_COMPLETE_OPTIONS'),
 
