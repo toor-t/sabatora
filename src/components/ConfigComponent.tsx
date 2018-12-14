@@ -6,12 +6,17 @@ import * as React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Title } from '../strings';
 
-export interface IConfigComponentProps {
+export interface IConfigComponentStateProps {
     // TODO:
     // checked?: boolean;
+}
+export interface IConfigComponentDispatchProps {
+    // TODO:
     // onChange?: (e: any) => any;
 }
-const ConfigComponent: React.SFC<IConfigComponentProps> = props => {
+const ConfigComponent: React.SFC<
+    IConfigComponentStateProps & IConfigComponentDispatchProps
+> = props => {
     // TODO:
     return (
         <div>

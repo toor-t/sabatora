@@ -73,12 +73,14 @@ export interface IManageDataComponentDispatchProps
 const ManageDataComponent: React.SFC<
     IManageDataComponentStateProps &
         IManageDataComponentDispatchProps &
-        WithStyles<typeof styles> &
+        WithStyles<
+            typeof styles
+        > /*&
         INotifyComponentStateProps &
-        INotifyComponentDispatchProps
+        INotifyComponentDispatchProps*/
 > = props => {
     // TODO:
-    const { classes, notifyContext, ...rest } = props;
+    const { classes, /*notifyContext,*/ ...rest } = props;
 
     return (
         <div className={classes.root}>

@@ -22,21 +22,33 @@ import * as classNames from 'classnames';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Str, BtnLabel } from '../strings';
 
-// autoCompleteOptions
-let autoCompleteOptions: any;
-autoCompleteOptions = {};
+/**
+ * autoCompleteOptions
+ */
+let autoCompleteOptions: any = {};
 
+/**
+ * getOptions
+ */
 const getOptions = (ddKey: string): { (): { id: number; title: string }[] } => {
     return () => {
         return autoCompleteOptions[ddKey];
     };
 };
 
-// CustomAutoCompleteEditor
+/**
+ * ICustomAutoCompleteEditorProps
+ */
 interface ICustomAutoCompleteEditorProps {
     getOptions: () => { id: number; title: string };
 }
+/**
+ * ICustomAutoCompleteEditorStates
+ */
 interface ICustomAutoCompleteEditorStates {}
+/**
+ * CustomAutoCompleteEditor
+ */
 class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
     ICustomAutoCompleteEditorProps & any,
     ICustomAutoCompleteEditorStates
@@ -195,6 +207,9 @@ interface ICustomRowRendererProps {
 interface ICustomRowRendererStates {
     grid: CreateFormDataGridComponent;
 }
+/**
+ * CustomRowRenderer
+ */
 class CustomRowRenderer extends React.Component<ICustomRowRendererProps, ICustomRowRendererStates> {
     constructor(props: ICustomRowRendererProps) {
         super(props);
@@ -372,12 +387,18 @@ const styles = (theme: Theme) =>
         }
     });
 
+/**
+ * ICreateFormDataGridComponentStateProps
+ */
 export interface ICreateFormDataGridComponentStateProps {
     rows: FormDataRow[];
     autoCompleteOptions: {};
     selectedRowsCount: number;
     firstSelectedRowIdx: number;
 }
+/**
+ * ICreateFormDataGridComponentDispatchProps
+ */
 export interface ICreateFormDataGridComponentDispatchProps {
     onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) => void;
     onSelectedCell: (col: { rowIdx: number; idx: number }) => void;
@@ -388,9 +409,15 @@ export interface ICreateFormDataGridComponentDispatchProps {
     deselectRows: (rows: { rowIdx: number; row: FormDataRow }[]) => void;
     addSubtotalRow: () => void;
 }
+/**
+ * ICreateFormDataGridComponentStates
+ */
 interface ICreateFormDataGridComponentStates {
     columns: (ReactDataGrid.Column<NormalDataRow> & { ddKey?: string })[];
 }
+/**
+ * CreateFormDataGridComponent
+ */
 class CreateFormDataGridComponent extends React.Component<
     ICreateFormDataGridComponentStateProps &
         ICreateFormDataGridComponentDispatchProps &

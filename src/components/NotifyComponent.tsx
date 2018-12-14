@@ -34,6 +34,9 @@ type ThunkActionType = (() => (
 ) => void);
 type ThunkDispatchActionType = ThunkActionType | ActionCreator<void> | undefined;
 
+/**
+ * NotifyContext
+ */
 export class NotifyContext {
     public readonly message: string;
     public readonly type: number;
@@ -120,17 +123,28 @@ export class NotifyContext {
     };
 }
 
+/**
+ * INotifyComponentStateProps
+ */
 export interface INotifyComponentStateProps {
     notifyContext: NotifyContext;
 }
+/**
+ * INotifyComponentDispatchProps
+ */
 export interface INotifyComponentDispatchProps {
     dispatch?: ThunkDispatch<IAppState, undefined, Action<void>>;
 }
+/**
+ * INotifyComponentStates
+ */
 interface INotifyComponentStates {}
+/**
+ * NotifyComponent
+ */
 class NotifyComponent extends React.Component<
     INotifyComponentStateProps & INotifyComponentDispatchProps & WithStyles<typeof styles>,
-    INotifyComponentStates,
-    any
+    INotifyComponentStates
 > {
     handleCloseButtonClick = (event: React.MouseEvent<HTMLElement>) => {
         // TODO:

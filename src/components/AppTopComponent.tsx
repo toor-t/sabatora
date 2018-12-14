@@ -249,7 +249,7 @@ class AppTopComponent extends React.Component<
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
 
-        let Content: any = {}; // TODO: any は止める
+        let Content: JSX.Element = <div />;
         let AppBarTitle: JSX.Element | string = '';
         let MoreVartMenuContent: JSX.Element | null = null;
 
@@ -329,7 +329,7 @@ class AppTopComponent extends React.Component<
         switch (selectedIndex) {
             case AppTopSelected.CreateForm:
                 // 帳票作成
-                Content = CreateFormContainer;
+                Content = <CreateFormContainer />;
                 AppBarTitle = AppTopSelected.CreateFormTitle;
                 MoreVartMenuContent = (
                     <div style={{ outline: 0 }}>
@@ -355,7 +355,7 @@ class AppTopComponent extends React.Component<
                 break;
             case AppTopSelected.ManageData:
                 // TODO: データ管理
-                Content = ManageDataContainer;
+                Content = <ManageDataContainer />;
                 AppBarTitle = AppTopSelected.ManageDataTitle;
                 // MoreVartMenuContent = (
                 // 	<div style={{ outline: 0 }}>
@@ -365,7 +365,7 @@ class AppTopComponent extends React.Component<
                 break;
             case AppTopSelected.Config:
                 // TODO: 設定
-                Content = ConfigContainer;
+                Content = <ConfigContainer />;
                 AppBarTitle = AppTopSelected.ConfigTitle;
                 // MoreVartMenuContent = (
                 // 	<div style={{ outline: 0 }}>
@@ -375,7 +375,7 @@ class AppTopComponent extends React.Component<
                 break;
             case AppTopSelected.About:
                 // TODO: About
-                Content = AboutContainer;
+                Content = <AboutContainer />;
                 AppBarTitle = AppTopSelected.AboutTitle;
                 MoreVartMenuContent = null;
                 break;
@@ -476,7 +476,7 @@ class AppTopComponent extends React.Component<
                     <div className={classes.toolbar} id="app-top-component-toolbar" />
 
                     {/* コンテンツ */}
-                    <Content />
+                    {Content}
                 </main>
             </div>
         );

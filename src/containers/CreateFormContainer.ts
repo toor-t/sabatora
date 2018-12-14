@@ -22,6 +22,10 @@ import {
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
 import * as ReactDataGrid from 'react-data-grid';
+import {
+    ICreateFormDataGridComponentStateProps,
+    ICreateFormDataGridComponentDispatchProps
+} from '../components/CreateFormDataGridComponent';
 
 /**
  * mapStateToProps
@@ -75,7 +79,12 @@ function mapDispatchToProps(
 /**
  * connect
  */
-export default connect(
+export default connect<
+    ICreateFormComponentStateProps & ICreateFormDataGridComponentStateProps,
+    ICreateFormComponentDispatchProps & ICreateFormDataGridComponentDispatchProps,
+    {},
+    IAppState
+>(
     mapStateToProps,
     mapDispatchToProps
 )(CreateFormComponent);

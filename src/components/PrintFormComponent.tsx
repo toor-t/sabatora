@@ -60,13 +60,17 @@ const styles = (theme: Theme) =>
         }
     });
 
+/**
+ * IPrintFormComponentStateProps
+ */
 export interface IPrintFormComponentStateProps {
     title: string;
     rows: FormDataRow[];
 }
-
+/**
+ *  IPrintFormComponentDispatchProps
+ */
 export interface IPrintFormComponentDispatchProps {}
-
 /**
  * 帳票印刷コンポーネント
  * @abstract 帳票印刷コンポーネント

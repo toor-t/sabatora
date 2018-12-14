@@ -7,14 +7,17 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 // TODO:
 import { ConfigActions } from '../actions/ConfigAction';
-import ConfigComponent, { IConfigComponentProps } from '../components/ConfigComponent';
+import ConfigComponent, {
+    IConfigComponentStateProps,
+    IConfigComponentDispatchProps
+} from '../components/ConfigComponent';
 import { IAppState } from '../store';
 
 /**
  * mapStateToProps
  * @param appState
  */
-function mapStateToProps(appState: IAppState): IConfigComponentProps {
+function mapStateToProps(appState: IAppState): IConfigComponentStateProps {
     // TODO:
     return {
         // checked: appState.configState.checked
@@ -24,7 +27,7 @@ function mapStateToProps(appState: IAppState): IConfigComponentProps {
  * mapDispatchToProps
  * @param dispatch
  */
-function mapDispatchToProps(dispatch: Dispatch): IConfigComponentProps {
+function mapDispatchToProps(dispatch: Dispatch): IConfigComponentDispatchProps {
     // TODO:
     return {
         // onChange: (e: any) => dispatch(ConfigActions.updateValue(e.target.checked))
@@ -33,7 +36,7 @@ function mapDispatchToProps(dispatch: Dispatch): IConfigComponentProps {
 /**
  * connect
  */
-export default connect(
+export default connect<IConfigComponentStateProps, IConfigComponentDispatchProps, {}, IAppState>(
     mapStateToProps,
     mapDispatchToProps
 )(ConfigComponent);

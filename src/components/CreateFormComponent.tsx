@@ -16,7 +16,8 @@ import CreateFormDataGridComponent, {
 } from './CreateFormDataGridComponent';
 import NotifyComponent, {
     INotifyComponentStateProps,
-    INotifyComponentDispatchProps
+    INotifyComponentDispatchProps,
+    NotifyContext
 } from './NotifyComponent';
 import PrintFormComponent from './PrintFormComponent';
 
@@ -61,6 +62,7 @@ export interface ICreateFormComponentStateProps extends ICreateFormDataGridCompo
     formDataEditted: boolean;
     // TODO: 印刷処理
     printing: boolean;
+    notifyContext: NotifyContext;
 }
 
 export interface ICreateFormComponentDispatchProps
