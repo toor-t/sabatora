@@ -2,7 +2,7 @@
  * store
  */
 'use strict';
-import { combineReducers, createStore, applyMiddleware } from 'redux';
+import { combineReducers, createStore, applyMiddleware, AnyAction } from 'redux';
 import reduxThunk from 'redux-thunk';
 import { IAppTopState, AppTopStateReducer } from './states/AppTopState';
 import { ICreateFormState, CreateFormStateReducer } from './states/CreateFormState';
@@ -24,7 +24,7 @@ export interface IAppState {
 /**
  * store
  */
-const store = createStore(
+const store = createStore<IAppState, AnyAction, {}, {}>(
     combineReducers<IAppState>({
         appTopState: AppTopStateReducer,
         createFormState: CreateFormStateReducer,
