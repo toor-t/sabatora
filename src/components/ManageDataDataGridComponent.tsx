@@ -206,6 +206,10 @@ class ManageDataDataGridComponent extends React.Component<
     // ReactDataGridへの参照
     grid: ReactDataGrid<DBDataRow> | null = null;
 
+    componentWillMount = () => {
+        // データロード
+        this.props.queryDb();
+    };
     rowGetter = (i: number) => {
         if (this.props.rows === null) {
             // 通常呼ばれないはずだが念のため
@@ -215,8 +219,6 @@ class ManageDataDataGridComponent extends React.Component<
     };
     rowCount = () => {
         if (this.props.rows === null) {
-            // データロード
-            this.props.queryDb();
             return 0;
         }
         return this.props.rows.length;
