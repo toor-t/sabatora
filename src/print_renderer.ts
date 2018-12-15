@@ -27,7 +27,7 @@ export const printForm = (): Promise<void> => {
         ipcRenderer.once(PrintForm.Reject, rejectListener);
         const replyListener = (event: Event, reply: any) => {
             /* TODO: */
-            // // TODO: 実験 リプライ時に李ソルブ扱いにしてみる。キャンセル時処理のため。->ダメでした。
+            // // TODO: 実験 リプライ時にresolve扱いにしてみる。キャンセル時処理のため。->ダメでした。
             // resolve(reply);
 
             // Remove Listner
