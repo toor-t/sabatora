@@ -9,11 +9,12 @@ import { wrapThunkAsyncActionWorker } from '../wrapAsyncWorker';
 import { queryDb, updateDb, insertDb, removeDb } from '../db_renderer';
 import immutabilityHelper from 'immutability-helper';
 import { IAppState } from '../store';
+import { Str } from '../strings';
 
 // DBDataRowKeys
 export namespace DBDataRowKeys {
     // TODO:
-    // export const id = 'id'; // : number;
+    export const _id = '_id';
 
     export const level_1 = db.DataDocKeys.level_1;
     export const level_2 = db.DataDocKeys.level_2;
@@ -27,7 +28,8 @@ export namespace DBDataRowKeys {
 }
 
 export interface DBDataRow {
-    // [DBDataRowKeys.id]: number;
+    [DBDataRowKeys._id]?: string;
+
     [DBDataRowKeys.level_1]: string;
     [DBDataRowKeys.level_2]: string;
     [DBDataRowKeys.level_3]: string;
@@ -139,11 +141,10 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
         }
         // TODO:　先頭に追加する
         const insertRow: DBDataRow = {
-            // [DBDataRowKeys.id]: state.dbDataRows.length, // TODO: 何を割り当てるべきか？
-            [DBDataRowKeys.level_1]: '大項目未入力',
-            [DBDataRowKeys.level_2]: '中項目未入力',
-            [DBDataRowKeys.level_3]: '小項目未入力',
-            [DBDataRowKeys.itemName]: '名称未入力',
+            [DBDataRowKeys.level_1]: Str.Level_1_NewItem,
+            [DBDataRowKeys.level_2]: Str.Level_2_NewItem,
+            [DBDataRowKeys.level_3]: Str.Level_3_NewItem,
+            [DBDataRowKeys.itemName]: Str.ItemName_NewItem,
             [DBDataRowKeys.unitPrice_1]: 0,
             [DBDataRowKeys.unitPrice_2]: 0,
             [DBDataRowKeys.unitPrice_3]: 0,

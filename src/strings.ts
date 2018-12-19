@@ -18,6 +18,11 @@ export namespace Str {
     export const SubtotalPrice = '小計';
     export const TotalPrice = '合計';
     export const InitialFormTitle = '新規帳票';
+
+    export const Level_1_NewItem = '==新規大項目==';
+    export const Level_2_NewItem = '==新規中項目==';
+    export const Level_3_NewItem = '==新規小項目==';
+    export const ItemName_NewItem = '==新規名称==';
 }
 
 export namespace Title {
