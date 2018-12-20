@@ -88,19 +88,25 @@ const PrintFormComponent: React.SFC<
 
     const tableHeadContents: JSX.Element = (
         <TableRow>
+            // No
             <TableCell padding="dense" numeric={true} style={{ width: 64 }}>
                 {Str.No}
             </TableCell>
+            // Level
             <TableCell padding="dense">{Str.Level_1}</TableCell>
             <TableCell padding="dense">{Str.Level_2}</TableCell>
             <TableCell padding="dense">{Str.Level_3}</TableCell>
+            // ItemName
             <TableCell padding="dense">{Str.ItemName}</TableCell>
+            // UnitPrice
             <TableCell padding="dense" numeric={true}>
                 {Str.UnitPrice}
             </TableCell>
+            // Num
             <TableCell padding="dense" numeric={true}>
                 {Str.Num}
             </TableCell>
+            // Price
             <TableCell padding="dense" numeric={true}>
                 {Str.Price}
             </TableCell>
@@ -114,15 +120,18 @@ const PrintFormComponent: React.SFC<
             // 小計行
             tableBodyContents.push(
                 <TableRow key={row[SubtotalPriceRowKeys.id]}>
+                    // padings
                     <TableCell />
                     <TableCell />
                     <TableCell />
                     <TableCell />
                     <TableCell />
                     <TableCell />
+                    // Subtotal Label
                     <TableCell padding="dense" numeric={true}>
                         {row[SubtotalPriceRowKeys.labelSubtotalPrice]}
                     </TableCell>
+                    // Subtotal Price
                     <TableCell padding="dense" numeric={true}>
                         {NumberFormatter(row[SubtotalPriceRowKeys.subtotalPrice])}
                     </TableCell>
@@ -132,19 +141,27 @@ const PrintFormComponent: React.SFC<
             // 通常行
             tableBodyContents.push(
                 <TableRow className={classes.row} key={row[NormalDataRowKeys.id]}>
+                    // No
                     <TableCell component="th" scope="row" padding="dense" numeric={true}>
                         {row[NormalDataRowKeys.id]}
                     </TableCell>
+                    // Level 1
                     <TableCell padding="dense">{row[NormalDataRowKeys.level_1]}</TableCell>
+                    // Level 2
                     <TableCell padding="dense">{row[NormalDataRowKeys.level_2]}</TableCell>
+                    // Level 3
                     <TableCell padding="dense">{row[NormalDataRowKeys.level_3]}</TableCell>
+                    // ItemName
                     <TableCell padding="dense">{row[NormalDataRowKeys.itemName]}</TableCell>
+                    // UnitPrice
                     <TableCell padding="dense" numeric={true}>
                         {NumberFormatter(row[NormalDataRowKeys.unitPrice])}
                     </TableCell>
+                    // Num
                     <TableCell padding="dense" numeric={true}>
                         {NumberFormatter(row[NormalDataRowKeys.num])}
                     </TableCell>
+                    // Price
                     <TableCell padding="dense" numeric={true}>
                         {NumberFormatter(row[NormalDataRowKeys.price])}
                     </TableCell>
@@ -156,15 +173,18 @@ const PrintFormComponent: React.SFC<
     const row = rows[rows.length - 1];
     const tableFooterContents: JSX.Element = (
         <TableRow key={row[TotalPriceRowKeys.id]}>
+            // paddings
             <TableCell />
             <TableCell />
             <TableCell />
             <TableCell />
             <TableCell />
             <TableCell />
+            // TotalPrice label
             <TableCell padding="dense" numeric={true}>
                 <Typography>{row[TotalPriceRowKeys.labelTotalPrice]}</Typography>
             </TableCell>
+            // Total Price
             <TableCell padding="dense" numeric={true}>
                 <Typography>{NumberFormatter(row[TotalPriceRowKeys.totalPrice])}</Typography>
             </TableCell>

@@ -24,15 +24,38 @@ import { DataDoc, DataDocKeys } from '../db';
 export namespace NormalDataRowKeys {
     // TODO:
     export const id = 'id'; // : number;
-
+    /**
+     * level
+     */
     export const level_1 = 'level_1'; // : string; // 大項目
     export const level_2 = 'level_2'; // : string; // 中項目
     export const level_3 = 'level_3'; // : string; // 小項目
+    // 現状levelは3段階で固定
+
+    /**
+     * itemName
+     */
     export const itemName = 'itemName'; // : string; // 名称
+
+    /**
+     * unitPrice
+     */
     export const unitPrice = 'unitPrice'; // : number; // 単価 TODO: データをどのように持たすか？
+    // unitPrice種別は保持していない
+
+    /**
+     * num
+     */
     export const num = 'num'; // : number; // 個数
+
+    /**
+     * price
+     */
     export const price = 'price'; // : number; // 価格
 
+    /**
+     * selected (行選択フラグ)
+     */
     export const selected = 'selected'; // : boolean;
 
     // TODO: 実験
@@ -41,14 +64,36 @@ export namespace NormalDataRowKeys {
 export interface NormalDataRow {
     [key: string]: number | string | boolean;
 
+    /**
+     * id (No)
+     */
     [NormalDataRowKeys.id]: number;
 
+    /**
+     * level
+     */
     [NormalDataRowKeys.level_1]: string; // 大項目
     [NormalDataRowKeys.level_2]: string; // 中項目
     [NormalDataRowKeys.level_3]: string; // 小項目
+
+    /**
+     * itemName
+     */
     [NormalDataRowKeys.itemName]: string; // 名称
+
+    /**
+     * unitPrice
+     */
     [NormalDataRowKeys.unitPrice]: number; // 単価
+
+    /**
+     * num
+     */
     [NormalDataRowKeys.num]: number; // 個数
+
+    /**
+     * price
+     */
     [NormalDataRowKeys.price]: number; // 価格
 
     [NormalDataRowKeys.selected]: boolean;
@@ -59,31 +104,66 @@ export interface NormalDataRow {
 
 // 合計表示行
 export namespace TotalPriceRowKeys {
-    export const id = 'id';
+    export const id = 'id'; // TODO: 現状未使用？
+
+    /**
+     * Total Price label
+     */
     export const labelTotalPrice = 'labelTotalPrice';
+    /**
+     * Total Price
+     */
     export const totalPrice = 'totalPrice';
 }
 export interface TotalPriceRow {
     [key: string]: number | string;
 
     [TotalPriceRowKeys.id]: number;
+
+    /**
+     * Total Price label
+     */
     [TotalPriceRowKeys.labelTotalPrice]: string;
+    /**
+     * Total Price
+     */
     [TotalPriceRowKeys.totalPrice]: number;
 }
 
 // 小計表示行
 export namespace SubtotalPriceRowKeys {
-    export const id = 'id';
+    export const id = 'id'; // TODO: 現状未使用？
+
+    /**
+     * Subtotal Price label
+     */
     export const labelSubtotalPrice = 'labelSubtotalPrice';
+
+    /**
+     * Subtotal Price
+     */
     export const subtotalPrice = 'subtotalPrice';
+
+    /**
+     * selected (行選択フラグ)
+     */
     export const selected = 'selected';
 }
 export interface SubtotalPriceRow {
     [key: string]: number | string | boolean;
 
     [SubtotalPriceRowKeys.id]: number;
+
+    /**
+     * Subtotal Price label
+     */
     [SubtotalPriceRowKeys.labelSubtotalPrice]: string;
+
+    /**
+     * Subtotal Price
+     */
     [SubtotalPriceRowKeys.subtotalPrice]: number;
+
     [SubtotalPriceRowKeys.selected]: boolean;
 }
 
@@ -93,8 +173,19 @@ export type FormDataRow = NormalDataRow | SubtotalPriceRow | TotalPriceRow;
  * IFormData
  */
 export interface IFormData {
-    dataRows: FormDataRow[];
+    /**
+     * 帳票タイトル
+     */
     title: string;
+
+    /**
+     * 帳票行データ
+     */
+    dataRows: FormDataRow[];
+
+    /**
+     * TODO: 帳票合計　現状使ってない？
+     */
     totalPrice: number;
 }
 
@@ -102,6 +193,9 @@ export interface IFormData {
  * ICreateFormState
  */
 export interface ICreateFormState {
+    /**
+     * 帳票データ
+     */
     formData: IFormData;
 
     formDataEditted: boolean; // 帳票データが編集済みか？
@@ -119,12 +213,27 @@ export interface ICreateFormState {
 const initialDataRow: FormDataRow = {
     id: 1,
 
+    /**
+     * level
+     */
     level_1: '',
     level_2: '',
     level_3: '',
+    /**
+     * itemName
+     */
     itemName: '',
+    /**
+     * unitPrice
+     */
     unitPrice: 0,
+    /**
+     * num
+     */
     num: 1, // 初期個数は1に
+    /**
+     * price
+     */
     price: 0,
 
     selected: false,
@@ -708,10 +817,19 @@ export const updateAutoCompleteOptionsWorker = wrapThunkAsyncActionWorker<
         let _rowData: DataDoc = Object.assign(
             {},
             {
+                /**
+                 * level
+                 */
                 [DataDocKeys.level_1]: rowData[NormalDataRowKeys.level_1],
                 [DataDocKeys.level_2]: rowData[NormalDataRowKeys.level_2],
                 [DataDocKeys.level_3]: rowData[NormalDataRowKeys.level_3],
+                /**
+                 * itemName
+                 */
                 [DataDocKeys.itemName]: rowData[NormalDataRowKeys.itemName],
+                /**
+                 * unitPrice
+                 */
                 [DataDocKeys.unitPrice]: [
                     0 // TODO: unitPrice はクエリに使われないのでダミー
                 ]

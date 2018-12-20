@@ -432,12 +432,19 @@ class CreateFormDataGridComponent extends React.Component<
         super(props);
         // カラム定義
         const columns: (ReactDataGrid.Column<NormalDataRow> & { ddKey?: string })[] = [
+            /**
+             * id
+             */
             {
                 key: NormalDataRowKeys.id,
                 name: Str.No,
                 width: 48,
                 formatter: CenterFormatter
             },
+            /**
+             * level
+             */
+            // level 1
             {
                 key: NormalDataRowKeys.level_1,
                 name: Str.Level_1,
@@ -445,6 +452,7 @@ class CreateFormDataGridComponent extends React.Component<
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_1)} />,
                 resizable: true
             },
+            // level 2
             {
                 key: NormalDataRowKeys.level_2,
                 name: Str.Level_2,
@@ -452,6 +460,7 @@ class CreateFormDataGridComponent extends React.Component<
                 resizable: true,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_2)} />
             },
+            // level 3
             {
                 key: NormalDataRowKeys.level_3,
                 name: Str.Level_3,
@@ -459,6 +468,9 @@ class CreateFormDataGridComponent extends React.Component<
                 ddKey: DataDocKeys.level_3,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_3)} />
             },
+            /**
+             * itemName
+             */
             {
                 key: NormalDataRowKeys.itemName,
                 name: Str.ItemName,
@@ -466,6 +478,9 @@ class CreateFormDataGridComponent extends React.Component<
                 ddKey: DataDocKeys.itemName,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.itemName)} />
             },
+            /**
+             * unitPrice
+             */
             {
                 key: NormalDataRowKeys.unitPrice,
                 name: Str.UnitPrice,
@@ -474,6 +489,9 @@ class CreateFormDataGridComponent extends React.Component<
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.unitPrice)} />,
                 formatter: NumberRightFormatter
             },
+            /**
+             * num
+             */
             {
                 key: NormalDataRowKeys.num,
                 name: Str.Num,
@@ -481,6 +499,9 @@ class CreateFormDataGridComponent extends React.Component<
                 resizable: true,
                 formatter: NumberRightFormatter
             },
+            /**
+             * price
+             */
             {
                 key: NormalDataRowKeys.price,
                 name: Str.Price,

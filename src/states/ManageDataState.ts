@@ -310,18 +310,15 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
         // TODO:
         const dbDocs = payload.result as db.DataDoc[];
         const dbDataRows = dbDocs.map<DBDataRow>((value, index, array) => {
-            const unitPrice_1 = value[db.DataDocKeys.unitPrice][0];
-            const unitPrice_2 = value[db.DataDocKeys.unitPrice][1];
-            const unitPrice_3 = value[db.DataDocKeys.unitPrice][2];
+            const unitPriceArray = value[db.DataDocKeys.unitPrice];
             return Object.assign(
                 {},
                 value,
                 {
-                    [DBDataRowKeys.unitPrice_1]: unitPrice_1,
-                    [DBDataRowKeys.unitPrice_2]: unitPrice_2,
-                    [DBDataRowKeys.unitPrice_3]: unitPrice_3
+                    [DBDataRowKeys.unitPrice_1]: unitPriceArray[0],
+                    [DBDataRowKeys.unitPrice_2]: unitPriceArray[1],
+                    [DBDataRowKeys.unitPrice_3]: unitPriceArray[2]
                 },
-                // { [DBDataRowKeys.id]: index },
                 { [DBDataRowKeys.selected]: false }
             );
         });

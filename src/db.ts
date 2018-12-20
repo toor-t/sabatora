@@ -4,20 +4,31 @@
 'use strict';
 
 export namespace DataDocKeys {
+    export const _id = '_id';
+
     export const level_1 = 'level_1';
     export const level_2 = 'level_2';
     export const level_3 = 'level_3';
+    // Level数は現状3で固定。
+
     export const itemName = 'itemName';
+
     export const unitPrice = 'unitPrice';
+    // unitPriceの配列要素数はDB的には可変。
+    // だが、データ管理画面で３つに固定してしまっている。
 }
 
 export interface DataDoc {
-    [key: string]: string | number[];
-    // TODO:
+    [key: string]: string | number[] | undefined;
+
+    [DataDocKeys._id]?: string;
+
     [DataDocKeys.level_1]: string; // 大1
     [DataDocKeys.level_2]: string; // 中2
     [DataDocKeys.level_3]: string; // 小3
+
     [DataDocKeys.itemName]: string; // 名称
+
     [DataDocKeys.unitPrice]: number[]; // 単価
 }
 

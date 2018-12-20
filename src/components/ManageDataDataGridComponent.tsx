@@ -142,6 +142,10 @@ class ManageDataDataGridComponent extends React.Component<
         super(props);
         // カラム定義
         const columns: (ReactDataGrid.Column<DBDataRow> & { ddKey?: string })[] = [
+            /**
+             * level
+             */
+            // level 1
             {
                 key: DBDataRowKeys.level_1,
                 name: Str.Level_1,
@@ -149,6 +153,7 @@ class ManageDataDataGridComponent extends React.Component<
                 resizable: true,
                 editable: true
             },
+            // level 2
             {
                 key: DBDataRowKeys.level_2,
                 name: Str.Level_2,
@@ -156,6 +161,7 @@ class ManageDataDataGridComponent extends React.Component<
                 resizable: true,
                 editable: true
             },
+            // level 3
             {
                 key: DBDataRowKeys.level_3,
                 name: Str.Level_3,
@@ -163,6 +169,9 @@ class ManageDataDataGridComponent extends React.Component<
                 resizable: true,
                 editable: true
             },
+            /**
+             * itemName
+             */
             {
                 key: DBDataRowKeys.itemName,
                 name: Str.ItemName,
@@ -170,6 +179,10 @@ class ManageDataDataGridComponent extends React.Component<
                 resizable: true,
                 editable: true
             },
+            /**
+             * unitPrice
+             */
+            // unitPrice 1
             {
                 key: DBDataRowKeys.unitPrice_1,
                 name: `${Str.UnitPrice} 1`,
@@ -178,6 +191,7 @@ class ManageDataDataGridComponent extends React.Component<
                 editable: true,
                 formatter: NumberRightFormatter
             },
+            // unitPrice 2
             {
                 key: DBDataRowKeys.unitPrice_2,
                 name: `${Str.UnitPrice} 2`,
@@ -186,6 +200,7 @@ class ManageDataDataGridComponent extends React.Component<
                 editable: true,
                 formatter: NumberRightFormatter
             },
+            // unitPrice 3
             {
                 key: DBDataRowKeys.unitPrice_3,
                 name: `${Str.UnitPrice} 3`,

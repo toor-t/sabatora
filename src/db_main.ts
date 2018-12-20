@@ -70,14 +70,24 @@ const queryDb = (query: DataDoc, projection: string[] = []): Promise<DataDoc[]> 
         let _query = {};
         for (const key in query) {
             switch (key) {
+                /**
+                 * level
+                 */
                 case DataDocKeys.level_1:
                 case DataDocKeys.level_2:
                 case DataDocKeys.level_3:
+                /**
+                 * itemName
+                 */
                 case DataDocKeys.itemName:
                     if (query[key] !== '') {
+                        // TODO: '' との比較で良いのか?
                         _query = Object.assign(_query, { [key]: query[key] });
                     }
                     break;
+                /**
+                 * unitPrice
+                 */
                 case DataDocKeys.unitPrice:
                     // TODO: 何もしないで良いか？
                     break;
@@ -90,23 +100,40 @@ const queryDb = (query: DataDoc, projection: string[] = []): Promise<DataDoc[]> 
         let _projection = {};
         for (const key in projection) {
             switch (projection[key]) {
+                /**
+                 * level
+                 */
                 case DataDocKeys.level_1:
                 case DataDocKeys.level_2:
                 case DataDocKeys.level_3:
+                /**
+                 * itemName
+                 */
                 case DataDocKeys.itemName:
+                /**
+                 * unitPrice
+                 */
                 case DataDocKeys.unitPrice:
                     _projection = Object.assign(_projection, { [projection[key]]: 1 });
                     break;
+
                 default:
+                    // もし他のキーが含まれていても無視する
                     break;
             }
         }
         data_db
             .find<DataDoc>(_query, _projection as DataDoc)
             .sort({
+                /**
+                 * level
+                 */
                 [DataDocKeys.level_1]: 1,
                 [DataDocKeys.level_2]: 1,
                 [DataDocKeys.level_3]: 1,
+                /**
+                 * itemName
+                 */
                 [DataDocKeys.itemName]: 1
             })
             .exec((err, docs: DataDoc[]) => {
@@ -152,14 +179,24 @@ const updateDb = (query: DataDoc, update: DataDoc): Promise<DataDoc[]> => {
         let _query = {};
         for (const key in query) {
             switch (key) {
+                /**
+                 * level
+                 */
                 case DataDocKeys.level_1:
                 case DataDocKeys.level_2:
                 case DataDocKeys.level_3:
+                /**
+                 * itemName
+                 */
                 case DataDocKeys.itemName:
                     if (query[key] !== '') {
+                        // TODO: ''との比較で良いか？
                         _query = Object.assign(_query, { [key]: query[key] });
                     }
                     break;
+                /**
+                 * unitPrice
+                 */
                 case DataDocKeys.unitPrice:
                     // TODO: 何もしないで良いか？
                     break;
@@ -295,17 +332,27 @@ const updateAutoCompleteOptions = (query: DataDoc, projection: string[] = []): P
         let _query = {};
         for (const key in query) {
             switch (key) {
+                /**
+                 * level
+                 */
                 case DataDocKeys.level_1:
                 case DataDocKeys.level_2:
                 case DataDocKeys.level_3:
+                /**
+                 * itemName
+                 */
                 case DataDocKeys.itemName:
                     if (query[key] !== '') {
                         _query = Object.assign(_query, { [key]: query[key] });
                     }
                     break;
+                /**
+                 * unitPrice
+                 */
                 case DataDocKeys.unitPrice:
                     // TODO: 何もしないで良いか？
                     break;
+
                 default:
                     // 何もしない
                     break;
@@ -315,10 +362,19 @@ const updateAutoCompleteOptions = (query: DataDoc, projection: string[] = []): P
         let _projection = {};
         for (const key in projection) {
             switch (projection[key]) {
+                /**
+                 * level
+                 */
                 case DataDocKeys.level_1:
                 case DataDocKeys.level_2:
                 case DataDocKeys.level_3:
+                /**
+                 * itemName
+                 */
                 case DataDocKeys.itemName:
+                /**
+                 * unitPrice
+                 */
                 case DataDocKeys.unitPrice:
                     _projection = Object.assign(_projection, { [projection[key]]: 1 });
                     break;
@@ -333,10 +389,19 @@ const updateAutoCompleteOptions = (query: DataDoc, projection: string[] = []): P
                 let projectionKeys = projection;
                 if (projectionKeys.length === 0) {
                     projectionKeys = [
+                        /**
+                         * level
+                         */
                         DataDocKeys.level_1,
                         DataDocKeys.level_2,
                         DataDocKeys.level_3,
+                        /**
+                         * itemName
+                         */
                         DataDocKeys.itemName,
+                        /**
+                         * unitPrice
+                         */
                         DataDocKeys.unitPrice
                     ];
                 }
@@ -388,7 +453,9 @@ export function makeDummyDB() {
             level_1: `大項目 ${Math.floor(Math.random() * 10 + 1)}`,
             level_2: `中項目 ${Math.floor(Math.random() * 10 + 1)}`,
             level_3: `小項目 ${Math.floor(Math.random() * 10 + 1)}`,
+
             itemName: `すごいもの ${i + 1}`,
+
             unitPrice: [(i + 1) * 100, (i + 1) * 100 + 100, (i + 1) * 100 + 200]
         };
         data_db.insert(doc, (err: Error, newdoc: DataDoc) => {
