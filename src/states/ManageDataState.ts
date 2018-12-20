@@ -61,7 +61,7 @@ const initialState: IManageDataState = {
 const getSlecetedRowsCount = (rows: DBDataRow[]): number => {
     let count: number = 0;
     for (let idx = 0; idx < rows.length; idx += 1) {
-        const row: DBDataRow = rows[idx] as DBDataRow;
+        const row = rows[idx];
         if (row[DBDataRowKeys.selected]) {
             count += 1;
         }
@@ -169,7 +169,7 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
             }
         );
 
-        insertDb(insertDoc as db.DataDoc).then();
+        insertDb(insertDoc).then();
 
         return Object.assign({}, state, { dbDataRows });
     })
@@ -308,8 +308,8 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
      */
     .case(ManageDataActions.queryDb.done, (state, payload) => {
         // TODO:
-        const dbDocs = payload.result as db.DataDoc[];
-        const dbDataRows = dbDocs.map<DBDataRow>((value, index, array) => {
+        const dbDocs = payload.result;
+        const dbDataRows = dbDocs.map((value, index, array) => {
             const unitPriceArray = value[db.DataDocKeys.unitPrice];
             return Object.assign(
                 {},
@@ -398,9 +398,9 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
  */
 export const queryDbWorker = wrapThunkAsyncActionWorker<
     IAppState,
-    { query: db.DataDoc; projection: string[] },
+    { query: db.DataDoc; projection: (keyof db.DataDoc)[] },
     db.DataDoc[],
     string
->(ManageDataActions.queryDb, (params: { query: db.DataDoc; projection: string[] }) => {
+>(ManageDataActions.queryDb, (params: { query: db.DataDoc; projection: (keyof db.DataDoc)[] }) => {
     return queryDb(params.query, params.projection);
 });

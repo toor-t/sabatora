@@ -42,9 +42,11 @@ export const ManageDataActions = {
     /**
      * データベースクエリー
      */
-    queryDb: actionCreator.async<{ query: db.DataDoc; projection: string[] }, db.DataDoc[], string>(
-        'QUERY_DB'
-    ),
+    queryDb: actionCreator.async<
+        { query: db.DataDoc; projection: (keyof db.DataDoc)[] },
+        db.DataDoc[],
+        string
+    >('QUERY_DB'),
     /**
      * データベースバックアップ
      */

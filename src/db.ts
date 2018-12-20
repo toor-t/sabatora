@@ -40,6 +40,7 @@ export namespace UpdateAutoCompleteOptions {
     export const Reject = 'updateAutoCompleteOptions-reject';
     export const Reply = 'updateAutoCompleteOptions-reply';
 }
+export type autoCompleteOptionsType = { [P in keyof DataDoc]?: { id: number; title: string }[] };
 
 export namespace QueryDb {
     export const Request = 'queryDb-request';

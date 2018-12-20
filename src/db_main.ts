@@ -14,7 +14,8 @@ import {
     QueryDb,
     UpdateDb,
     InsertDb,
-    RemoveDb
+    RemoveDb,
+    autoCompleteOptionsType
 } from './db';
 
 const userDataPath = app.getPath('userData');
@@ -41,33 +42,36 @@ const conf_db: Nedb = new DataStore({
 /**
  * Query DB Request listener
  */
-const queryDb_request = ipcMain.on(QueryDb.Request, (event: Event, arg: any[]) => {
-    // TODO:
-    const asyncFunc = async () => {
-        event.sender.send(QueryDb.Reply, 'Request received.');
-        try {
-            const result = await queryDb(arg[0], arg[1]);
-            if (win) {
-                win.webContents.send(QueryDb.Result, result);
+const queryDb_request = ipcMain.on(
+    QueryDb.Request,
+    (event: Event, arg: [DataDoc, (keyof DataDoc)[]]) => {
+        // TODO:
+        const asyncFunc = async () => {
+            event.sender.send(QueryDb.Reply, 'Request received.');
+            try {
+                const result = await queryDb(arg[0], arg[1]);
+                if (win) {
+                    win.webContents.send(QueryDb.Result, result);
+                }
+            } catch (reject) {
+                // TODO:
+                if (win) {
+                    win.webContents.send(QueryDb.Reject, reject);
+                }
             }
-        } catch (reject) {
-            // TODO:
-            if (win) {
-                win.webContents.send(QueryDb.Reject, reject);
-            }
-        }
-    };
-    asyncFunc().then();
-});
+        };
+        asyncFunc().then();
+    }
+);
 /**
  * Query DB
  * @param query
  * @param projection
  */
-const queryDb = (query: DataDoc, projection: string[] = []): Promise<DataDoc[]> => {
+const queryDb = (query: DataDoc, projection: (keyof DataDoc)[] = []): Promise<DataDoc[]> => {
     return new Promise((resolve, reject) => {
         // query生成
-        let _query = {};
+        let _query: Partial<DataDoc> = {};
         for (const key in query) {
             switch (key) {
                 /**
@@ -97,9 +101,9 @@ const queryDb = (query: DataDoc, projection: string[] = []): Promise<DataDoc[]> 
             }
         }
         // projection生成
-        let _projection = {};
-        for (const key in projection) {
-            switch (projection[key]) {
+        let _projection: Partial<DataDoc> = {};
+        projection.map((value, index, array) => {
+            switch (value) {
                 /**
                  * level
                  */
@@ -114,28 +118,29 @@ const queryDb = (query: DataDoc, projection: string[] = []): Promise<DataDoc[]> 
                  * unitPrice
                  */
                 case DataDocKeys.unitPrice:
-                    _projection = Object.assign(_projection, { [projection[key]]: 1 });
+                    _projection = Object.assign(_projection, { [value]: 1 });
                     break;
 
                 default:
                     // もし他のキーが含まれていても無視する
                     break;
             }
-        }
+        });
+        const _sortQuery: { [P in keyof DataDoc]?: number } = {
+            /**
+             * level
+             */
+            [DataDocKeys.level_1]: 1,
+            [DataDocKeys.level_2]: 1,
+            [DataDocKeys.level_3]: 1,
+            /**
+             * itemName
+             */
+            [DataDocKeys.itemName]: 1
+        };
         data_db
-            .find<DataDoc>(_query, _projection as DataDoc)
-            .sort({
-                /**
-                 * level
-                 */
-                [DataDocKeys.level_1]: 1,
-                [DataDocKeys.level_2]: 1,
-                [DataDocKeys.level_3]: 1,
-                /**
-                 * itemName
-                 */
-                [DataDocKeys.itemName]: 1
-            })
+            .find(_query, _projection as DataDoc)
+            .sort(_sortQuery)
             .exec((err, docs: DataDoc[]) => {
                 if (err) {
                     reject(err);
@@ -150,7 +155,7 @@ const queryDb = (query: DataDoc, projection: string[] = []): Promise<DataDoc[]> 
 /**
  * Update DB Request listener
  */
-const updateDb_request = ipcMain.on(UpdateDb.Request, (event: Event, arg: any) => {
+const updateDb_request = ipcMain.on(UpdateDb.Request, (event: Event, arg: [DataDoc, DataDoc]) => {
     const asyncFunc = async () => {
         event.sender.send(UpdateDb.Reply, 'Request received.');
         try {
@@ -176,7 +181,7 @@ const updateDb_request = ipcMain.on(UpdateDb.Request, (event: Event, arg: any) =
 const updateDb = (query: DataDoc, update: DataDoc): Promise<DataDoc[]> => {
     return new Promise((resolve, reject) => {
         // query生成
-        let _query = {};
+        let _query: Partial<DataDoc> = {};
         for (const key in query) {
             switch (key) {
                 /**
@@ -224,7 +229,7 @@ const updateDb = (query: DataDoc, update: DataDoc): Promise<DataDoc[]> => {
 /**
  * Insert DB Request listener
  */
-const insertDb_request = ipcMain.on(InsertDb.Request, (event: Event, arg: any) => {
+const insertDb_request = ipcMain.on(InsertDb.Request, (event: Event, arg: [DataDoc]) => {
     const asyncFunc = async () => {
         event.sender.send(InsertDb.Reply, 'Request received.');
         try {
@@ -262,7 +267,7 @@ const insertDb = (doc: DataDoc): Promise<DataDoc> => {
 /**
  * Remove DB Request listener
  */
-const removeDb_request = ipcMain.on(RemoveDb.Request, (event: Event, arg: any) => {
+const removeDb_request = ipcMain.on(RemoveDb.Request, (event: Event, arg: [DataDoc]) => {
     const asyncFunc = async () => {
         event.sender.send(RemoveDb.Reply, 'Request received.');
         try {
@@ -302,7 +307,7 @@ const removeDb = (query: DataDoc): Promise<number> => {
  */
 const updateAutoCompleteOptions_request = ipcMain.on(
     UpdateAutoCompleteOptions.Request,
-    (event: Event, arg: any) => {
+    (event: Event, arg: [DataDoc, (keyof DataDoc)[]]) => {
         const asyncFunc = async () => {
             event.sender.send(UpdateAutoCompleteOptions.Reply, 'Request received.');
             try {
@@ -326,10 +331,13 @@ const updateAutoCompleteOptions_request = ipcMain.on(
  * @param query
  * @param projection
  */
-const updateAutoCompleteOptions = (query: DataDoc, projection: string[] = []): Promise<{}> => {
+const updateAutoCompleteOptions = (
+    query: DataDoc,
+    projection: (keyof DataDoc)[] = []
+): Promise<{}> => {
     return new Promise((resolve, reject) => {
         // query生成
-        let _query = {};
+        let _query: Partial<DataDoc> = {};
         for (const key in query) {
             switch (key) {
                 /**
@@ -359,9 +367,9 @@ const updateAutoCompleteOptions = (query: DataDoc, projection: string[] = []): P
             }
         }
         // projection生成
-        let _projection = {};
-        for (const key in projection) {
-            switch (projection[key]) {
+        let _projection: Partial<DataDoc> = {};
+        projection.map((value, index, array) => {
+            switch (value) {
                 /**
                  * level
                  */
@@ -376,13 +384,13 @@ const updateAutoCompleteOptions = (query: DataDoc, projection: string[] = []): P
                  * unitPrice
                  */
                 case DataDocKeys.unitPrice:
-                    _projection = Object.assign(_projection, { [projection[key]]: 1 });
+                    _projection = Object.assign(_projection, { [value]: 1 });
                     break;
                 default:
                     break;
             }
-        }
-        data_db.find<DataDoc>(_query, _projection as DataDoc, (err, docs: DataDoc[]) => {
+        });
+        data_db.find(_query, _projection as DataDoc, (err, docs) => {
             if (err) {
                 reject(err);
             } else {
@@ -405,10 +413,9 @@ const updateAutoCompleteOptions = (query: DataDoc, projection: string[] = []): P
                         DataDocKeys.unitPrice
                     ];
                 }
-                let autoCompleteOptions = {};
-                for (const key in projectionKeys) {
+                let autoCompleteOptions: autoCompleteOptionsType = {};
+                projectionKeys.map((currentKey, index, array) => {
                     let result: string[] = [];
-                    const currentKey = projectionKeys[key];
                     switch (currentKey) {
                         /**
                          * level
@@ -435,7 +442,7 @@ const updateAutoCompleteOptions = (query: DataDoc, projection: string[] = []): P
                         case DataDocKeys.unitPrice:
                             if (docs.length !== 1) {
                                 // 複数候補がある場合は無視する
-                                continue;
+                                return;
                             }
                             result = docs[0][currentKey].map((value, index, array) => {
                                 return value.toString();
@@ -454,7 +461,7 @@ const updateAutoCompleteOptions = (query: DataDoc, projection: string[] = []): P
                             break;
                     }
 
-                    const _options: {}[] = [];
+                    const _options: { id: number; title: string }[] = [];
                     for (let i = 0; i < result.length; i = i + 1) {
                         _options.push({
                             id: i,
@@ -462,9 +469,9 @@ const updateAutoCompleteOptions = (query: DataDoc, projection: string[] = []): P
                         });
                     }
                     autoCompleteOptions = Object.assign(autoCompleteOptions, {
-                        [projectionKeys[key]]: _options
+                        [currentKey]: _options
                     });
-                }
+                });
                 resolve(autoCompleteOptions);
             }
         });

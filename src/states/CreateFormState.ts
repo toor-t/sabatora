@@ -20,10 +20,33 @@ import { Str, BtnLabel, Message } from '../strings';
 import { Action } from 'redux';
 import { DataDoc, DataDocKeys } from '../db';
 
+// BaseRow
+export namespace BaseRowKeys {
+    /**
+     * id
+     */
+    export const id = 'id';
+    /**
+     * selected
+     */
+    export const selected = 'selected';
+}
+export interface BaseRow {
+    /**
+     * id
+     */
+    [BaseRowKeys.id]: number;
+    /**
+     * selected (行選択フラグ)
+     */
+    [BaseRowKeys.selected]: boolean;
+}
+
 // NormalDataRowKeys
 export namespace NormalRowKeys {
     // TODO:
-    export const id = 'id'; // : number;
+    export const type = 'Normal'; // 厳密にはこれ"key"じゃ無いけど。
+
     /**
      * level
      */
@@ -53,19 +76,11 @@ export namespace NormalRowKeys {
      */
     export const price = 'price'; // : number; // 価格
 
-    /**
-     * selected (行選択フラグ)
-     */
-    export const selected = 'selected'; // : boolean;
-
     // TODO: 実験
     export const invalid = 'invalid'; // : boolean;
 }
-export interface NormalRow {
-    /**
-     * id (No)
-     */
-    [NormalRowKeys.id]: number;
+export interface NormalRow extends BaseRow {
+    type: Readonly<'Normal'>;
 
     /**
      * level
@@ -94,16 +109,12 @@ export interface NormalRow {
      */
     [NormalRowKeys.price]: number; // 価格
 
-    [NormalRowKeys.selected]: boolean;
-
     // TODO: 実験
     [NormalRowKeys.invalid]: boolean;
 }
 
 // 合計表示行
 export namespace TotalPriceRowKeys {
-    export const id = 'id'; // TODO: 現状未使用？
-
     /**
      * Total Price label
      */
@@ -113,8 +124,8 @@ export namespace TotalPriceRowKeys {
      */
     export const totalPrice = 'totalPrice';
 }
-export interface TotalPriceRow {
-    [TotalPriceRowKeys.id]: number;
+export interface TotalPriceRow extends BaseRow {
+    type: Readonly<'TotalPrice'>;
 
     /**
      * Total Price label
@@ -124,12 +135,15 @@ export interface TotalPriceRow {
      * Total Price
      */
     [TotalPriceRowKeys.totalPrice]: number;
+    // TODO: 実験
+    /**
+     * selected override
+     */
+    [BaseRowKeys.selected]: false;
 }
 
 // 小計表示行
 export namespace SubtotalPriceRowKeys {
-    export const id = 'id'; // TODO: 現状未使用？
-
     /**
      * Subtotal Price label
      */
@@ -139,14 +153,11 @@ export namespace SubtotalPriceRowKeys {
      * Subtotal Price
      */
     export const subtotalPrice = 'subtotalPrice';
-
-    /**
-     * selected (行選択フラグ)
-     */
-    export const selected = 'selected';
 }
-export interface SubtotalPriceRow {
-    [SubtotalPriceRowKeys.id]: number;
+export interface SubtotalPriceRow extends BaseRow {
+    type: Readonly<'SubtotalPrice'>;
+
+    // [SubtotalPriceRowKeys.id]: number;
 
     /**
      * Subtotal Price label
@@ -158,7 +169,7 @@ export interface SubtotalPriceRow {
      */
     [SubtotalPriceRowKeys.subtotalPrice]: number;
 
-    [SubtotalPriceRowKeys.selected]: boolean;
+    // [SubtotalPriceRowKeys.selected]: boolean;
 }
 
 export type FormDataRow = NormalRow | SubtotalPriceRow | TotalPriceRow;
@@ -205,6 +216,8 @@ export interface ICreateFormState {
     printing: boolean; //
 }
 const initialDataRow: FormDataRow = {
+    type: 'Normal',
+
     id: 1,
 
     /**
@@ -241,9 +254,11 @@ const initialState: ICreateFormState = {
             initialDataRow,
             // 合計行
             {
+                type: 'TotalPrice',
                 id: -1,
                 [TotalPriceRowKeys.labelTotalPrice]: Str.TotalPrice,
-                [TotalPriceRowKeys.totalPrice]: 0
+                [TotalPriceRowKeys.totalPrice]: 0,
+                selected: false
             }
         ],
         title: Str.InitialFormTitle,
@@ -271,24 +286,25 @@ function calcTotalPrice(rows: FormDataRow[]): number {
     let subSumPrice: number = 0;
     let id: number = 1;
     for (let i = 0; i < rows.length; i = i + 1) {
+        const row = rows[i];
         if (
-            NormalRowKeys.price in rows[i]
+            row.type === 'Normal'
             // && !rows[i][NormalDataRowKeys.price_isEmpty]
         ) {
-            sumPrice += (rows[i] as NormalRow)[NormalRowKeys.price] as number;
-            subSumPrice += (rows[i] as NormalRow)[NormalRowKeys.price] as number;
+            sumPrice += row[NormalRowKeys.price];
+            subSumPrice += row[NormalRowKeys.price];
             // TODO: No.を更新する処理
-            rows[i][NormalRowKeys.id] = id;
+            row[BaseRowKeys.id] = id;
             id += 1;
         }
         // 小計行
-        if (SubtotalPriceRowKeys.subtotalPrice in rows[i]) {
-            (rows[i] as SubtotalPriceRow)[SubtotalPriceRowKeys.subtotalPrice] = subSumPrice;
+        if (row.type === 'SubtotalPrice') {
+            row[SubtotalPriceRowKeys.subtotalPrice] = subSumPrice;
             subSumPrice = 0;
         }
         // 合計行 ※ここでやらないほうが良い？
-        if (TotalPriceRowKeys.totalPrice in rows[i]) {
-            (rows[i] as TotalPriceRow)[TotalPriceRowKeys.totalPrice] = sumPrice;
+        if (row.type === 'TotalPrice') {
+            row[TotalPriceRowKeys.totalPrice] = sumPrice;
         }
     }
     // console.log(`totalPrice=${sumPrice}`);
@@ -304,8 +320,8 @@ const getSlecetedRowsInfo = (rows: FormDataRow[]): { count: number; firstIdx: nu
     let count: number = 0;
     let firstIdx: number = -1;
     for (let idx = 0; idx < rows.length - 1 /* 合計行は無視 */; idx += 1) {
-        const row: NormalRow = rows[idx] as NormalRow;
-        if (row[NormalRowKeys.selected]) {
+        const row = rows[idx];
+        if (row[BaseRowKeys.selected]) {
             count += 1;
             if (firstIdx === -1) {
                 firstIdx = idx;
@@ -391,6 +407,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         if (insertIdx > -1) {
             // 実際に小計行を追加・挿入する
             const subtotalRow: SubtotalPriceRow = {
+                type: 'SubtotalPrice',
                 id: -1,
                 labelSubtotalPrice: Str.SubtotalPrice,
                 subtotalPrice: 0,
@@ -426,7 +443,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
         const dataRows: (NormalRow | TotalPriceRow | SubtotalPriceRow)[] = [];
 
         for (const dataRowIdx in state.formData.dataRows) {
-            if (!(state.formData.dataRows[dataRowIdx] as NormalRow)[NormalRowKeys.selected]) {
+            if (!state.formData.dataRows[dataRowIdx][BaseRowKeys.selected]) {
                 // 残す行なのでpushして保存する
                 dataRows.push(state.formData.dataRows[dataRowIdx]);
             }
@@ -456,8 +473,8 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         // tslint:disable-next-line:no-increment-decrement
         for (let i = e.fromRow; i <= e.toRow; i++) {
-            if ((dataRows[i] as any)[NormalRowKeys.price] !== undefined) {
-                const rowToUpdate: NormalRow = dataRows[i] as NormalRow;
+            if (dataRows[i].type === 'Normal') {
+                const rowToUpdate = dataRows[i] as NormalRow;
                 // TODO: 価格を計算
                 if (e.updated[NormalRowKeys.unitPrice]) {
                     e.updated[NormalRowKeys.unitPrice] = String(
@@ -684,7 +701,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     .case(CreateFormActions.selectRows, (state, rows) => {
         // TODO:
         const dataRows = state.formData.dataRows.map((value, index, array) => {
-            if ((value as TotalPriceRow)[TotalPriceRowKeys.totalPrice] === undefined) {
+            if (value.type !== 'TotalPrice') {
                 // 合計表示行は選択不能にする
                 for (let i = 0; i < rows.length; i = i + 1) {
                     if (index === rows[i].rowIdx) {

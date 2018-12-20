@@ -21,7 +21,8 @@ import {
     NormalRowKeys,
     TotalPriceRow,
     SubtotalPriceRow,
-    NormalRow
+    NormalRow,
+    BaseRowKeys
 } from '../states/CreateFormState';
 import { TableFooter } from '@material-ui/core';
 import { Str } from '../strings';
@@ -91,25 +92,25 @@ const PrintFormComponent: React.SFC<
 
     const tableHeadContents: JSX.Element = (
         <TableRow>
-            // No
+            {/* No */}
             <TableCell padding="dense" numeric={true} style={{ width: 64 }}>
                 {Str.No}
             </TableCell>
-            // Level
+            {/* Level */}
             <TableCell padding="dense">{Str.Level_1}</TableCell>
             <TableCell padding="dense">{Str.Level_2}</TableCell>
             <TableCell padding="dense">{Str.Level_3}</TableCell>
-            // ItemName
+            {/* ItemName */}
             <TableCell padding="dense">{Str.ItemName}</TableCell>
-            // UnitPrice
+            {/* UnitPrice */}
             <TableCell padding="dense" numeric={true}>
                 {Str.UnitPrice}
             </TableCell>
-            // Num
+            {/* Num */}
             <TableCell padding="dense" numeric={true}>
                 {Str.Num}
             </TableCell>
-            // Price
+            {/* Price */}
             <TableCell padding="dense" numeric={true}>
                 {Str.Price}
             </TableCell>
@@ -118,51 +119,53 @@ const PrintFormComponent: React.SFC<
 
     const tableBodyContents: JSX.Element[] = [];
     for (let rowsidx = 0; rowsidx < rows.length - 1; rowsidx += 1) {
-        if (SubtotalPriceRowKeys.labelSubtotalPrice in rows[rowsidx]) {
+        const row = rows[rowsidx];
+        if (row.type === 'SubtotalPrice') {
             // 小計行
-            const row = rows[rowsidx] as SubtotalPriceRow;
             tableBodyContents.push(
-                <TableRow key={row[SubtotalPriceRowKeys.id]}>
-                    // padings
+                <TableRow key={row[BaseRowKeys.id]}>
+                    {/* padings */}
                     <TableCell />
                     <TableCell />
                     <TableCell />
                     <TableCell />
                     <TableCell />
                     <TableCell />
-                    // Subtotal Label
+                    {/* Subtotal Label */}
                     <TableCell padding="dense" numeric={true}>
                         {row[SubtotalPriceRowKeys.labelSubtotalPrice]}
                     </TableCell>
-                    // Subtotal Price
+                    {/* Subtotal Price */}
                     <TableCell padding="dense" numeric={true}>
                         {NumberFormatter(row[SubtotalPriceRowKeys.subtotalPrice])}
                     </TableCell>
                 </TableRow>
             );
-        } else {
+        } else if (row.type === 'Normal') {
             // 通常行
-            const row = rows[rowsidx] as NormalRow;
             tableBodyContents.push(
-                <TableRow className={classes.row} key={row[NormalRowKeys.id]}>
-                    // No
+                <TableRow className={classes.row} key={row[BaseRowKeys.id]}>
+                    {/* No */}
                     <TableCell component="th" scope="row" padding="dense" numeric={true}>
-                        {row[NormalRowKeys.id]}
+                        {row[BaseRowKeys.id]}
                     </TableCell>
-                    // Level 1<TableCell padding="dense">{row[NormalRowKeys.level_1]}</TableCell>
-                    // Level 2<TableCell padding="dense">{row[NormalRowKeys.level_2]}</TableCell>
-                    // Level 3<TableCell padding="dense">{row[NormalRowKeys.level_3]}</TableCell>
-                    // ItemName
+                    {/* Level 1 */}
+                    <TableCell padding="dense">{row[NormalRowKeys.level_1]}</TableCell>
+                    {/* Level 2 */}
+                    <TableCell padding="dense">{row[NormalRowKeys.level_2]}</TableCell>
+                    {/* Level 3 */}
+                    <TableCell padding="dense">{row[NormalRowKeys.level_3]}</TableCell>
+                    {/* ItemName */}
                     <TableCell padding="dense">{row[NormalRowKeys.itemName]}</TableCell>
-                    // UnitPrice
+                    {/* UnitPrice */}
                     <TableCell padding="dense" numeric={true}>
                         {NumberFormatter(row[NormalRowKeys.unitPrice])}
                     </TableCell>
-                    // Num
+                    {/* Num */}
                     <TableCell padding="dense" numeric={true}>
                         {NumberFormatter(row[NormalRowKeys.num])}
                     </TableCell>
-                    // Price
+                    {/* Price */}
                     <TableCell padding="dense" numeric={true}>
                         {NumberFormatter(row[NormalRowKeys.price])}
                     </TableCell>
@@ -173,19 +176,19 @@ const PrintFormComponent: React.SFC<
 
     const row = rows[rows.length - 1] as TotalPriceRow; // TODO: 最後の行が合計行であることを決め打ちしているのはあまりよくない
     const tableFooterContents: JSX.Element = (
-        <TableRow key={row[TotalPriceRowKeys.id]}>
-            // paddings
+        <TableRow key={row[BaseRowKeys.id]}>
+            {/* paddings */}
             <TableCell />
             <TableCell />
             <TableCell />
             <TableCell />
             <TableCell />
             <TableCell />
-            // TotalPrice label
+            {/* TotalPrice label */}
             <TableCell padding="dense" numeric={true}>
                 <Typography>{row[TotalPriceRowKeys.labelTotalPrice]}</Typography>
             </TableCell>
-            // Total Price
+            {/* Total Price */}
             <TableCell padding="dense" numeric={true}>
                 <Typography>{NumberFormatter(row[TotalPriceRowKeys.totalPrice])}</Typography>
             </TableCell>
