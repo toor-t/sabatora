@@ -31,7 +31,7 @@ function sleep(waitMSec: number, callbackFunc: () => void) {
 /**
  * 帳票読込リクエスト待ち受け
  */
-const openForm_request = ipcMain.on(OpenForm.Request, (event: Event, arg: any) => {
+ipcMain.on(OpenForm.Request, (event: Event, arg: unknown) => {
     // TODO:
     event.sender.send(OpenForm.Reply, 'Request received.');
     // TODO: 実験：waitしてみる
@@ -101,7 +101,7 @@ const openForm = (): Promise<Buffer> => {
 /**
  * 帳票保存リクエスト待ち受け
  */
-const saveForm_request = ipcMain.on(SaveForm.Request, (event: Event, arg: any) => {
+ipcMain.on(SaveForm.Request, (event: Event, arg: [IFormData]) => {
     event.sender.send(SaveForm.Reply, 'Request received.');
     // TODO: 実験：waitしてみる
     sleep(200, () => {

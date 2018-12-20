@@ -13,7 +13,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Slide from '@material-ui/core/Slide';
+import Slide, { SlideProps } from '@material-ui/core/Slide';
 // tslint:disable-next-line:import-name
 import CloseIcon from '@material-ui/icons/Close';
 import { ActionCreator } from 'typescript-fsa';
@@ -183,7 +183,7 @@ class NotifyComponent extends React.Component<
             this.props.dispatch(this.props.notifyContext.onNotificationClose() as any); // TODO: この as any を止める方法は無いものか
     };
 
-    dialogTransition = (props: {}) => {
+    dialogTransition = (props: SlideProps) => {
         return <Slide direction="up" {...props} />;
     };
 

@@ -18,7 +18,7 @@ import { IAppState } from '../store';
 import { printForm } from '../print_renderer';
 import { Str, BtnLabel, Message } from '../strings';
 import { Action } from 'redux';
-import { DataDoc, DataDocKeys } from '../db';
+import { DataDoc, DataDocKeys, autoCompleteOptionsType } from '../db';
 
 // BaseRow
 export namespace BaseRowKeys {
@@ -115,6 +115,8 @@ export interface NormalRow extends BaseRow {
 
 // 合計表示行
 export namespace TotalPriceRowKeys {
+    // TODO:
+    export const type = 'TotalPrice'; // 厳密にはこれ"key"じゃ無いけど。
     /**
      * Total Price label
      */
@@ -144,6 +146,8 @@ export interface TotalPriceRow extends BaseRow {
 
 // 小計表示行
 export namespace SubtotalPriceRowKeys {
+    // TODO:
+    export const type = 'SubtotalPrice'; // 厳密にはこれ"key"じゃ無いけど。
     /**
      * Subtotal Price label
      */
@@ -288,7 +292,7 @@ function calcTotalPrice(rows: FormDataRow[]): number {
     for (let i = 0; i < rows.length; i = i + 1) {
         const row = rows[i];
         if (
-            row.type === 'Normal'
+            row.type === NormalRowKeys.type
             // && !rows[i][NormalDataRowKeys.price_isEmpty]
         ) {
             sumPrice += row[NormalRowKeys.price];
@@ -298,12 +302,12 @@ function calcTotalPrice(rows: FormDataRow[]): number {
             id += 1;
         }
         // 小計行
-        if (row.type === 'SubtotalPrice') {
+        if (row.type === SubtotalPriceRowKeys.type) {
             row[SubtotalPriceRowKeys.subtotalPrice] = subSumPrice;
             subSumPrice = 0;
         }
         // 合計行 ※ここでやらないほうが良い？
-        if (row.type === 'TotalPrice') {
+        if (row.type === TotalPriceRowKeys.type) {
             row[TotalPriceRowKeys.totalPrice] = sumPrice;
         }
     }
@@ -473,7 +477,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         // tslint:disable-next-line:no-increment-decrement
         for (let i = e.fromRow; i <= e.toRow; i++) {
-            if (dataRows[i].type === 'Normal') {
+            if (dataRows[i].type === NormalRowKeys.type) {
                 const rowToUpdate = dataRows[i] as NormalRow;
                 // TODO: 価格を計算
                 if (e.updated[NormalRowKeys.unitPrice]) {
@@ -701,7 +705,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
     .case(CreateFormActions.selectRows, (state, rows) => {
         // TODO:
         const dataRows = state.formData.dataRows.map((value, index, array) => {
-            if (value.type !== 'TotalPrice') {
+            if (value.type !== TotalPriceRowKeys.type) {
                 // 合計表示行は選択不能にする
                 for (let i = 0; i < rows.length; i = i + 1) {
                     if (index === rows[i].rowIdx) {
@@ -785,7 +789,6 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
      * AutoCompleteOptions更新 (完了)
      */
     .case(CreateFormActions.updateAutoCompleteOptions.done, (state, done) => {
-        // TODO:
         return Object.assign({}, state, { autoCompleteOptions: done.result });
     })
     /**
@@ -818,12 +821,12 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
  */
 export const updateAutoCompleteOptionsWorker = wrapThunkAsyncActionWorker<
     IAppState,
-    { rowData: NormalRow; columnDDKey?: string },
-    {},
-    {}
+    { rowData: NormalRow; columnDDKey?: keyof DataDoc },
+    autoCompleteOptionsType,
+    Error
 >(
     CreateFormActions.updateAutoCompleteOptions,
-    ({ rowData, columnDDKey }): Promise<{}> => {
+    ({ rowData, columnDDKey }): Promise<autoCompleteOptionsType> => {
         let _rowData: DataDoc = Object.assign(
             {},
             {

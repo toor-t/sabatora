@@ -5,6 +5,7 @@
 import { actionCreatorFactory } from 'typescript-fsa';
 import * as ReactDataGrid from 'react-data-grid';
 import { FormDataRow, NormalRow } from '../states/CreateFormState';
+import { DataDoc, autoCompleteOptionsType } from '../db';
 
 const actionCreator = actionCreatorFactory('CREATE_FORM_ACTIONS');
 
@@ -55,8 +56,9 @@ export const CreateFormActions = {
      * オートコンプリート候補更新
      */
     updateAutoCompleteOptions: actionCreator.async<
-        { rowData: NormalRow; columnDDKey?: string },
-        {}
+        { rowData: NormalRow; columnDDKey?: keyof DataDoc },
+        autoCompleteOptionsType,
+        Error
     >('UPDATE_AUTO_COMPLETE_OPTIONS'),
 
     /**

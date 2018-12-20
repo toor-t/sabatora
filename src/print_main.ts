@@ -30,7 +30,7 @@ function sleep(waitMSec: number, callbackFunc: () => void) {
 /**
  * 帳票印刷リクエスト待ち受け
  */
-const printForm_request = ipcMain.on(PrintForm.Request, (event: Event, arg: any) => {
+const printForm_request = ipcMain.on(PrintForm.Request, (event: Event, arg: unknown) => {
     // TODO:
     event.sender.send(PrintForm.Reply, 'Request received.');
     // TODO: 実験：waitしてみる
@@ -63,11 +63,11 @@ const printForm = (): Promise<string> => {
                 { silent: false, printBackground: false, deviceName: '' },
                 (success: boolean) => {
                     if (success) {
-                        console.log('印刷終了');
+                        // console.log('印刷終了');
                         resolve('印刷完了');
                     } else {
                         // TODO:  失敗した場合エラー表示する
-                        console.log('帳票印刷失敗');
+                        // console.log('帳票印刷失敗');
                         reject('印刷失敗');
                     }
                 }

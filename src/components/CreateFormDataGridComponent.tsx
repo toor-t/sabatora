@@ -45,7 +45,7 @@ const getOptions = (ddKey: keyof DataDoc): { (): { id: number; title: string }[]
  * ICustomAutoCompleteEditorProps
  */
 interface ICustomAutoCompleteEditorProps {
-    getOptions: () => { id: number; title: string };
+    getOptions: () => { id: number; title: string }[];
 }
 /**
  * ICustomAutoCompleteEditorStates
@@ -397,7 +397,7 @@ const styles = (theme: Theme) =>
  */
 export interface ICreateFormDataGridComponentStateProps {
     rows: FormDataRow[];
-    autoCompleteOptions: {};
+    autoCompleteOptions: autoCompleteOptionsType;
     selectedRowsCount: number;
     firstSelectedRowIdx: number;
 }
@@ -407,7 +407,7 @@ export interface ICreateFormDataGridComponentStateProps {
 export interface ICreateFormDataGridComponentDispatchProps {
     onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) => void;
     onSelectedCell: (col: { rowIdx: number; idx: number }) => void;
-    updateAutoCompleteOptions: (col: { rowData: NormalRow; columnDDKey?: string }) => void;
+    updateAutoCompleteOptions: (col: { rowData: NormalRow; columnDDKey?: keyof DataDoc }) => void;
     addRow: () => void;
     deleteRows: () => void;
     selectRows: (rows: { rowIdx: number; row: FormDataRow }[]) => void;
@@ -536,7 +536,7 @@ class CreateFormDataGridComponent extends React.Component<
         if (this.props.rows) {
             const row = this.props.rows[col.rowIdx];
             // updateAutoCompleteOptions
-            if (row.type === 'Normal') {
+            if (row.type === NormalRowKeys.type) {
                 // 通常行のみ。合計行等では更新しない
                 if (
                     col.idx > 1 &&
@@ -551,7 +551,7 @@ class CreateFormDataGridComponent extends React.Component<
                             undefined
                                 ? this.state.columns[col.idx - 1 /* チェックボックスの分引く */]
                                       .ddKey
-                                : ''
+                                : undefined
                     });
                 }
             }

@@ -9,7 +9,7 @@ import { ipcRenderer, Event } from 'electron';
 // PrintForm
 export const printForm = (): Promise<void> => {
     return new Promise((resolve, reject) => {
-        const resultListener = (event: Event, result: any) => {
+        const resultListener = (event: Event, result: void) => {
             resolve(result);
 
             // Remove Listner
@@ -17,7 +17,7 @@ export const printForm = (): Promise<void> => {
             ipcRenderer.removeListener(PrintForm.Reject, rejectListener);
         };
         ipcRenderer.once(PrintForm.Result, resultListener);
-        const rejectListener = (event: Event, result: any) => {
+        const rejectListener = (event: Event, result: Error) => {
             reject(result);
 
             // Remove Listner
@@ -25,7 +25,7 @@ export const printForm = (): Promise<void> => {
             ipcRenderer.removeListener(PrintForm.Result, resultListener);
         };
         ipcRenderer.once(PrintForm.Reject, rejectListener);
-        const replyListener = (event: Event, reply: any) => {
+        const replyListener = (event: Event, reply: string) => {
             /* TODO: */
             // // TODO: 実験 リプライ時にresolve扱いにしてみる。キャンセル時処理のため。->ダメでした。
             // resolve(reply);

@@ -120,7 +120,7 @@ const PrintFormComponent: React.SFC<
     const tableBodyContents: JSX.Element[] = [];
     for (let rowsidx = 0; rowsidx < rows.length - 1; rowsidx += 1) {
         const row = rows[rowsidx];
-        if (row.type === 'SubtotalPrice') {
+        if (row.type === SubtotalPriceRowKeys.type) {
             // 小計行
             tableBodyContents.push(
                 <TableRow key={row[BaseRowKeys.id]}>
@@ -141,7 +141,7 @@ const PrintFormComponent: React.SFC<
                     </TableCell>
                 </TableRow>
             );
-        } else if (row.type === 'Normal') {
+        } else if (row.type === NormalRowKeys.type) {
             // 通常行
             tableBodyContents.push(
                 <TableRow className={classes.row} key={row[BaseRowKeys.id]}>
@@ -173,6 +173,8 @@ const PrintFormComponent: React.SFC<
             );
         }
     }
+    // DEBUG:
+    console.log(tableBodyContents);
 
     const row = rows[rows.length - 1] as TotalPriceRow; // TODO: 最後の行が合計行であることを決め打ちしているのはあまりよくない
     const tableFooterContents: JSX.Element = (

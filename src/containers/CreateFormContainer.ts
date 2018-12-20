@@ -22,6 +22,7 @@ import {
     ICreateFormDataGridComponentStateProps,
     ICreateFormDataGridComponentDispatchProps
 } from '../components/CreateFormDataGridComponent';
+import { DataDoc } from '../db';
 
 /**
  * mapStateToProps
@@ -59,7 +60,7 @@ function mapDispatchToProps(
             dispatch(CreateFormActions.selectCell(col)),
         onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) =>
             dispatch(CreateFormActions.updateGridRow(e)),
-        updateAutoCompleteOptions: (c: { rowData: NormalRow; columnDDKey?: string }) =>
+        updateAutoCompleteOptions: (c: { rowData: NormalRow; columnDDKey?: keyof DataDoc }) =>
             dispatch(updateAutoCompleteOptionsWorker(c)),
         addRow: () => dispatch(CreateFormActions.addRow()),
         deleteRows: () => dispatch(CreateFormActions.deleteRows()),
