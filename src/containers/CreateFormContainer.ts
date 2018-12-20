@@ -76,12 +76,7 @@ function mapDispatchToProps(
 /**
  * connect
  */
-export default connect<
-    ICreateFormComponentStateProps & ICreateFormDataGridComponentStateProps,
-    ICreateFormComponentDispatchProps & ICreateFormDataGridComponentDispatchProps,
-    {},
-    IAppState
->(
+export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(CreateFormComponent);

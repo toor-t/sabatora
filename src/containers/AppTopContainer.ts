@@ -23,7 +23,7 @@ import { Action } from 'redux';
  * mapStateToProps
  * @param appState
  */
-function mapStateToProps(appState: IAppState) {
+function mapStateToProps(appState: IAppState): IAppTopComponentStateProps {
     // TODO:
     return {
         selectedIndex: appState.appTopState.selectedIndex,
@@ -51,7 +51,7 @@ function mapDispatchToProps(
 /**
  * connect
  */
-export default connect<IAppTopComponentStateProps, IAppTopComponentDispatchProps, {}, IAppState>(
+export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(AppTopComponent);

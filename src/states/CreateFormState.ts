@@ -213,7 +213,7 @@ export interface ICreateFormState {
     formDataSelectedRowsCount: number; // TODO:  選択行の数
     formDataFirstSelectedRowIdx: number; // TODO: 先頭から最初の選択行のインデックス
 
-    autoCompleteOptions: {};
+    autoCompleteOptions: autoCompleteOptionsType;
 
     notify: NotifyContext; // 通知コンテキスト
 

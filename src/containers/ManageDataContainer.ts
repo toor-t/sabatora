@@ -59,12 +59,7 @@ function mapDispatchToProps(
 /**
  * connect
  */
-export default connect<
-    IManageDataComponentStateProps,
-    IManageDataComponentDispatchProps,
-    {},
-    IAppState
->(
+export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(ManageDataComponent);

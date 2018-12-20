@@ -35,7 +35,7 @@ function mapDispatchToProps(dispatch: Dispatch): IAboutComponentDispatchProps {
 /**
  * connect
  */
-export default connect<IAboutComponentStateProps, IAboutComponentDispatchProps, {}, IAppState>(
+export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(AboutComponent);
