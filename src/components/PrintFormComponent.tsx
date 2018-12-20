@@ -18,7 +18,10 @@ import {
     FormDataRow,
     TotalPriceRowKeys,
     SubtotalPriceRowKeys,
-    NormalDataRowKeys
+    NormalRowKeys,
+    TotalPriceRow,
+    SubtotalPriceRow,
+    NormalRow
 } from '../states/CreateFormState';
 import { TableFooter } from '@material-ui/core';
 import { Str } from '../strings';
@@ -115,9 +118,9 @@ const PrintFormComponent: React.SFC<
 
     const tableBodyContents: JSX.Element[] = [];
     for (let rowsidx = 0; rowsidx < rows.length - 1; rowsidx += 1) {
-        const row = rows[rowsidx];
-        if (row[SubtotalPriceRowKeys.labelSubtotalPrice]) {
+        if (SubtotalPriceRowKeys.labelSubtotalPrice in rows[rowsidx]) {
             // 小計行
+            const row = rows[rowsidx] as SubtotalPriceRow;
             tableBodyContents.push(
                 <TableRow key={row[SubtotalPriceRowKeys.id]}>
                     // padings
@@ -139,38 +142,36 @@ const PrintFormComponent: React.SFC<
             );
         } else {
             // 通常行
+            const row = rows[rowsidx] as NormalRow;
             tableBodyContents.push(
-                <TableRow className={classes.row} key={row[NormalDataRowKeys.id]}>
+                <TableRow className={classes.row} key={row[NormalRowKeys.id]}>
                     // No
                     <TableCell component="th" scope="row" padding="dense" numeric={true}>
-                        {row[NormalDataRowKeys.id]}
+                        {row[NormalRowKeys.id]}
                     </TableCell>
-                    // Level 1
-                    <TableCell padding="dense">{row[NormalDataRowKeys.level_1]}</TableCell>
-                    // Level 2
-                    <TableCell padding="dense">{row[NormalDataRowKeys.level_2]}</TableCell>
-                    // Level 3
-                    <TableCell padding="dense">{row[NormalDataRowKeys.level_3]}</TableCell>
+                    // Level 1<TableCell padding="dense">{row[NormalRowKeys.level_1]}</TableCell>
+                    // Level 2<TableCell padding="dense">{row[NormalRowKeys.level_2]}</TableCell>
+                    // Level 3<TableCell padding="dense">{row[NormalRowKeys.level_3]}</TableCell>
                     // ItemName
-                    <TableCell padding="dense">{row[NormalDataRowKeys.itemName]}</TableCell>
+                    <TableCell padding="dense">{row[NormalRowKeys.itemName]}</TableCell>
                     // UnitPrice
                     <TableCell padding="dense" numeric={true}>
-                        {NumberFormatter(row[NormalDataRowKeys.unitPrice])}
+                        {NumberFormatter(row[NormalRowKeys.unitPrice])}
                     </TableCell>
                     // Num
                     <TableCell padding="dense" numeric={true}>
-                        {NumberFormatter(row[NormalDataRowKeys.num])}
+                        {NumberFormatter(row[NormalRowKeys.num])}
                     </TableCell>
                     // Price
                     <TableCell padding="dense" numeric={true}>
-                        {NumberFormatter(row[NormalDataRowKeys.price])}
+                        {NumberFormatter(row[NormalRowKeys.price])}
                     </TableCell>
                 </TableRow>
             );
         }
     }
 
-    const row = rows[rows.length - 1];
+    const row = rows[rows.length - 1] as TotalPriceRow; // TODO: 最後の行が合計行であることを決め打ちしているのはあまりよくない
     const tableFooterContents: JSX.Element = (
         <TableRow key={row[TotalPriceRowKeys.id]}>
             // paddings

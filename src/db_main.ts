@@ -409,21 +409,49 @@ const updateAutoCompleteOptions = (query: DataDoc, projection: string[] = []): P
                 for (const key in projectionKeys) {
                     let result: string[] = [];
                     const currentKey = projectionKeys[key];
-                    if (currentKey !== DataDocKeys.unitPrice) {
-                        const newDocs: string[] = [];
-                        for (let i = 0; i < docs.length; i = i + 1) {
-                            const doc = docs[i];
-                            newDocs.push(doc[currentKey] as string);
-                        }
-                        result = Array.from(new Set(newDocs)).sort();
-                    } else if (currentKey === DataDocKeys.unitPrice) {
-                        if (docs.length !== 1) {
-                            // 複数候補がある場合は無視する
-                            continue;
-                        }
-                        result = docs[0][currentKey].map((value, index, array) => {
-                            return value.toString();
-                        });
+                    switch (currentKey) {
+                        /**
+                         * level
+                         */
+                        case DataDocKeys.level_1:
+                        case DataDocKeys.level_2:
+                        case DataDocKeys.level_3:
+                        /**
+                         * itemName
+                         */
+                        case DataDocKeys.itemName:
+                            const newDocs: string[] = [];
+                            for (let i = 0; i < docs.length; i = i + 1) {
+                                const doc = docs[i];
+                                newDocs.push(doc[currentKey]);
+                            }
+                            result = Array.from(new Set(newDocs)).sort();
+
+                            break;
+
+                        /**
+                         * unitPrice
+                         */
+                        case DataDocKeys.unitPrice:
+                            if (docs.length !== 1) {
+                                // 複数候補がある場合は無視する
+                                continue;
+                            }
+                            result = docs[0][currentKey].map((value, index, array) => {
+                                return value.toString();
+                            });
+
+                            break;
+
+                        /**
+                         * _id
+                         */
+                        case DataDocKeys._id:
+                            // _id は無視
+                            break;
+
+                        default:
+                            break;
                     }
 
                     const _options: {}[] = [];

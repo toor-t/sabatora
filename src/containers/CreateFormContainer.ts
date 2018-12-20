@@ -14,11 +14,7 @@ import {
 } from '../components/NotifyComponent';
 
 import { IAppState } from '../store';
-import {
-    updateAutoCompleteOptionsWorker,
-    FormDataRow,
-    NormalDataRow
-} from '../states/CreateFormState';
+import { updateAutoCompleteOptionsWorker, FormDataRow, NormalRow } from '../states/CreateFormState';
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
 import * as ReactDataGrid from 'react-data-grid';
@@ -63,7 +59,7 @@ function mapDispatchToProps(
             dispatch(CreateFormActions.selectCell(col)),
         onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) =>
             dispatch(CreateFormActions.updateGridRow(e)),
-        updateAutoCompleteOptions: (c: { rowData: NormalDataRow; columnDDKey?: string }) =>
+        updateAutoCompleteOptions: (c: { rowData: NormalRow; columnDDKey?: string }) =>
             dispatch(updateAutoCompleteOptionsWorker(c)),
         addRow: () => dispatch(CreateFormActions.addRow()),
         deleteRows: () => dispatch(CreateFormActions.deleteRows()),

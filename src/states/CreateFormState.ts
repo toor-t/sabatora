@@ -21,7 +21,7 @@ import { Action } from 'redux';
 import { DataDoc, DataDocKeys } from '../db';
 
 // NormalDataRowKeys
-export namespace NormalDataRowKeys {
+export namespace NormalRowKeys {
     // TODO:
     export const id = 'id'; // : number;
     /**
@@ -61,45 +61,43 @@ export namespace NormalDataRowKeys {
     // TODO: 実験
     export const invalid = 'invalid'; // : boolean;
 }
-export interface NormalDataRow {
-    [key: string]: number | string | boolean;
-
+export interface NormalRow {
     /**
      * id (No)
      */
-    [NormalDataRowKeys.id]: number;
+    [NormalRowKeys.id]: number;
 
     /**
      * level
      */
-    [NormalDataRowKeys.level_1]: string; // 大項目
-    [NormalDataRowKeys.level_2]: string; // 中項目
-    [NormalDataRowKeys.level_3]: string; // 小項目
+    [NormalRowKeys.level_1]: string; // 大項目
+    [NormalRowKeys.level_2]: string; // 中項目
+    [NormalRowKeys.level_3]: string; // 小項目
 
     /**
      * itemName
      */
-    [NormalDataRowKeys.itemName]: string; // 名称
+    [NormalRowKeys.itemName]: string; // 名称
 
     /**
      * unitPrice
      */
-    [NormalDataRowKeys.unitPrice]: number; // 単価
+    [NormalRowKeys.unitPrice]: number; // 単価
 
     /**
      * num
      */
-    [NormalDataRowKeys.num]: number; // 個数
+    [NormalRowKeys.num]: number; // 個数
 
     /**
      * price
      */
-    [NormalDataRowKeys.price]: number; // 価格
+    [NormalRowKeys.price]: number; // 価格
 
-    [NormalDataRowKeys.selected]: boolean;
+    [NormalRowKeys.selected]: boolean;
 
     // TODO: 実験
-    [NormalDataRowKeys.invalid]: boolean;
+    [NormalRowKeys.invalid]: boolean;
 }
 
 // 合計表示行
@@ -116,8 +114,6 @@ export namespace TotalPriceRowKeys {
     export const totalPrice = 'totalPrice';
 }
 export interface TotalPriceRow {
-    [key: string]: number | string;
-
     [TotalPriceRowKeys.id]: number;
 
     /**
@@ -150,8 +146,6 @@ export namespace SubtotalPriceRowKeys {
     export const selected = 'selected';
 }
 export interface SubtotalPriceRow {
-    [key: string]: number | string | boolean;
-
     [SubtotalPriceRowKeys.id]: number;
 
     /**
@@ -167,7 +161,7 @@ export interface SubtotalPriceRow {
     [SubtotalPriceRowKeys.selected]: boolean;
 }
 
-export type FormDataRow = NormalDataRow | SubtotalPriceRow | TotalPriceRow;
+export type FormDataRow = NormalRow | SubtotalPriceRow | TotalPriceRow;
 
 /**
  * IFormData
@@ -278,23 +272,23 @@ function calcTotalPrice(rows: FormDataRow[]): number {
     let id: number = 1;
     for (let i = 0; i < rows.length; i = i + 1) {
         if (
-            rows[i][NormalDataRowKeys.price] !== undefined
+            NormalRowKeys.price in rows[i]
             // && !rows[i][NormalDataRowKeys.price_isEmpty]
         ) {
-            sumPrice += rows[i][NormalDataRowKeys.price] as number;
-            subSumPrice += rows[i][NormalDataRowKeys.price] as number;
+            sumPrice += (rows[i] as NormalRow)[NormalRowKeys.price] as number;
+            subSumPrice += (rows[i] as NormalRow)[NormalRowKeys.price] as number;
             // TODO: No.を更新する処理
-            rows[i][NormalDataRowKeys.id] = id;
+            rows[i][NormalRowKeys.id] = id;
             id += 1;
         }
         // 小計行
-        if (rows[i][SubtotalPriceRowKeys.subtotalPrice] !== undefined) {
-            rows[i][SubtotalPriceRowKeys.subtotalPrice] = subSumPrice;
+        if (SubtotalPriceRowKeys.subtotalPrice in rows[i]) {
+            (rows[i] as SubtotalPriceRow)[SubtotalPriceRowKeys.subtotalPrice] = subSumPrice;
             subSumPrice = 0;
         }
         // 合計行 ※ここでやらないほうが良い？
-        if (rows[i][TotalPriceRowKeys.totalPrice] !== undefined) {
-            rows[i][TotalPriceRowKeys.totalPrice] = sumPrice;
+        if (TotalPriceRowKeys.totalPrice in rows[i]) {
+            (rows[i] as TotalPriceRow)[TotalPriceRowKeys.totalPrice] = sumPrice;
         }
     }
     // console.log(`totalPrice=${sumPrice}`);
@@ -310,8 +304,8 @@ const getSlecetedRowsInfo = (rows: FormDataRow[]): { count: number; firstIdx: nu
     let count: number = 0;
     let firstIdx: number = -1;
     for (let idx = 0; idx < rows.length - 1 /* 合計行は無視 */; idx += 1) {
-        const row: NormalDataRow = rows[idx] as NormalDataRow;
-        if (row[NormalDataRowKeys.selected]) {
+        const row: NormalRow = rows[idx] as NormalRow;
+        if (row[NormalRowKeys.selected]) {
             count += 1;
             if (firstIdx === -1) {
                 firstIdx = idx;
@@ -429,12 +423,10 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
      * 行削除
      */
     .case(CreateFormActions.deleteRows, state => {
-        const dataRows: (NormalDataRow | TotalPriceRow | SubtotalPriceRow)[] = [];
+        const dataRows: (NormalRow | TotalPriceRow | SubtotalPriceRow)[] = [];
 
         for (const dataRowIdx in state.formData.dataRows) {
-            if (
-                !(state.formData.dataRows[dataRowIdx] as NormalDataRow)[NormalDataRowKeys.selected]
-            ) {
+            if (!(state.formData.dataRows[dataRowIdx] as NormalRow)[NormalRowKeys.selected]) {
                 // 残す行なのでpushして保存する
                 dataRows.push(state.formData.dataRows[dataRowIdx]);
             }
@@ -464,35 +456,36 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
 
         // tslint:disable-next-line:no-increment-decrement
         for (let i = e.fromRow; i <= e.toRow; i++) {
-            if ((dataRows[i] as any)[NormalDataRowKeys.price] !== undefined) {
-                const rowToUpdate: NormalDataRow = dataRows[i] as NormalDataRow;
+            if ((dataRows[i] as any)[NormalRowKeys.price] !== undefined) {
+                const rowToUpdate: NormalRow = dataRows[i] as NormalRow;
                 // TODO: 価格を計算
-                if (e.updated[NormalDataRowKeys.unitPrice]) {
-                    e.updated[NormalDataRowKeys.unitPrice] = String(
-                        e.updated[NormalDataRowKeys.unitPrice]
+                if (e.updated[NormalRowKeys.unitPrice]) {
+                    e.updated[NormalRowKeys.unitPrice] = String(
+                        e.updated[NormalRowKeys.unitPrice]
                     ).replace(/[Ａ-Ｚａ-ｚ０-９]/g, (s: string) => {
                         return String.fromCharCode(s.charCodeAt(0) - 65248);
                     });
                 }
-                if (e.updated[NormalDataRowKeys.num]) {
-                    e.updated[NormalDataRowKeys.num] = String(
-                        e.updated[NormalDataRowKeys.num]
-                    ).replace(/[Ａ-Ｚａ-ｚ０-９]/g, (s: string) => {
-                        return String.fromCharCode(s.charCodeAt(0) - 65248);
-                    });
+                if (e.updated[NormalRowKeys.num]) {
+                    e.updated[NormalRowKeys.num] = String(e.updated[NormalRowKeys.num]).replace(
+                        /[Ａ-Ｚａ-ｚ０-９]/g,
+                        (s: string) => {
+                            return String.fromCharCode(s.charCodeAt(0) - 65248);
+                        }
+                    );
                 }
-                const _unitPrice = !e.updated[NormalDataRowKeys.unitPrice]
-                    ? rowToUpdate[NormalDataRowKeys.unitPrice]
-                    : e.updated[NormalDataRowKeys.unitPrice] === ''
+                const _unitPrice = !e.updated[NormalRowKeys.unitPrice]
+                    ? rowToUpdate[NormalRowKeys.unitPrice]
+                    : e.updated[NormalRowKeys.unitPrice] === ''
                     ? 0
-                    : e.updated[NormalDataRowKeys.unitPrice];
-                const _num = !e.updated[NormalDataRowKeys.num]
-                    ? rowToUpdate[NormalDataRowKeys.num]
-                    : e.updated[NormalDataRowKeys.num] === ''
+                    : e.updated[NormalRowKeys.unitPrice];
+                const _num = !e.updated[NormalRowKeys.num]
+                    ? rowToUpdate[NormalRowKeys.num]
+                    : e.updated[NormalRowKeys.num] === ''
                     ? 0
-                    : e.updated[NormalDataRowKeys.num];
+                    : e.updated[NormalRowKeys.num];
 
-                e.updated[NormalDataRowKeys.price] = Number(_unitPrice) * Number(_num);
+                e.updated[NormalRowKeys.price] = Number(_unitPrice) * Number(_num);
                 // e.updated[NormalDataRowKeys.price_isEmpty] = false;
 
                 const updatedRow = immutabilityHelper(rowToUpdate, { $merge: e.updated });
@@ -808,7 +801,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
  */
 export const updateAutoCompleteOptionsWorker = wrapThunkAsyncActionWorker<
     IAppState,
-    { rowData: NormalDataRow; columnDDKey?: string },
+    { rowData: NormalRow; columnDDKey?: string },
     {},
     {}
 >(
@@ -820,13 +813,13 @@ export const updateAutoCompleteOptionsWorker = wrapThunkAsyncActionWorker<
                 /**
                  * level
                  */
-                [DataDocKeys.level_1]: rowData[NormalDataRowKeys.level_1],
-                [DataDocKeys.level_2]: rowData[NormalDataRowKeys.level_2],
-                [DataDocKeys.level_3]: rowData[NormalDataRowKeys.level_3],
+                [DataDocKeys.level_1]: rowData[NormalRowKeys.level_1],
+                [DataDocKeys.level_2]: rowData[NormalRowKeys.level_2],
+                [DataDocKeys.level_3]: rowData[NormalRowKeys.level_3],
                 /**
                  * itemName
                  */
-                [DataDocKeys.itemName]: rowData[NormalDataRowKeys.itemName],
+                [DataDocKeys.itemName]: rowData[NormalRowKeys.itemName],
                 /**
                  * unitPrice
                  */

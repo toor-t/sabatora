@@ -8,8 +8,8 @@ import * as React from 'react';
 import { Toolbar, Editors } from 'react-data-grid-addons';
 const { AutoComplete: AutoCompleteEditor, SimpleTextEditor } = Editors;
 import {
-    NormalDataRow,
-    NormalDataRowKeys,
+    NormalRow,
+    NormalRowKeys,
     TotalPriceRowKeys,
     SubtotalPriceRowKeys,
     FormDataRow
@@ -249,7 +249,7 @@ class CustomRowRenderer extends React.Component<ICustomRowRendererProps, ICustom
         const { columns, ...other } = this.props;
         let _columns = columns;
 
-        if (this.props.row[TotalPriceRowKeys.totalPrice] !== undefined) {
+        if (TotalPriceRowKeys.totalPrice in this.props.row) {
             // 合計表示
             const check_column = Object.assign(
                 {},
@@ -307,7 +307,7 @@ class CustomRowRenderer extends React.Component<ICustomRowRendererProps, ICustom
                 />
             );
         }
-        if (this.props.row[SubtotalPriceRowKeys.subtotalPrice] !== undefined) {
+        if (SubtotalPriceRowKeys.subtotalPrice in this.props.row) {
             // 小計表示
             const check_column = columns[0]; // チェックボックスカラム
 
@@ -402,7 +402,7 @@ export interface ICreateFormDataGridComponentStateProps {
 export interface ICreateFormDataGridComponentDispatchProps {
     onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) => void;
     onSelectedCell: (col: { rowIdx: number; idx: number }) => void;
-    updateAutoCompleteOptions: (col: { rowData: NormalDataRow; columnDDKey?: string }) => void;
+    updateAutoCompleteOptions: (col: { rowData: NormalRow; columnDDKey?: string }) => void;
     addRow: () => void;
     deleteRows: () => void;
     selectRows: (rows: { rowIdx: number; row: FormDataRow }[]) => void;
@@ -413,7 +413,7 @@ export interface ICreateFormDataGridComponentDispatchProps {
  * ICreateFormDataGridComponentStates
  */
 interface ICreateFormDataGridComponentStates {
-    columns: (ReactDataGrid.Column<NormalDataRow> & { ddKey?: string })[];
+    columns: (ReactDataGrid.Column<NormalRow> & { ddKey?: string })[];
 }
 /**
  * CreateFormDataGridComponent
@@ -431,12 +431,12 @@ class CreateFormDataGridComponent extends React.Component<
     ) {
         super(props);
         // カラム定義
-        const columns: (ReactDataGrid.Column<NormalDataRow> & { ddKey?: string })[] = [
+        const columns: (ReactDataGrid.Column<NormalRow> & { ddKey?: string })[] = [
             /**
              * id
              */
             {
-                key: NormalDataRowKeys.id,
+                key: NormalRowKeys.id,
                 name: Str.No,
                 width: 48,
                 formatter: CenterFormatter
@@ -446,7 +446,7 @@ class CreateFormDataGridComponent extends React.Component<
              */
             // level 1
             {
-                key: NormalDataRowKeys.level_1,
+                key: NormalRowKeys.level_1,
                 name: Str.Level_1,
                 ddKey: DataDocKeys.level_1,
                 editor: <CustomAutoCompleteEditor getOptions={getOptions(DataDocKeys.level_1)} />,
@@ -454,7 +454,7 @@ class CreateFormDataGridComponent extends React.Component<
             },
             // level 2
             {
-                key: NormalDataRowKeys.level_2,
+                key: NormalRowKeys.level_2,
                 name: Str.Level_2,
                 ddKey: DataDocKeys.level_2,
                 resizable: true,
@@ -462,7 +462,7 @@ class CreateFormDataGridComponent extends React.Component<
             },
             // level 3
             {
-                key: NormalDataRowKeys.level_3,
+                key: NormalRowKeys.level_3,
                 name: Str.Level_3,
                 resizable: true,
                 ddKey: DataDocKeys.level_3,
@@ -472,7 +472,7 @@ class CreateFormDataGridComponent extends React.Component<
              * itemName
              */
             {
-                key: NormalDataRowKeys.itemName,
+                key: NormalRowKeys.itemName,
                 name: Str.ItemName,
                 resizable: true,
                 ddKey: DataDocKeys.itemName,
@@ -482,7 +482,7 @@ class CreateFormDataGridComponent extends React.Component<
              * unitPrice
              */
             {
-                key: NormalDataRowKeys.unitPrice,
+                key: NormalRowKeys.unitPrice,
                 name: Str.UnitPrice,
                 resizable: true,
                 ddKey: DataDocKeys.unitPrice,
@@ -493,7 +493,7 @@ class CreateFormDataGridComponent extends React.Component<
              * num
              */
             {
-                key: NormalDataRowKeys.num,
+                key: NormalRowKeys.num,
                 name: Str.Num,
                 editable: true,
                 resizable: true,
@@ -503,7 +503,7 @@ class CreateFormDataGridComponent extends React.Component<
              * price
              */
             {
-                key: NormalDataRowKeys.price,
+                key: NormalRowKeys.price,
                 name: Str.Price,
                 editable: false,
                 resizable: true,
@@ -531,7 +531,7 @@ class CreateFormDataGridComponent extends React.Component<
         // updateAutoCompleteOptions
         if (
             this.props.rows &&
-            (this.props.rows[col.rowIdx] as NormalDataRow)[NormalDataRowKeys.price] !== undefined
+            (this.props.rows[col.rowIdx] as NormalRow)[NormalRowKeys.price] !== undefined
         ) {
             // 通常行のみ。合計行等では更新しない
             if (
@@ -541,7 +541,7 @@ class CreateFormDataGridComponent extends React.Component<
             ) {
                 // DBに対応するデータがあるカラムのみ。
                 this.props.updateAutoCompleteOptions({
-                    rowData: this.props.rows[col.rowIdx] as NormalDataRow,
+                    rowData: this.props.rows[col.rowIdx] as NormalRow,
                     columnDDKey:
                         this.state.columns[col.idx - 1 /* チェックボックスの分引く */].ddKey !==
                         undefined
@@ -602,7 +602,7 @@ class CreateFormDataGridComponent extends React.Component<
                         onRowsSelected: this.onRowsSelected,
                         onRowsDeselected: this.onRowsDeselected,
                         selectBy: {
-                            isSelectedKey: NormalDataRowKeys.selected
+                            isSelectedKey: NormalRowKeys.selected
                         }
                     }}
                     rowGetter={this.rowGetter}

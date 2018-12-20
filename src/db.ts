@@ -19,8 +19,6 @@ export namespace DataDocKeys {
 }
 
 export interface DataDoc {
-    [key: string]: string | number[] | undefined;
-
     [DataDocKeys._id]?: string;
 
     [DataDocKeys.level_1]: string; // 大1
