@@ -13,7 +13,11 @@ import {
     autoCompleteOptionsType
 } from './db';
 
-// AutoCompleteOptions
+/**
+ * UpdateAutoCompleteOptions
+ * @param query
+ * @param projection
+ */
 export const updateAutoCompleteOptions = (
     query: DataDoc,
     projection: (keyof DataDoc)[] = []
@@ -36,7 +40,11 @@ export const updateAutoCompleteOptions = (
     });
 };
 
-// dbQuery
+/**
+ * dbQuery
+ * @param query
+ * @param projection
+ */
 export const queryDb = (query: DataDoc, projection: (keyof DataDoc)[] = []): Promise<DataDoc[]> => {
     return new Promise((resolve, reject) => {
         //
@@ -56,7 +64,11 @@ export const queryDb = (query: DataDoc, projection: (keyof DataDoc)[] = []): Pro
     });
 };
 
-// dbUpdate
+/**
+ * dbUpdate
+ * @param query
+ * @param update
+ */
 export const updateDb = (query: DataDoc, update: DataDoc): Promise<DataDoc[]> => {
     return new Promise((resolve, reject) => {
         //
@@ -76,7 +88,10 @@ export const updateDb = (query: DataDoc, update: DataDoc): Promise<DataDoc[]> =>
     });
 };
 
-// dbInsert
+/**
+ * dbInsert
+ * @param doc
+ */
 export const insertDb = (doc: DataDoc): Promise<DataDoc> => {
     return new Promise((resolve, reject) => {
         //
@@ -96,7 +111,10 @@ export const insertDb = (doc: DataDoc): Promise<DataDoc> => {
     });
 };
 
-// dbRemove
+/**
+ * dbRemove
+ * @param query
+ */
 export const removeDb = (query: DataDoc): Promise<number> => {
     return new Promise((resolve, reject) => {
         //

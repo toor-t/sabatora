@@ -53,8 +53,13 @@ const createWindow = async () => {
         x,
         y,
         minWidth: 800,
-        minHeight: 400
+        minHeight: 400,
         // titleBarStyle: 'hiddenInset',
+        show: false
+        // backgroundColor: '#2e2c29',
+    });
+    win.once('ready-to-show', () => {
+        win && win.show();
     });
 
     if (process.env.NODE_ENV !== 'production') {

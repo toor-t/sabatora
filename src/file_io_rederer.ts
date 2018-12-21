@@ -6,7 +6,9 @@ import { ipcRenderer, Event } from 'electron';
 import { OpenForm, SaveForm } from './file_io';
 import { IFormData } from './states/CreateFormState';
 
-// OpenForm
+/**
+ * OpenForm
+ */
 export const openForm = (): Promise<Buffer> => {
     return new Promise((resolve, reject) => {
         //
@@ -23,7 +25,9 @@ export const openForm = (): Promise<Buffer> => {
     });
 };
 
-// SaveForm
+/**
+ * SaveForm
+ */
 export const saveForm = (): Promise<void> => {
     return new Promise((resolve, reject) => {
         //

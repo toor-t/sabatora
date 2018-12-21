@@ -67,7 +67,7 @@ class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
         this.getInputNode.bind(this);
         this.hasResults.bind(this);
     }
-    autoComplete: any;
+    autoComplete: any; // TODO: anyで無くしたい。
 
     getValue() {
         const valueObj: {} = this.autoComplete.getValue();
@@ -203,7 +203,7 @@ const BoldRightFormatter: React.SFC<IFormatterProps> = props => {
 interface ICustomRowRendererProps {
     grid: CreateFormDataGridComponent;
     idx: number;
-    columns: /*ReactDataGrid.Column<FormDataRow>*/ any[];
+    columns: (ReactDataGrid.Column<NormalRow> & { ddKey?: keyof DataDoc })[];
     row: FormDataRow;
 }
 /**
@@ -265,8 +265,9 @@ class CustomRowRenderer extends React.Component<ICustomRowRendererProps, ICustom
 
             let width = 0;
             for (let i = 1; i < columns.length - 1; i = i + 1) {
-                if (columns[i]['width'] !== undefined) {
-                    width += columns[i]['width'];
+                const column = columns[i];
+                if (column['width'] !== undefined) {
+                    width += column['width'];
                 }
             }
             // 左端のカラムの情報
@@ -318,8 +319,9 @@ class CustomRowRenderer extends React.Component<ICustomRowRendererProps, ICustom
 
             let width = 0;
             for (let i = 1; i < columns.length - 1; i = i + 1) {
-                if (columns[i]['width'] !== undefined) {
-                    width += columns[i]['width'];
+                const column = columns[i];
+                if (column['width'] !== undefined) {
+                    width += column['width'];
                 }
             }
             // 左端のカラムの情報
