@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConfigComponent renders correctly 1`] = `
+<div>
+  <h6
+    className="MuiTypography-root-1 MuiTypography-h6-18 MuiTypography-colorInherit-30 MuiTypography-noWrap-27 MuiTypography-alignCenter-24"
+    style={
+      Object {
+        "flexGrow": 1,
+      }
+    }
+  >
+    設定
+  </h6>
+</div>
+`;

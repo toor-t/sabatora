@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AboutComponent renders correctly 1`] = `
+<div>
+  <div
+    className="AboutComponent-div-1"
+  >
+    <img
+      className="AboutComponent-img-2"
+      src="test-file-stub"
+    />
+  </div>
+  <h6
+    className="MuiTypography-root-3 MuiTypography-h6-20 MuiTypography-colorInherit-32 MuiTypography-noWrap-29 MuiTypography-alignCenter-26"
+    style={
+      Object {
+        "flexGrow": 1,
+      }
+    }
+  >
+    <br />
+    sabatora.
+    <br />
+    (C) 2008 toor-t
+  </h6>
+</div>
+`;
