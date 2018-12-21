@@ -161,8 +161,6 @@ export namespace SubtotalPriceRowKeys {
 export interface SubtotalPriceRow extends BaseRow {
     type: Readonly<'SubtotalPrice'>;
 
-    // [SubtotalPriceRowKeys.id]: number;
-
     /**
      * Subtotal Price label
      */
@@ -172,8 +170,6 @@ export interface SubtotalPriceRow extends BaseRow {
      * Subtotal Price
      */
     [SubtotalPriceRowKeys.subtotalPrice]: number;
-
-    // [SubtotalPriceRowKeys.selected]: boolean;
 }
 
 export type FormDataRow = NormalRow | SubtotalPriceRow | TotalPriceRow;
@@ -251,19 +247,20 @@ const initialDataRow: FormDataRow = {
     // TODO: 実験
     invalid: false
 };
+const initialTotalpriceRow: TotalPriceRow = {
+    type: 'TotalPrice',
+    id: -1,
+    [TotalPriceRowKeys.labelTotalPrice]: Str.TotalPrice,
+    [TotalPriceRowKeys.totalPrice]: 0,
+    selected: false
+};
 const initialState: ICreateFormState = {
     formData: {
         dataRows: [
             // 空行
             initialDataRow,
             // 合計行
-            {
-                type: 'TotalPrice',
-                id: -1,
-                [TotalPriceRowKeys.labelTotalPrice]: Str.TotalPrice,
-                [TotalPriceRowKeys.totalPrice]: 0,
-                selected: false
-            }
+            initialTotalpriceRow
         ],
         title: Str.InitialFormTitle,
         totalPrice: 0
@@ -912,7 +909,7 @@ export const newFormWithConfirmWorker = () => (
 /**
  * TODO: 印刷処理ワーカー
  */
-export const printFormWorker = () => (
+export const printFormWorker = () => async (
     dispatch: ThunkDispatch<IAppState, undefined, Action>,
     getState: () => IAppState
 ) => {

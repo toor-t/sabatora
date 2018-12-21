@@ -30,9 +30,7 @@ function sleep(waitMSec: number, callbackFunc: () => void) {
 /**
  * 帳票印刷リクエスト待ち受け
  */
-const printForm_request = ipcMain.on(PrintForm.Request, (event: Event, arg: unknown) => {
-    // TODO:
-    event.sender.send(PrintForm.Reply, 'Request received.');
+ipcMain.on(PrintForm.Request, (event: Event, arg: unknown) => {
     // TODO: 実験：waitしてみる
     sleep(200, () => {
         const asyncFunc = async () => {
@@ -51,7 +49,6 @@ const printForm_request = ipcMain.on(PrintForm.Request, (event: Event, arg: unkn
         asyncFunc().then();
     });
 });
-
 /**
  * 帳票印刷
  */

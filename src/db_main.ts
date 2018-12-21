@@ -42,27 +42,23 @@ const conf_db: Nedb = new DataStore({
 /**
  * Query DB Request listener
  */
-const queryDb_request = ipcMain.on(
-    QueryDb.Request,
-    (event: Event, arg: [DataDoc, (keyof DataDoc)[]]) => {
-        // TODO:
-        const asyncFunc = async () => {
-            event.sender.send(QueryDb.Reply, 'Request received.');
-            try {
-                const result = await queryDb(arg[0], arg[1]);
-                if (win) {
-                    win.webContents.send(QueryDb.Result, result);
-                }
-            } catch (reject) {
-                // TODO:
-                if (win) {
-                    win.webContents.send(QueryDb.Reject, reject);
-                }
+ipcMain.on(QueryDb.Request, (event: Event, arg: [DataDoc, (keyof DataDoc)[]]) => {
+    // TODO:
+    const asyncFunc = async () => {
+        try {
+            const result = await queryDb(arg[0], arg[1]);
+            if (win) {
+                win.webContents.send(QueryDb.Result, result);
             }
-        };
-        asyncFunc().then();
-    }
-);
+        } catch (reject) {
+            // TODO:
+            if (win) {
+                win.webContents.send(QueryDb.Reject, reject);
+            }
+        }
+    };
+    asyncFunc().then();
+});
 /**
  * Query DB
  * @param query
@@ -155,9 +151,8 @@ const queryDb = (query: DataDoc, projection: (keyof DataDoc)[] = []): Promise<Da
 /**
  * Update DB Request listener
  */
-const updateDb_request = ipcMain.on(UpdateDb.Request, (event: Event, arg: [DataDoc, DataDoc]) => {
+ipcMain.on(UpdateDb.Request, (event: Event, arg: [DataDoc, DataDoc]) => {
     const asyncFunc = async () => {
-        event.sender.send(UpdateDb.Reply, 'Request received.');
         try {
             // TODO:
             const result = await updateDb(arg[0], arg[1]);
@@ -229,9 +224,8 @@ const updateDb = (query: DataDoc, update: DataDoc): Promise<DataDoc[]> => {
 /**
  * Insert DB Request listener
  */
-const insertDb_request = ipcMain.on(InsertDb.Request, (event: Event, arg: [DataDoc]) => {
+ipcMain.on(InsertDb.Request, (event: Event, arg: [DataDoc]) => {
     const asyncFunc = async () => {
-        event.sender.send(InsertDb.Reply, 'Request received.');
         try {
             // TODO:
             const result = await insertDb(arg[0]);
@@ -267,9 +261,8 @@ const insertDb = (doc: DataDoc): Promise<DataDoc> => {
 /**
  * Remove DB Request listener
  */
-const removeDb_request = ipcMain.on(RemoveDb.Request, (event: Event, arg: [DataDoc]) => {
+ipcMain.on(RemoveDb.Request, (event: Event, arg: [DataDoc]) => {
     const asyncFunc = async () => {
-        event.sender.send(RemoveDb.Reply, 'Request received.');
         try {
             // TODO:
             const result = await removeDb(arg[0]);
@@ -305,27 +298,23 @@ const removeDb = (query: DataDoc): Promise<number> => {
 /**
  * Update AutoCompleteOptions Request listener
  */
-const updateAutoCompleteOptions_request = ipcMain.on(
-    UpdateAutoCompleteOptions.Request,
-    (event: Event, arg: [DataDoc, (keyof DataDoc)[]]) => {
-        const asyncFunc = async () => {
-            event.sender.send(UpdateAutoCompleteOptions.Reply, 'Request received.');
-            try {
-                // TODO:
-                const result = await updateAutoCompleteOptions(arg[0], arg[1]);
-                if (win) {
-                    win.webContents.send(UpdateAutoCompleteOptions.Result, result);
-                }
-            } catch (reject) {
-                // TODO:
-                if (win) {
-                    win.webContents.send(UpdateAutoCompleteOptions.Reject, reject);
-                }
+ipcMain.on(UpdateAutoCompleteOptions.Request, (event: Event, arg: [DataDoc, (keyof DataDoc)[]]) => {
+    const asyncFunc = async () => {
+        try {
+            // TODO:
+            const result = await updateAutoCompleteOptions(arg[0], arg[1]);
+            if (win) {
+                win.webContents.send(UpdateAutoCompleteOptions.Result, result);
             }
-        };
-        asyncFunc().then();
-    }
-);
+        } catch (reject) {
+            // TODO:
+            if (win) {
+                win.webContents.send(UpdateAutoCompleteOptions.Reject, reject);
+            }
+        }
+    };
+    asyncFunc().then();
+});
 /**
  * Update AutoCompleteOptions
  * @param query
@@ -334,7 +323,7 @@ const updateAutoCompleteOptions_request = ipcMain.on(
 const updateAutoCompleteOptions = (
     query: DataDoc,
     projection: (keyof DataDoc)[] = []
-): Promise<{}> => {
+): Promise<autoCompleteOptionsType> => {
     return new Promise((resolve, reject) => {
         // query生成
         let _query: Partial<DataDoc> = {};

@@ -32,16 +32,16 @@ function sleep(waitMSec: number, callbackFunc: () => void) {
  * 帳票読込リクエスト待ち受け
  */
 ipcMain.on(OpenForm.Request, (event: Event, arg: unknown) => {
-    // TODO:
-    event.sender.send(OpenForm.Reply, 'Request received.');
     // TODO: 実験：waitしてみる
     sleep(200, () => {
         const asyncFunc = async () => {
             if (win) {
                 try {
                     const result = await openForm();
+                    console.log('openForm() end.');
                     win.webContents.send(OpenForm.Result, result);
                 } catch (reject) {
+                    console.log(typeof reject);
                     // TODO:
                     win.webContents.send(OpenForm.Reject, reject);
                 }
@@ -102,7 +102,6 @@ const openForm = (): Promise<Buffer> => {
  * 帳票保存リクエスト待ち受け
  */
 ipcMain.on(SaveForm.Request, (event: Event, arg: [IFormData]) => {
-    event.sender.send(SaveForm.Reply, 'Request received.');
     // TODO: 実験：waitしてみる
     sleep(200, () => {
         const asyncFunc = async () => {

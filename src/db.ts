@@ -38,7 +38,6 @@ export namespace UpdateAutoCompleteOptions {
     export const Request = 'updateAutoCompleteOptions-request';
     export const Result = 'updateAutoCompleteOptions-result';
     export const Reject = 'updateAutoCompleteOptions-reject';
-    export const Reply = 'updateAutoCompleteOptions-reply';
 }
 export type autoCompleteOptionsType = { [P in keyof DataDoc]?: { id: number; title: string }[] };
 
@@ -46,26 +45,22 @@ export namespace QueryDb {
     export const Request = 'queryDb-request';
     export const Result = 'queryDb-result';
     export const Reject = 'queryDb-reject';
-    export const Reply = 'queryDb-reply';
 }
 
 export namespace UpdateDb {
     export const Request = 'updateDb-request';
     export const Result = 'updateDb-result';
     export const Reject = 'updateDb-reject';
-    export const Reply = 'updateDb-reply';
 }
 
 export namespace InsertDb {
     export const Request = 'insertDb-request';
     export const Result = 'insertDb-result';
     export const Reject = 'insertDb-reject';
-    export const Reply = 'insertDb-reply';
 }
 
 export namespace RemoveDb {
     export const Request = 'removeDb-request';
     export const Result = 'removeDb-result';
     export const Reject = 'removeDb-reject';
-    export const Reply = 'removeDb-reply';
 }

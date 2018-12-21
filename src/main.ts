@@ -8,12 +8,21 @@ import * as url from 'url';
 import './db_main';
 import './file_io_main';
 import './print_main';
-const ElectronStore = require('electron-store');
+// tslint:disable-next-line:import-name
+import ElectronStore = require('electron-store');
 
 export let win: BrowserWindow | null;
 
+interface IConfig {
+    bounds: {
+        width: number;
+        height: number;
+        x?: number;
+        y?: number;
+    };
+}
 // 設定(ウィンドウ位置とサイズ)取得
-const config = new ElectronStore({
+const config = new ElectronStore<IConfig>({
     defaults: {
         bounds: {
             width: 800, // ウィンドウ幅デフォルト
