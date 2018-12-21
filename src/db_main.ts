@@ -4,7 +4,6 @@
 'use strict';
 import { app, ipcMain, Event } from 'electron';
 import * as DataStore from 'nedb';
-import { win } from './main';
 
 import {
     DataDocKeys,
@@ -47,14 +46,10 @@ ipcMain.on(QueryDb.Request, (event: Event, arg: [DataDoc, (keyof DataDoc)[]]) =>
     const asyncFunc = async () => {
         try {
             const result = await queryDb(arg[0], arg[1]);
-            if (win) {
-                win.webContents.send(QueryDb.Result, result);
-            }
+            event.sender.send(QueryDb.Result, [result, null]);
         } catch (reject) {
             // TODO:
-            if (win) {
-                win.webContents.send(QueryDb.Reject, reject);
-            }
+            event.sender.send(QueryDb.Result, [null, reject]);
         }
     };
     asyncFunc().then();
@@ -156,14 +151,10 @@ ipcMain.on(UpdateDb.Request, (event: Event, arg: [DataDoc, DataDoc]) => {
         try {
             // TODO:
             const result = await updateDb(arg[0], arg[1]);
-            if (win) {
-                win.webContents.send(UpdateDb.Result, result);
-            }
+            event.sender.send(UpdateDb.Result, [result, null]);
         } catch (reject) {
             // TODO:
-            if (win) {
-                win.webContents.send(UpdateDb.Reject, reject);
-            }
+            event.sender.send(UpdateDb.Result, [null, reject]);
         }
     };
     asyncFunc().then();
@@ -229,14 +220,10 @@ ipcMain.on(InsertDb.Request, (event: Event, arg: [DataDoc]) => {
         try {
             // TODO:
             const result = await insertDb(arg[0]);
-            if (win) {
-                win.webContents.send(InsertDb.Result, result);
-            }
+            event.sender.send(InsertDb.Result, [result, null]);
         } catch (reject) {
             // TODO:
-            if (win) {
-                win.webContents.send(InsertDb.Reject, reject);
-            }
+            event.sender.send(InsertDb.Result, [null, reject]);
         }
     };
     asyncFunc().then();
@@ -266,14 +253,10 @@ ipcMain.on(RemoveDb.Request, (event: Event, arg: [DataDoc]) => {
         try {
             // TODO:
             const result = await removeDb(arg[0]);
-            if (win) {
-                win.webContents.send(RemoveDb.Result, result);
-            }
+            event.sender.send(RemoveDb.Result, [result, null]);
         } catch (reject) {
             // TODO:
-            if (win) {
-                win.webContents.send(RemoveDb.Reject, reject);
-            }
+            event.sender.send(RemoveDb.Result, [null, reject]);
         }
     };
     asyncFunc().then();
@@ -303,14 +286,10 @@ ipcMain.on(UpdateAutoCompleteOptions.Request, (event: Event, arg: [DataDoc, (key
         try {
             // TODO:
             const result = await updateAutoCompleteOptions(arg[0], arg[1]);
-            if (win) {
-                win.webContents.send(UpdateAutoCompleteOptions.Result, result);
-            }
+            event.sender.send(UpdateAutoCompleteOptions.Result, [result, null]);
         } catch (reject) {
             // TODO:
-            if (win) {
-                win.webContents.send(UpdateAutoCompleteOptions.Reject, reject);
-            }
+            event.sender.send(UpdateAutoCompleteOptions.Result, [null, reject]);
         }
     };
     asyncFunc().then();

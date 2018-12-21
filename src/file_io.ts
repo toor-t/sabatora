@@ -5,18 +5,15 @@
 
 const _request = '-request';
 const _result = '-result';
-const _reject = '-reject';
 
 export namespace OpenForm {
     const prefix = 'openForm';
     export const Request = prefix + _request;
     export const Result = prefix + _result;
-    export const Reject = prefix + _reject;
 }
 
 export namespace SaveForm {
     const prefix = 'saveForm';
     export const Request = prefix + _request;
     export const Result = prefix + _result;
-    export const Reject = prefix + _reject;
 }

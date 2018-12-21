@@ -27,7 +27,7 @@ function sleep(waitMSec: number, callbackFunc: () => void) {
         }
     }, 1);
 }
-// TODO:
+
 /**
  * 帳票読込リクエスト待ち受け
  */
@@ -35,16 +35,11 @@ ipcMain.on(OpenForm.Request, (event: Event, arg: unknown) => {
     // TODO: 実験：waitしてみる
     sleep(200, () => {
         const asyncFunc = async () => {
-            if (win) {
-                try {
-                    const result = await openForm();
-                    console.log('openForm() end.');
-                    win.webContents.send(OpenForm.Result, result);
-                } catch (reject) {
-                    console.log(typeof reject);
-                    // TODO:
-                    win.webContents.send(OpenForm.Reject, reject);
-                }
+            try {
+                const result = await openForm();
+                event.sender.send(OpenForm.Result, [result, null]);
+            } catch (reject) {
+                event.sender.send(OpenForm.Result, [null, reject]);
             }
         };
         asyncFunc().then();
@@ -68,9 +63,7 @@ const openForm = (): Promise<Buffer> => {
                     ]
                 },
                 filename => {
-                    // console.log(filename);
                     if (filename && filename[0]) {
-                        // console.log(filename[0]);
                         // ファイルオープン
                         fs.readFile(filename[0], (err, data) => {
                             if (err) {
@@ -85,7 +78,6 @@ const openForm = (): Promise<Buffer> => {
                         });
                     } else {
                         // キャンセルされた
-                        console.log('Canceled.');
                         reject('CANCELED'); // TODO:
                     }
                 }
@@ -105,13 +97,11 @@ ipcMain.on(SaveForm.Request, (event: Event, arg: [IFormData]) => {
     // TODO: 実験：waitしてみる
     sleep(200, () => {
         const asyncFunc = async () => {
-            if (win) {
-                try {
-                    const result = await saveForm(arg[0]);
-                    win.webContents.send(SaveForm.Result, result);
-                } catch (reject) {
-                    win.webContents.send(SaveForm.Reject, reject);
-                }
+            try {
+                const result = await saveForm(arg[0]);
+                event.sender.send(SaveForm.Result, [result, null]);
+            } catch (reject) {
+                event.sender.send(SaveForm.Result, [null, reject]);
             }
         };
         asyncFunc().then();
@@ -144,7 +134,6 @@ const saveForm = (formData: IFormData): Promise<void> => {
                         const saveFormData = Object.assign({}, formData);
                         // ファイルに保存
                         const fileContent = JSON.stringify(saveFormData);
-                        // console.log(fileContent);
                         fs.writeFile(filename, fileContent, err => {
                             if (err) {
                                 // TODO:

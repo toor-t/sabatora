@@ -4,7 +4,6 @@
 'use strict';
 import { PrintForm } from './print';
 import { ipcMain, Event } from 'electron';
-import { win } from './main';
 
 // TODO:
 // setIntervalを使う方法
@@ -34,16 +33,12 @@ ipcMain.on(PrintForm.Request, (event: Event, arg: unknown) => {
     // TODO: 実験：waitしてみる
     sleep(200, () => {
         const asyncFunc = async () => {
-            if (win) {
-                try {
-                    const result = await printForm();
-                    win.webContents.send(PrintForm.Result, result);
-                } catch (reject) {
-                    // TODO:
-                    win.webContents.send(PrintForm.Reject, reject);
-                }
-            } else {
-                // TODO: 以上状態
+            try {
+                const result = await printForm(event.sender);
+                event.sender.send(PrintForm.Result, [result, null]);
+            } catch (reject) {
+                // TODO:
+                event.sender.send(PrintForm.Result, [null, reject]);
             }
         };
         asyncFunc().then();
@@ -52,26 +47,19 @@ ipcMain.on(PrintForm.Request, (event: Event, arg: unknown) => {
 /**
  * 帳票印刷
  */
-const printForm = (): Promise<string> => {
+const printForm = (webContents: Electron.WebContents): Promise<string> => {
     return new Promise((resolve, reject) => {
-        if (win) {
-            // 印刷処理
-            win.webContents.print(
-                { silent: false, printBackground: false, deviceName: '' },
-                (success: boolean) => {
-                    if (success) {
-                        // console.log('印刷終了');
-                        resolve('印刷完了');
-                    } else {
-                        // TODO:  失敗した場合エラー表示する
-                        // console.log('帳票印刷失敗');
-                        reject('印刷失敗');
-                    }
+        // 印刷処理
+        webContents.print(
+            { silent: false, printBackground: false, deviceName: '' },
+            (success: boolean) => {
+                if (success) {
+                    resolve('印刷完了');
+                } else {
+                    // TODO:  失敗した場合エラー表示する
+                    reject('印刷失敗');
                 }
-            );
-        } else {
-            // TODO:
-            reject('印刷異常終了');
-        }
+            }
+        );
     });
 };

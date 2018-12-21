@@ -173,8 +173,6 @@ const PrintFormComponent: React.SFC<
             );
         }
     }
-    // DEBUG:
-    console.log(tableBodyContents);
 
     const row = rows[rows.length - 1] as TotalPriceRow; // TODO: 最後の行が合計行であることを決め打ちしているのはあまりよくない
     const tableFooterContents: JSX.Element = (
