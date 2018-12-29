@@ -18,7 +18,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { ActionCreator } from 'typescript-fsa';
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
-import { IAppState } from '../store';
+import { AppState } from '../store';
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -28,8 +28,8 @@ const styles = (theme: Theme) =>
     });
 
 type ThunkActionType = (() => (
-    dispatch: ThunkDispatch<IAppState, undefined, Action<void>>,
-    getState: () => IAppState
+    dispatch: ThunkDispatch<AppState, undefined, Action<void>>,
+    getState: () => AppState
 ) => void);
 type ThunkDispatchActionType = ThunkActionType | ActionCreator<void> | undefined;
 
@@ -123,27 +123,27 @@ export class NotifyContext {
 }
 
 /**
- * INotifyComponentStateProps
+ * NotifyComponentStateProps
  */
-export interface INotifyComponentStateProps {
+export type NotifyComponentStateProps = {
     notifyContext: NotifyContext;
-}
+};
 /**
- * INotifyComponentDispatchProps
+ * NotifyComponentDispatchProps
  */
-export interface INotifyComponentDispatchProps {
-    dispatch?: ThunkDispatch<IAppState, undefined, Action<void>>;
-}
+export type NotifyComponentDispatchProps = {
+    dispatch?: ThunkDispatch<AppState, undefined, Action<void>>;
+};
 /**
- * INotifyComponentStates
+ * NotifyComponentStates
  */
-interface INotifyComponentStates {}
+type NotifyComponentStates = {};
 /**
  * NotifyComponent
  */
 class NotifyComponent extends React.Component<
-    INotifyComponentStateProps & INotifyComponentDispatchProps & WithStyles<typeof styles>,
-    INotifyComponentStates
+    NotifyComponentStateProps & NotifyComponentDispatchProps & WithStyles<typeof styles>,
+    NotifyComponentStates
 > {
     handleCloseButtonClick = (event: React.MouseEvent<HTMLElement>) => {
         // TODO:

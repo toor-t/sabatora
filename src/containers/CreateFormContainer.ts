@@ -5,15 +5,15 @@
 import { connect } from 'react-redux';
 import { CreateFormActions } from '../actions/CreateFormAction';
 import CreateFormComponent, {
-    ICreateFormComponentStateProps,
-    ICreateFormComponentDispatchProps
+    CreateFormComponentStateProps,
+    CreateFormComponentDispatchProps
 } from '../components/CreateFormComponent';
 import {
-    INotifyComponentStateProps,
-    INotifyComponentDispatchProps
+    NotifyComponentStateProps,
+    NotifyComponentDispatchProps
 } from '../components/NotifyComponent';
 
-import { IAppState } from '../store';
+import { AppState } from '../store';
 import { updateAutoCompleteOptionsWorker, FormDataRow, NormalRow } from '../states/CreateFormState';
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
@@ -26,7 +26,7 @@ import { DataDoc } from '../db';
  */
 function mapStateToProps({
     createFormState
-}: IAppState): ICreateFormComponentStateProps & INotifyComponentStateProps {
+}: AppState): CreateFormComponentStateProps & NotifyComponentStateProps {
     // TODO:
     return {
         title: createFormState.formData.title,
@@ -46,8 +46,8 @@ function mapStateToProps({
  * @param dispatch
  */
 function mapDispatchToProps(
-    dispatch: ThunkDispatch<IAppState, undefined, Action>
-): ICreateFormComponentDispatchProps & INotifyComponentDispatchProps {
+    dispatch: ThunkDispatch<AppState, undefined, Action>
+): CreateFormComponentDispatchProps & NotifyComponentDispatchProps {
     // TODO:
     return {
         dispatch, // NotifyComponent に dispatchを渡す必要があるため。

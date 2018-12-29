@@ -65,22 +65,22 @@ const styles = (theme: Theme) =>
     });
 
 /**
- * IPrintFormComponentStateProps
+ * PrintFormComponentStateProps
  */
-export interface IPrintFormComponentStateProps {
+export type PrintFormComponentStateProps = {
     title: string;
     rows: FormDataRow[];
-}
+};
 /**
- *  IPrintFormComponentDispatchProps
+ *  PrintFormComponentDispatchProps
  */
-export interface IPrintFormComponentDispatchProps {}
+export type PrintFormComponentDispatchProps = {};
 /**
  * 帳票印刷コンポーネント
  * @abstract 帳票印刷コンポーネント
  */
 const PrintFormComponent: React.SFC<
-    IPrintFormComponentStateProps & IPrintFormComponentDispatchProps & WithStyles<typeof styles>
+    PrintFormComponentStateProps & PrintFormComponentDispatchProps & WithStyles<typeof styles>
 > = props => {
     const {
         classes,

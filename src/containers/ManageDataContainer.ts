@@ -8,10 +8,10 @@ import { Action } from 'redux';
 // TODO:
 import { ManageDataActions } from '../actions/ManageDataAction';
 import ManageDataComponent, {
-    IManageDataComponentStateProps,
-    IManageDataComponentDispatchProps
+    ManageDataComponentStateProps,
+    ManageDataComponentDispatchProps
 } from '../components/ManageDataComponent';
-import { IAppState } from '../store';
+import { AppState } from '../store';
 import { queryDbWorker, DBDataRow } from '../states/ManageDataState';
 import { DataDoc } from '../db';
 import { ThunkDispatch } from 'redux-thunk';
@@ -21,7 +21,7 @@ import * as ReactDataGrid from 'react-data-grid';
  * mapStateToProps
  * @param appState
  */
-function mapStateToProps({ manageDataState }: IAppState): IManageDataComponentStateProps {
+function mapStateToProps({ manageDataState }: AppState): ManageDataComponentStateProps {
     // TODO:
     return {
         rows: manageDataState.dbDataRows,
@@ -33,8 +33,8 @@ function mapStateToProps({ manageDataState }: IAppState): IManageDataComponentSt
  * @param dispatch
  */
 function mapDispatchToProps(
-    dispatch: ThunkDispatch<IAppState, undefined, Action>
-): IManageDataComponentDispatchProps {
+    dispatch: ThunkDispatch<AppState, undefined, Action>
+): ManageDataComponentDispatchProps {
     // TODO:
     return {
         queryDb: () => dispatch(queryDbWorker({ query: <DataDoc>{}, projection: [] })),

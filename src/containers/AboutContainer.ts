@@ -7,16 +7,16 @@ import { Dispatch } from 'redux';
 // TODO:
 import { AboutActions } from '../actions/AboutAction';
 import AboutComponent, {
-    IAboutComponentStateProps,
-    IAboutComponentDispatchProps
+    AboutComponentStateProps,
+    AboutComponentDispatchProps
 } from '../components/AboutComponent';
-import { IAppState } from '../store';
+import { AppState } from '../store';
 
 /**
  * mapStateToProps
  * @param appState
  */
-function mapStateToProps({ aboutState }: IAppState): IAboutComponentStateProps {
+function mapStateToProps({ aboutState }: AppState): AboutComponentStateProps {
     // TODO:
     return {
         // checked: appState.aboutState.checked
@@ -26,7 +26,7 @@ function mapStateToProps({ aboutState }: IAppState): IAboutComponentStateProps {
  * mapDispatchToProps
  * @param dispatch
  */
-function mapDispatchToProps(dispatch: Dispatch): IAboutComponentDispatchProps {
+function mapDispatchToProps(dispatch: Dispatch): AboutComponentDispatchProps {
     // TODO:
     return {
         // onChange: (e: any) => dispatch(AboutActions.updateValue(e.target.checked))

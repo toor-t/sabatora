@@ -4,7 +4,7 @@
 
 import { ipcRenderer, Event } from 'electron';
 import { OpenForm, SaveForm } from './file_io';
-import { IFormData } from './states/CreateFormState';
+import { FormData } from './states/CreateFormState';
 
 /**
  * OpenForm
@@ -43,7 +43,7 @@ export const saveForm = (): Promise<void> => {
         // ipcRenderer.send(SaveForm.Request, []);
     });
 };
-export const saveForm_sendFormData = (formData: IFormData) => {
+export const saveForm_sendFormData = (formData: FormData) => {
     // Send
     ipcRenderer.send(SaveForm.Request, [formData]);
 };

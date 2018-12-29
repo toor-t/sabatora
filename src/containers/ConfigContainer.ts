@@ -8,16 +8,16 @@ import { Dispatch } from 'redux';
 // TODO:
 import { ConfigActions } from '../actions/ConfigAction';
 import ConfigComponent, {
-    IConfigComponentStateProps,
-    IConfigComponentDispatchProps
+    ConfigComponentStateProps,
+    ConfigComponentDispatchProps
 } from '../components/ConfigComponent';
-import { IAppState } from '../store';
+import { AppState } from '../store';
 
 /**
  * mapStateToProps
  * @param appState
  */
-function mapStateToProps({ configState }: IAppState): IConfigComponentStateProps {
+function mapStateToProps({ configState }: AppState): ConfigComponentStateProps {
     // TODO:
     return {
         // checked: appState.configState.checked
@@ -27,7 +27,7 @@ function mapStateToProps({ configState }: IAppState): IConfigComponentStateProps
  * mapDispatchToProps
  * @param dispatch
  */
-function mapDispatchToProps(dispatch: Dispatch): IConfigComponentDispatchProps {
+function mapDispatchToProps(dispatch: Dispatch): ConfigComponentDispatchProps {
     // TODO:
     return {
         // onChange: (e: any) => dispatch(ConfigActions.updateValue(e.target.checked))

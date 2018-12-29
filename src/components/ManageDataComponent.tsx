@@ -11,12 +11,12 @@ import Input from '@material-ui/core/Input';
 import CreateIcon from '@material-ui/icons/Create';
 
 import ManageDataDataGridComponent, {
-    IManageDataDataGridComponentStateProps,
-    IManageDataDataGridComponentDispatchProps
+    ManageDataDataGridComponentStateProps,
+    ManageDataDataGridComponentDispatchProps
 } from './ManageDataDataGridComponent';
 import NotifyComponent, {
-    INotifyComponentStateProps,
-    INotifyComponentDispatchProps
+    NotifyComponentStateProps,
+    NotifyComponentDispatchProps
 } from './NotifyComponent';
 
 // ManageDataComponent
@@ -53,26 +53,25 @@ const styles = (theme: Theme) =>
             // margin: 20,
         }
     });
-export interface IManageDataComponentStateProps extends IManageDataDataGridComponentStateProps {
+export type ManageDataComponentStateProps = ManageDataDataGridComponentStateProps & {
     // TODO:
     // title: string;
     // edittingTitle: boolean;
     // totalPrice?: number;
     // and so on
-}
+};
 
-export interface IManageDataComponentDispatchProps
-    extends IManageDataDataGridComponentDispatchProps {
+export type ManageDataComponentDispatchProps = ManageDataDataGridComponentDispatchProps & {
     // startEdittingTitle: () => void;
     // endEdittingTitle: (title: string) => void;
-}
+};
 
 /**
  * ManageDataComponent
  */
 const ManageDataComponent: React.SFC<
-    IManageDataComponentStateProps &
-        IManageDataComponentDispatchProps &
+    ManageDataComponentStateProps &
+        ManageDataComponentDispatchProps &
         WithStyles<
             typeof styles
         > /*&

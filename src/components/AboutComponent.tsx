@@ -20,24 +20,24 @@ const styles = () =>
     });
 
 /**
- *  IAboutComponentStateProps
+ *  AboutComponentStateProps
  */
-export interface IAboutComponentStateProps {
+export type AboutComponentStateProps = {
     // TODO:
     // checked?: boolean;
-}
+};
 /**
- * IAboutComponentDispatchProps
+ * AboutComponentDispatchProps
  */
-export interface IAboutComponentDispatchProps {
+export type AboutComponentDispatchProps = {
     // onChange?: (e: any) => any;
-}
+};
 /**
  * AboutComponent
  * @param props
  */
 const AboutComponent: React.SFC<
-    IAboutComponentStateProps & IAboutComponentDispatchProps & WithStyles<typeof styles>
+    AboutComponentStateProps & AboutComponentDispatchProps & WithStyles<typeof styles>
 > = props => {
     // TODO:
     return (

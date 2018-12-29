@@ -17,7 +17,7 @@ export namespace DataDocKeys {
     // だが、データ管理画面で３つに固定してしまっている。
 }
 
-export interface DataDoc {
+export type DataDoc = {
     [DataDocKeys._id]?: string;
 
     [DataDocKeys.level_1]: string; // 大1
@@ -27,11 +27,11 @@ export interface DataDoc {
     [DataDocKeys.itemName]: string; // 名称
 
     [DataDocKeys.unitPrice]: number[]; // 単価
-}
+};
 
-export interface ConfDoc {
+export type ConfDoc = {
     // TODO:
-}
+};
 
 export namespace UpdateAutoCompleteOptions {
     export const Request = 'updateAutoCompleteOptions-request';

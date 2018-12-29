@@ -8,7 +8,7 @@ import * as db from '../db';
 import { wrapThunkAsyncActionWorker } from '../wrapAsyncWorker';
 import { queryDb, updateDb, insertDb, removeDb } from '../db_renderer';
 import immutabilityHelper from 'immutability-helper';
-import { IAppState } from '../store';
+import { AppState } from '../store';
 import { Str } from '../strings';
 
 // DBDataRowKeys
@@ -27,7 +27,7 @@ export namespace DBDataRowKeys {
     export const selected = 'selected';
 }
 
-export interface DBDataRow {
+export type DBDataRow = {
     [DBDataRowKeys._id]?: string;
 
     [DBDataRowKeys.level_1]: string;
@@ -39,16 +39,16 @@ export interface DBDataRow {
     [DBDataRowKeys.unitPrice_3]: number;
 
     [DBDataRowKeys.selected]: boolean;
-}
+};
 
 /**
- * IManageDataState
+ * ManageDataState
  */
-export interface IManageDataState {
+export type ManageDataState = {
     dbDataRows: DBDataRow[] | null;
     selectedRowsCount: number; // TODO:  選択行の数
-}
-const initialState: IManageDataState = {
+};
+const initialState: ManageDataState = {
     dbDataRows: null,
     selectedRowsCount: 0
 };
@@ -73,7 +73,7 @@ const getSlecetedRowsCount = (rows: DBDataRow[]): number => {
 /**
  * ManageDataStateReducer
  */
-export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(initialState)
+export const ManageDataStateReducer = reducerWithInitialState<ManageDataState>(initialState)
     /**
      * 行選択
      */
@@ -397,7 +397,7 @@ export const ManageDataStateReducer = reducerWithInitialState<IManageDataState>(
  * Query DB Worker
  */
 export const queryDbWorker = wrapThunkAsyncActionWorker<
-    IAppState,
+    AppState,
     { query: db.DataDoc; projection: (keyof db.DataDoc)[] },
     db.DataDoc[],
     string

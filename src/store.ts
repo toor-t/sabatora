@@ -4,28 +4,28 @@
 
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import reduxThunk from 'redux-thunk';
-import { IAppTopState, AppTopStateReducer } from './states/AppTopState';
-import { ICreateFormState, CreateFormStateReducer } from './states/CreateFormState';
-import { IAboutState, AboutStateReducer } from './states/AboutState';
-import { IConfigState, ConfigStateReducer } from './states/ConfigState';
-import { IManageDataState, ManageDataStateReducer } from './states/ManageDataState';
+import { AppTopState, AppTopStateReducer } from './states/AppTopState';
+import { CreateFormState, CreateFormStateReducer } from './states/CreateFormState';
+import { AboutState, AboutStateReducer } from './states/AboutState';
+import { ConfigState, ConfigStateReducer } from './states/ConfigState';
+import { ManageDataState, ManageDataStateReducer } from './states/ManageDataState';
 
 /**
- * IAppState
+ * AppState
  */
-export interface IAppState {
-    appTopState: IAppTopState;
-    createFormState: ICreateFormState;
-    aboutState: IAboutState;
-    configState: IConfigState;
-    manageDataState: IManageDataState;
-}
+export type AppState = {
+    appTopState: AppTopState;
+    createFormState: CreateFormState;
+    aboutState: AboutState;
+    configState: ConfigState;
+    manageDataState: ManageDataState;
+};
 
 /**
  * store
  */
 const store = createStore(
-    combineReducers<IAppState>({
+    combineReducers<AppState>({
         appTopState: AppTopStateReducer,
         createFormState: CreateFormStateReducer,
         aboutState: AboutStateReducer,
