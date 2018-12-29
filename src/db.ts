@@ -1,7 +1,6 @@
 /**
  * db
  */
-'use strict';
 
 export namespace DataDocKeys {
     export const _id = '_id';

@@ -1,7 +1,7 @@
 /**
  * ConfigState
  */
-'use strict';
+
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { ConfigActions } from '../actions/ConfigAction';
 

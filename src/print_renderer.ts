@@ -1,7 +1,7 @@
 /**
  * print renderer
  */
-'use strict';
+
 import { PrintForm } from './print';
 import { ipcRenderer, Event } from 'electron';
 

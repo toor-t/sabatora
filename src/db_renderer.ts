@@ -1,7 +1,7 @@
 /**
  * db_renderer
  */
-'use strict';
+
 import { ipcRenderer, Event } from 'electron';
 import {
     UpdateAutoCompleteOptions,

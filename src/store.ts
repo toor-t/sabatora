@@ -1,7 +1,7 @@
 /**
  * store
  */
-'use strict';
+
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import reduxThunk from 'redux-thunk';
 import { IAppTopState, AppTopStateReducer } from './states/AppTopState';

@@ -1,7 +1,7 @@
 /**
  * AppTopContainer
  */
-'use strict';
+
 import { connect } from 'react-redux';
 // TODO:
 import { AppTopActions } from '../actions/AppTopAction';
@@ -23,11 +23,11 @@ import { Action } from 'redux';
  * mapStateToProps
  * @param appState
  */
-function mapStateToProps(appState: IAppState): IAppTopComponentStateProps {
+function mapStateToProps({ appTopState }: IAppState): IAppTopComponentStateProps {
     // TODO:
     return {
-        selectedIndex: appState.appTopState.selectedIndex,
-        drawerOpend: appState.appTopState.drawerOpened
+        selectedIndex: appTopState.selectedIndex,
+        drawerOpend: appTopState.drawerOpened
     };
 }
 /**

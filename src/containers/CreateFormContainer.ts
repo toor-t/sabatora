@@ -1,7 +1,7 @@
 /**
  * CreateFormContainer
  */
-'use strict';
+
 import { connect } from 'react-redux';
 import { CreateFormActions } from '../actions/CreateFormAction';
 import CreateFormComponent, {
@@ -18,31 +18,27 @@ import { updateAutoCompleteOptionsWorker, FormDataRow, NormalRow } from '../stat
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
 import * as ReactDataGrid from 'react-data-grid';
-import {
-    ICreateFormDataGridComponentStateProps,
-    ICreateFormDataGridComponentDispatchProps
-} from '../components/CreateFormDataGridComponent';
 import { DataDoc } from '../db';
 
 /**
  * mapStateToProps
  * @param appState
  */
-function mapStateToProps(
-    appState: IAppState
-): ICreateFormComponentStateProps & INotifyComponentStateProps {
+function mapStateToProps({
+    createFormState
+}: IAppState): ICreateFormComponentStateProps & INotifyComponentStateProps {
     // TODO:
     return {
-        title: appState.createFormState.formData.title,
-        rows: appState.createFormState.formData.dataRows,
-        autoCompleteOptions: appState.createFormState.autoCompleteOptions,
-        edittingTitle: appState.createFormState.edittingTitle,
-        notifyContext: appState.createFormState.notify,
-        selectedRowsCount: appState.createFormState.formDataSelectedRowsCount,
-        firstSelectedRowIdx: appState.createFormState.formDataFirstSelectedRowIdx,
-        formDataEditted: appState.createFormState.formDataEditted,
+        title: createFormState.formData.title,
+        rows: createFormState.formData.dataRows,
+        autoCompleteOptions: createFormState.autoCompleteOptions,
+        edittingTitle: createFormState.edittingTitle,
+        notifyContext: createFormState.notify,
+        selectedRowsCount: createFormState.formDataSelectedRowsCount,
+        firstSelectedRowIdx: createFormState.formDataFirstSelectedRowIdx,
+        formDataEditted: createFormState.formDataEditted,
         // TODO:
-        printing: appState.createFormState.printing
+        printing: createFormState.printing
     };
 }
 /**

@@ -1,7 +1,7 @@
 /**
  * AboutContainer
  */
-'use strict';
+
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 // TODO:
@@ -16,7 +16,7 @@ import { IAppState } from '../store';
  * mapStateToProps
  * @param appState
  */
-function mapStateToProps(appState: IAppState): IAboutComponentStateProps {
+function mapStateToProps({ aboutState }: IAppState): IAboutComponentStateProps {
     // TODO:
     return {
         // checked: appState.aboutState.checked

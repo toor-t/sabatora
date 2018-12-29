@@ -1,7 +1,6 @@
 /**
  * CreateFormAction
  */
-'use strict';
 import { actionCreatorFactory } from 'typescript-fsa';
 import * as ReactDataGrid from 'react-data-grid';
 import { FormDataRow, NormalRow } from '../states/CreateFormState';

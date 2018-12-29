@@ -1,7 +1,7 @@
 /**
  * AppTopState
  */
-'use strict';
+
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { AppTopActions } from '../actions/AppTopAction';
 import { AppTopSelected } from '../components/AppTopComponent';

@@ -1,7 +1,6 @@
 /**
  * strings
  */
-'use strict';
 
 export namespace Str {
     export const AppName = 'sabatora.';

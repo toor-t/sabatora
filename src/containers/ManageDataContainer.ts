@@ -2,7 +2,7 @@
 /**
  * ManageDataContainer
  */
-'use strict';
+
 import { connect } from 'react-redux';
 import { Action } from 'redux';
 // TODO:
@@ -21,11 +21,11 @@ import * as ReactDataGrid from 'react-data-grid';
  * mapStateToProps
  * @param appState
  */
-function mapStateToProps(appState: IAppState): IManageDataComponentStateProps {
+function mapStateToProps({ manageDataState }: IAppState): IManageDataComponentStateProps {
     // TODO:
     return {
-        rows: appState.manageDataState.dbDataRows,
-        selectedRowsCount: appState.manageDataState.selectedRowsCount
+        rows: manageDataState.dbDataRows,
+        selectedRowsCount: manageDataState.selectedRowsCount
     };
 }
 /**

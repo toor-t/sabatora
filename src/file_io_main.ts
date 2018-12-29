@@ -1,7 +1,7 @@
 /**
  * file_io_main
  */
-'use strict';
+
 import { dialog, ipcMain, Event } from 'electron';
 import { win } from './main';
 import { OpenForm, SaveForm } from './file_io';

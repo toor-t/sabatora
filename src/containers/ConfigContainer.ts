@@ -2,7 +2,7 @@
 /**
  * ConfigContainer
  */
-'use strict';
+
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 // TODO:
@@ -17,7 +17,7 @@ import { IAppState } from '../store';
  * mapStateToProps
  * @param appState
  */
-function mapStateToProps(appState: IAppState): IConfigComponentStateProps {
+function mapStateToProps({ configState }: IAppState): IConfigComponentStateProps {
     // TODO:
     return {
         // checked: appState.configState.checked

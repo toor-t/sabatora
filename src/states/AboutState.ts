@@ -1,7 +1,7 @@
 /**
  * AboutState
  */
-'use strict';
+
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { AboutActions } from '../actions/AboutAction';
 

@@ -1,7 +1,7 @@
 /**
  * AppTopComponent
  */
-'use strict';
+
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';

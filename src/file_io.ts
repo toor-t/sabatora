@@ -1,7 +1,6 @@
 /**
  * file_io
  */
-'use strict';
 
 const _request = '-request';
 const _result = '-result';

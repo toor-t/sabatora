@@ -1,7 +1,7 @@
 /*
  * file_io_renderer
  */
-'use strict';
+
 import { ipcRenderer, Event } from 'electron';
 import { OpenForm, SaveForm } from './file_io';
 import { IFormData } from './states/CreateFormState';

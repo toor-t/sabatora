@@ -1,7 +1,6 @@
 /**
  * CreateFormDataGridComponent
  */
-'use strict';
 
 import * as ReactDataGrid from 'react-data-grid';
 import * as React from 'react';
