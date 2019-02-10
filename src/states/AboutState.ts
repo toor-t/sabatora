@@ -1,24 +1,24 @@
 /**
  * AboutState
  */
-'use strict';
+
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { AboutActions } from '../actions/AboutAction';
 
 /**
- * IAboutState
+ * AboutState
  */
-export interface IAboutState {
+export type AboutState = {
     checked: boolean;
-}
-const initialState: IAboutState = {
+};
+const initialState: AboutState = {
     checked: true
 };
 
 /**
  * AboutStateReducer
  */
-export const AboutStateReducer = reducerWithInitialState<IAboutState>(initialState)
+export const AboutStateReducer = reducerWithInitialState<AboutState>(initialState)
     /**
      * TODO: dummy
      */

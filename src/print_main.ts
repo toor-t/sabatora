@@ -1,7 +1,7 @@
 /**
  * print_main
  */
-'use strict';
+
 import { PrintForm } from './print';
 import { ipcMain, Event } from 'electron';
 

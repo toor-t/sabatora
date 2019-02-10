@@ -1,7 +1,7 @@
 /**
  * CreateFormComponent
  */
-'use strict';
+
 import * as React from 'react';
 import { WithStyles, withStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -11,12 +11,12 @@ import Input from '@material-ui/core/Input';
 import CreateIcon from '@material-ui/icons/Create';
 
 import CreateFormDataGridComponent, {
-    ICreateFormDataGridComponentStateProps,
-    ICreateFormDataGridComponentDispatchProps
+    CreateFormDataGridComponentStateProps,
+    CreateFormDataGridComponentDispatchProps
 } from './CreateFormDataGridComponent';
 import NotifyComponent, {
-    INotifyComponentStateProps,
-    INotifyComponentDispatchProps,
+    NotifyComponentStateProps,
+    NotifyComponentDispatchProps,
     NotifyContext
 } from './NotifyComponent';
 import PrintFormComponent from './PrintFormComponent';
@@ -56,31 +56,30 @@ const styles = (theme: Theme) =>
             // margin: 20,
         }
     });
-export interface ICreateFormComponentStateProps extends ICreateFormDataGridComponentStateProps {
+export type CreateFormComponentStateProps = {
     title: string;
     edittingTitle: boolean;
     formDataEditted: boolean;
     // TODO: 印刷処理
     printing: boolean;
     notifyContext: NotifyContext;
-}
+} & CreateFormDataGridComponentStateProps;
 
-export interface ICreateFormComponentDispatchProps
-    extends ICreateFormDataGridComponentDispatchProps {
+export type CreateFormComponentDispatchProps = {
     startEdittingTitle: () => void;
     endEdittingTitle: (title: string) => void;
-}
+} & CreateFormDataGridComponentDispatchProps;
 
 /**
  * 帳票作成コンポーネント
  * @abstract 帳票作成コンポーネント
  */
 const CreateFormComponent: React.SFC<
-    ICreateFormComponentStateProps &
-        ICreateFormComponentDispatchProps &
+    CreateFormComponentStateProps &
+        CreateFormComponentDispatchProps &
         WithStyles<typeof styles> &
-        INotifyComponentStateProps &
-        INotifyComponentDispatchProps
+        NotifyComponentStateProps &
+        NotifyComponentDispatchProps
 > = props => {
     const {
         classes,

@@ -1,7 +1,7 @@
 /**
  * main
  */
-'use strict';
+
 import { app, BrowserWindow, Event } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
@@ -13,16 +13,16 @@ import ElectronStore = require('electron-store');
 
 export let win: BrowserWindow | null;
 
-interface IConfig {
+type Config = {
     bounds: {
         width: number;
         height: number;
         x?: number;
         y?: number;
     };
-}
+};
 // 設定(ウィンドウ位置とサイズ)取得
-const config = new ElectronStore<IConfig>({
+const config = new ElectronStore<Config>({
     defaults: {
         bounds: {
             width: 800, // ウィンドウ幅デフォルト

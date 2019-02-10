@@ -1,15 +1,15 @@
 /**
  * AppTopContainer
  */
-'use strict';
+
 import { connect } from 'react-redux';
 // TODO:
 import { AppTopActions } from '../actions/AppTopAction';
 import AppTopComponent, {
-    IAppTopComponentStateProps,
-    IAppTopComponentDispatchProps
+    AppTopComponentStateProps,
+    AppTopComponentDispatchProps
 } from '../components/AppTopComponent';
-import { IAppState } from '../store';
+import { AppState } from '../store';
 import {
     saveFormWorker,
     openFormWithConfirmWorker,
@@ -23,11 +23,11 @@ import { Action } from 'redux';
  * mapStateToProps
  * @param appState
  */
-function mapStateToProps(appState: IAppState): IAppTopComponentStateProps {
+function mapStateToProps({ appTopState }: AppState): AppTopComponentStateProps {
     // TODO:
     return {
-        selectedIndex: appState.appTopState.selectedIndex,
-        drawerOpend: appState.appTopState.drawerOpened
+        selectedIndex: appTopState.selectedIndex,
+        drawerOpend: appTopState.drawerOpened
     };
 }
 /**
@@ -35,8 +35,8 @@ function mapStateToProps(appState: IAppState): IAppTopComponentStateProps {
  * @param dispatch
  */
 function mapDispatchToProps(
-    dispatch: ThunkDispatch<IAppState, undefined, Action>
-): IAppTopComponentDispatchProps {
+    dispatch: ThunkDispatch<AppState, undefined, Action>
+): AppTopComponentDispatchProps {
     // TODO:
     return {
         onOpenDrawer: () => dispatch(AppTopActions.openDrawer()),

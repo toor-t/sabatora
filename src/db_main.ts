@@ -1,7 +1,7 @@
 /**
  * db_main
  */
-'use strict';
+
 import { app, ipcMain, Event } from 'electron';
 import * as DataStore from 'nedb';
 

@@ -1,7 +1,6 @@
 /**
  * AboutAction
  */
-'use strict';
 import { actionCreatorFactory } from 'typescript-fsa';
 
 const actionCreator = actionCreatorFactory('ABOUT_ACTIONS');

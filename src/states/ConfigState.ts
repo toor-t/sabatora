@@ -1,24 +1,24 @@
 /**
  * ConfigState
  */
-'use strict';
+
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { ConfigActions } from '../actions/ConfigAction';
 
 /**
- * IConfigState
+ * ConfigState
  */
-export interface IConfigState {
+export type ConfigState = {
     checked: boolean;
-}
-const initialState: IConfigState = {
+};
+const initialState: ConfigState = {
     checked: true
 };
 
 /**
  * ConfigStateReducer
  */
-export const ConfigStateReducer = reducerWithInitialState<IConfigState>(initialState)
+export const ConfigStateReducer = reducerWithInitialState<ConfigState>(initialState)
     /**
      * TODO: dummy
      */

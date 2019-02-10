@@ -1,7 +1,6 @@
 /**
  * ConfigAction
  */
-'use strict';
 import { actionCreatorFactory } from 'typescript-fsa';
 
 const actionCreator = actionCreatorFactory('CONFIG_ACTIONS');

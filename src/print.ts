@@ -1,7 +1,6 @@
 /**
  * print
  */
-'use strict';
 
 // TODO:
 export namespace PrintForm {

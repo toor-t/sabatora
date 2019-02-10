@@ -1,7 +1,6 @@
 /**
  * ManageDataDataGridComponent
  */
-'use strict';
 
 import * as ReactDataGrid from 'react-data-grid';
 import * as React from 'react';
@@ -23,12 +22,12 @@ import EventListener from 'react-event-listener';
  */
 
 /**
- * IFormatterProps
+ * FormatterProps
  */
-interface IFormatterProps {
+type FormatterProps = {
     value: any;
-}
-const NumberRightFormatter: React.SFC<IFormatterProps> = props => {
+};
+const NumberRightFormatter: React.SFC<FormatterProps> = props => {
     if ((typeof props.value === 'number' && !isNaN(props.value)) || !isNaN(Number(props.value))) {
         const formattedValue: string = String(props.value).replace(
             /(\d)(?=(\d\d\d)+(?!\d))/g,
@@ -46,28 +45,28 @@ const NumberRightFormatter: React.SFC<IFormatterProps> = props => {
         </div>
     );
 };
-const RightFormatter: React.SFC<IFormatterProps> = props => {
+const RightFormatter: React.SFC<FormatterProps> = props => {
     return (
         <div title={props.value} className="text-right">
             {props.value}
         </div>
     );
 };
-const CenterFormatter: React.SFC<IFormatterProps> = props => {
+const CenterFormatter: React.SFC<FormatterProps> = props => {
     return (
         <div title={props.value} className="text-center">
             {props.value}
         </div>
     );
 };
-const BoldNumberRightFormatter: React.SFC<IFormatterProps> = props => {
+const BoldNumberRightFormatter: React.SFC<FormatterProps> = props => {
     return (
         <strong>
             <NumberRightFormatter {...props} />
         </strong>
     );
 };
-const BoldRightFormatter: React.SFC<IFormatterProps> = props => {
+const BoldRightFormatter: React.SFC<FormatterProps> = props => {
     return (
         <strong>
             <RightFormatter {...props} />
@@ -98,16 +97,16 @@ const styles = (theme: Theme) =>
     });
 
 /**
- * IManageDataDataGridComponentStateProps
+ * ManageDataDataGridComponentStateProps
  */
-export interface IManageDataDataGridComponentStateProps {
+export type ManageDataDataGridComponentStateProps = {
     rows: DBDataRow[] | null;
     selectedRowsCount: number;
-}
+};
 /**
- * IManageDataDataGridComponentDispatchProps
+ * ManageDataDataGridComponentDispatchProps
  */
-export interface IManageDataDataGridComponentDispatchProps {
+export type ManageDataDataGridComponentDispatchProps = {
     queryDb: () => void;
     // TODO:
     onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) => void;
@@ -116,27 +115,27 @@ export interface IManageDataDataGridComponentDispatchProps {
     deleteRows: () => void;
     selectRows: (rows: { rowIdx: number; row: DBDataRow }[]) => void;
     deselectRows: (rows: { rowIdx: number; row: DBDataRow }[]) => void;
-}
+};
 /**
- * IManageDataDataGridComponentStates
+ * ManageDataDataGridComponentStates
  */
-interface IManageDataDataGridComponentStates {
+type ManageDataDataGridComponentStates = {
     columns: (ReactDataGrid.Column<DBDataRow> & { ddKey?: string })[];
     width: number;
     height: number;
-}
+};
 /**
  * ManageDataDataGridComponent
  */
 class ManageDataDataGridComponent extends React.Component<
-    IManageDataDataGridComponentStateProps &
-        IManageDataDataGridComponentDispatchProps &
+    ManageDataDataGridComponentStateProps &
+        ManageDataDataGridComponentDispatchProps &
         WithStyles<typeof styles>,
-    IManageDataDataGridComponentStates
+    ManageDataDataGridComponentStates
 > {
     constructor(
-        props: IManageDataDataGridComponentStateProps &
-            IManageDataDataGridComponentDispatchProps &
+        props: ManageDataDataGridComponentStateProps &
+            ManageDataDataGridComponentDispatchProps &
             WithStyles<typeof styles>
     ) {
         super(props);

@@ -1,7 +1,6 @@
 /**
  * AppTopAction
  */
-'use strict';
 import { actionCreatorFactory } from 'typescript-fsa';
 
 const actionCreator = actionCreatorFactory('APP_TOP_ACTIONS');

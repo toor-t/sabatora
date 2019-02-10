@@ -1,15 +1,15 @@
 /**
  * AppTopState
  */
-'use strict';
+
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { AppTopActions } from '../actions/AppTopAction';
 import { AppTopSelected } from '../components/AppTopComponent';
 
 /**
- * IAppTopState
+ * AppTopState
  */
-export interface IAppTopState {
+export type AppTopState = {
     /**
      * ドロワー開閉状態
      */
@@ -18,8 +18,8 @@ export interface IAppTopState {
      * 選択されたメニューのインデックス
      */
     selectedIndex: number;
-}
-const initialState: IAppTopState = {
+};
+const initialState: AppTopState = {
     drawerOpened: false,
     selectedIndex: AppTopSelected.CreateForm
 };
@@ -27,7 +27,7 @@ const initialState: IAppTopState = {
 /**
  * AppTopStateReducer
  */
-export const AppTopStateReducer = reducerWithInitialState<IAppTopState>(initialState)
+export const AppTopStateReducer = reducerWithInitialState<AppTopState>(initialState)
     /**
      * Open Drawer
      */

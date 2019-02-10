@@ -1,7 +1,6 @@
 /**
  * CreateFormDataGridComponent
  */
-'use strict';
 
 import * as ReactDataGrid from 'react-data-grid';
 import * as React from 'react';
@@ -42,23 +41,23 @@ const getOptions = (ddKey: keyof DataDoc): { (): { id: number; title: string }[]
 };
 
 /**
- * ICustomAutoCompleteEditorProps
+ * CustomAutoCompleteEditorProps
  */
-interface ICustomAutoCompleteEditorProps {
+type CustomAutoCompleteEditorProps = {
     getOptions: () => { id: number; title: string }[];
-}
+};
 /**
- * ICustomAutoCompleteEditorStates
+ * CustomAutoCompleteEditorStates
  */
-interface ICustomAutoCompleteEditorStates {}
+type CustomAutoCompleteEditorStates = {};
 /**
  * CustomAutoCompleteEditor
  */
 class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
-    ICustomAutoCompleteEditorProps & any,
-    ICustomAutoCompleteEditorStates
+    CustomAutoCompleteEditorProps & any,
+    CustomAutoCompleteEditorStates
 > {
-    constructor(props: ICustomAutoCompleteEditorProps & any) {
+    constructor(props: CustomAutoCompleteEditorProps & any) {
         super(props);
         this.state = {
             // 現状空
@@ -121,16 +120,16 @@ class CustomAutoCompleteEditor extends ReactDataGrid.editors.EditorBase<
  */
 
 /**
- * IFormatterProps
+ * FormatterProps
  */
-interface IFormatterProps {
+type FormatterProps = {
     value: any;
-}
+};
 /**
  * Number Right Formatter
  * @param props
  */
-const NumberRightFormatter: React.SFC<IFormatterProps> = props => {
+const NumberRightFormatter: React.SFC<FormatterProps> = props => {
     if ((typeof props.value === 'number' && !isNaN(props.value)) || !isNaN(Number(props.value))) {
         const formattedValue: string = String(props.value).replace(
             /(\d)(?=(\d\d\d)+(?!\d))/g,
@@ -152,7 +151,7 @@ const NumberRightFormatter: React.SFC<IFormatterProps> = props => {
  * Right Formatter
  * @param props
  */
-const RightFormatter: React.SFC<IFormatterProps> = props => {
+const RightFormatter: React.SFC<FormatterProps> = props => {
     return (
         <div title={props.value} className="text-right">
             {props.value}
@@ -163,7 +162,7 @@ const RightFormatter: React.SFC<IFormatterProps> = props => {
  * Center Formatter
  * @param props
  */
-const CenterFormatter: React.SFC<IFormatterProps> = props => {
+const CenterFormatter: React.SFC<FormatterProps> = props => {
     return (
         <div title={props.value} className="text-center">
             {props.value}
@@ -174,7 +173,7 @@ const CenterFormatter: React.SFC<IFormatterProps> = props => {
  * Bold Number Right Formatter
  * @param props
  */
-const BoldNumberRightFormatter: React.SFC<IFormatterProps> = props => {
+const BoldNumberRightFormatter: React.SFC<FormatterProps> = props => {
     return (
         <strong>
             <NumberRightFormatter {...props} />
@@ -185,7 +184,7 @@ const BoldNumberRightFormatter: React.SFC<IFormatterProps> = props => {
  * Bold Right Formatter
  * @param props
  */
-const BoldRightFormatter: React.SFC<IFormatterProps> = props => {
+const BoldRightFormatter: React.SFC<FormatterProps> = props => {
     return (
         <strong>
             <RightFormatter {...props} />
@@ -198,25 +197,25 @@ const BoldRightFormatter: React.SFC<IFormatterProps> = props => {
  */
 
 /**
- * ICustomRowRenderProps
+ * CustomRowRenderProps
  */
-interface ICustomRowRendererProps {
+type CustomRowRendererProps = {
     grid: CreateFormDataGridComponent;
     idx: number;
     columns: (ReactDataGrid.Column<NormalRow> & { ddKey?: keyof DataDoc })[];
     row: FormDataRow;
-}
+};
 /**
- * ICustomRowRenderStates
+ * CustomRowRenderStates
  */
-interface ICustomRowRendererStates {
+type CustomRowRendererStates = {
     grid: CreateFormDataGridComponent;
-}
+};
 /**
  * CustomRowRenderer
  */
-class CustomRowRenderer extends React.Component<ICustomRowRendererProps, ICustomRowRendererStates> {
-    constructor(props: ICustomRowRendererProps) {
+class CustomRowRenderer extends React.Component<CustomRowRendererProps, CustomRowRendererStates> {
+    constructor(props: CustomRowRendererProps) {
         super(props);
         this.state = {
             grid: this.props.grid
@@ -227,8 +226,8 @@ class CustomRowRenderer extends React.Component<ICustomRowRendererProps, ICustom
     row: ReactDataGrid.Row | null;
 
     shouldComponentUpdate = (
-        nextProps: Readonly<ICustomRowRendererProps>,
-        nextState: Readonly<ICustomRowRendererStates>,
+        nextProps: Readonly<CustomRowRendererProps>,
+        nextState: Readonly<CustomRowRendererStates>,
         nextContext: any
     ) => {
         if (this.row && this.row !== null && this.row.shouldComponentUpdate) {
@@ -395,18 +394,18 @@ const styles = (theme: Theme) =>
     });
 
 /**
- * ICreateFormDataGridComponentStateProps
+ * CreateFormDataGridComponentStateProps
  */
-export interface ICreateFormDataGridComponentStateProps {
+export type CreateFormDataGridComponentStateProps = {
     rows: FormDataRow[];
     autoCompleteOptions: autoCompleteOptionsType;
     selectedRowsCount: number;
     firstSelectedRowIdx: number;
-}
+};
 /**
- * ICreateFormDataGridComponentDispatchProps
+ * CreateFormDataGridComponentDispatchProps
  */
-export interface ICreateFormDataGridComponentDispatchProps {
+export type CreateFormDataGridComponentDispatchProps = {
     onGridRowUpdate: (e: ReactDataGrid.GridRowsUpdatedEvent) => void;
     onSelectedCell: (col: { rowIdx: number; idx: number }) => void;
     updateAutoCompleteOptions: (col: { rowData: NormalRow; columnDDKey?: keyof DataDoc }) => void;
@@ -415,25 +414,25 @@ export interface ICreateFormDataGridComponentDispatchProps {
     selectRows: (rows: { rowIdx: number; row: FormDataRow }[]) => void;
     deselectRows: (rows: { rowIdx: number; row: FormDataRow }[]) => void;
     addSubtotalRow: () => void;
-}
+};
 /**
- * ICreateFormDataGridComponentStates
+ * CreateFormDataGridComponentStates
  */
-interface ICreateFormDataGridComponentStates {
+type CreateFormDataGridComponentStates = {
     columns: (ReactDataGrid.Column<NormalRow> & { ddKey?: keyof DataDoc })[];
-}
+};
 /**
  * CreateFormDataGridComponent
  */
 class CreateFormDataGridComponent extends React.Component<
-    ICreateFormDataGridComponentStateProps &
-        ICreateFormDataGridComponentDispatchProps &
+    CreateFormDataGridComponentStateProps &
+        CreateFormDataGridComponentDispatchProps &
         WithStyles<typeof styles>,
-    ICreateFormDataGridComponentStates
+    CreateFormDataGridComponentStates
 > {
     constructor(
-        props: ICreateFormDataGridComponentStateProps &
-            ICreateFormDataGridComponentDispatchProps &
+        props: CreateFormDataGridComponentStateProps &
+            CreateFormDataGridComponentDispatchProps &
             WithStyles<typeof styles>
     ) {
         super(props);

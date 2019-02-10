@@ -1,7 +1,7 @@
 /**
  * AboutComponent
  */
-'use strict';
+
 import * as React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -20,24 +20,24 @@ const styles = () =>
     });
 
 /**
- *  IAboutComponentStateProps
+ *  AboutComponentStateProps
  */
-export interface IAboutComponentStateProps {
+export type AboutComponentStateProps = {
     // TODO:
     // checked?: boolean;
-}
+};
 /**
- * IAboutComponentDispatchProps
+ * AboutComponentDispatchProps
  */
-export interface IAboutComponentDispatchProps {
+export type AboutComponentDispatchProps = {
     // onChange?: (e: any) => any;
-}
+};
 /**
  * AboutComponent
  * @param props
  */
 const AboutComponent: React.SFC<
-    IAboutComponentStateProps & IAboutComponentDispatchProps & WithStyles<typeof styles>
+    AboutComponentStateProps & AboutComponentDispatchProps & WithStyles<typeof styles>
 > = props => {
     // TODO:
     return (

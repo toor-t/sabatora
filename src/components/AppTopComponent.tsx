@@ -1,7 +1,7 @@
 /**
  * AppTopComponent
  */
-'use strict';
+
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -150,7 +150,7 @@ export namespace AppTopSelected {
     export const ConfigTitle = Title.Config;
     export const AboutTitle = Title.About;
 }
-export interface IAppTopComponentStateProps {
+export type AppTopComponentStateProps = {
     /**
      * ドロワーメニューで選択された項目のインデックス
      */
@@ -159,8 +159,8 @@ export interface IAppTopComponentStateProps {
      * ドロワー開閉状態
      */
     drawerOpend: boolean;
-}
-export interface IAppTopComponentDispatchProps {
+};
+export type AppTopComponentDispatchProps = {
     /**
      * ドロワーオープン
      */
@@ -191,21 +191,21 @@ export interface IAppTopComponentDispatchProps {
     onPrintForm: () => void;
 
     // TODO: 他画面用メニューも必要？
-}
-interface IAppTopComponentStates {
+};
+type AppTopComponentStates = {
     anchorEl?: HTMLElement;
     width: number;
     height: number;
-}
+};
 class AppTopComponent extends React.Component<
-    IAppTopComponentStateProps &
-        IAppTopComponentDispatchProps &
+    AppTopComponentStateProps &
+        AppTopComponentDispatchProps &
         WithStyles<typeof styles> & { theme: Theme },
-    IAppTopComponentStates
+    AppTopComponentStates
 > {
     constructor(
-        props: IAppTopComponentStateProps &
-            IAppTopComponentDispatchProps &
+        props: AppTopComponentStateProps &
+            AppTopComponentDispatchProps &
             WithStyles<typeof styles> & { theme: Theme }
     ) {
         super(props);

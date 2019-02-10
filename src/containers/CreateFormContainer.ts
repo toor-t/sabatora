@@ -1,48 +1,44 @@
 /**
  * CreateFormContainer
  */
-'use strict';
+
 import { connect } from 'react-redux';
 import { CreateFormActions } from '../actions/CreateFormAction';
 import CreateFormComponent, {
-    ICreateFormComponentStateProps,
-    ICreateFormComponentDispatchProps
+    CreateFormComponentStateProps,
+    CreateFormComponentDispatchProps
 } from '../components/CreateFormComponent';
 import {
-    INotifyComponentStateProps,
-    INotifyComponentDispatchProps
+    NotifyComponentStateProps,
+    NotifyComponentDispatchProps
 } from '../components/NotifyComponent';
 
-import { IAppState } from '../store';
+import { AppState } from '../store';
 import { updateAutoCompleteOptionsWorker, FormDataRow, NormalRow } from '../states/CreateFormState';
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
 import * as ReactDataGrid from 'react-data-grid';
-import {
-    ICreateFormDataGridComponentStateProps,
-    ICreateFormDataGridComponentDispatchProps
-} from '../components/CreateFormDataGridComponent';
 import { DataDoc } from '../db';
 
 /**
  * mapStateToProps
  * @param appState
  */
-function mapStateToProps(
-    appState: IAppState
-): ICreateFormComponentStateProps & INotifyComponentStateProps {
+function mapStateToProps({
+    createFormState
+}: AppState): CreateFormComponentStateProps & NotifyComponentStateProps {
     // TODO:
     return {
-        title: appState.createFormState.formData.title,
-        rows: appState.createFormState.formData.dataRows,
-        autoCompleteOptions: appState.createFormState.autoCompleteOptions,
-        edittingTitle: appState.createFormState.edittingTitle,
-        notifyContext: appState.createFormState.notify,
-        selectedRowsCount: appState.createFormState.formDataSelectedRowsCount,
-        firstSelectedRowIdx: appState.createFormState.formDataFirstSelectedRowIdx,
-        formDataEditted: appState.createFormState.formDataEditted,
+        title: createFormState.formData.title,
+        rows: createFormState.formData.dataRows,
+        autoCompleteOptions: createFormState.autoCompleteOptions,
+        edittingTitle: createFormState.edittingTitle,
+        notifyContext: createFormState.notify,
+        selectedRowsCount: createFormState.formDataSelectedRowsCount,
+        firstSelectedRowIdx: createFormState.formDataFirstSelectedRowIdx,
+        formDataEditted: createFormState.formDataEditted,
         // TODO:
-        printing: appState.createFormState.printing
+        printing: createFormState.printing
     };
 }
 /**
@@ -50,8 +46,8 @@ function mapStateToProps(
  * @param dispatch
  */
 function mapDispatchToProps(
-    dispatch: ThunkDispatch<IAppState, undefined, Action>
-): ICreateFormComponentDispatchProps & INotifyComponentDispatchProps {
+    dispatch: ThunkDispatch<AppState, undefined, Action>
+): CreateFormComponentDispatchProps & NotifyComponentDispatchProps {
     // TODO:
     return {
         dispatch, // NotifyComponent に dispatchを渡す必要があるため。

@@ -1,7 +1,6 @@
 /**
  * ManageDataAction
  */
-'use strict';
 import { actionCreatorFactory } from 'typescript-fsa';
 import * as ReactDataGrid from 'react-data-grid';
 import * as ManageDataState from '../states/ManageDataState';

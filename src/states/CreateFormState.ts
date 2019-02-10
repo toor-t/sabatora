@@ -1,7 +1,7 @@
 /**
  * CreateFormState
  */
-'use strict';
+
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { CreateFormActions } from '../actions/CreateFormAction';
 import immutabilityHelper from 'immutability-helper';
@@ -14,7 +14,7 @@ import { openForm, saveForm, saveForm_sendFormData } from '../file_io_rederer';
 // TODO: NotifyComponentの実験
 import { NotifyContext } from '../components/NotifyComponent';
 import { ThunkDispatch } from 'redux-thunk';
-import { IAppState } from '../store';
+import { AppState } from '../store';
 import { printForm } from '../print_renderer';
 import { Str, BtnLabel, Message } from '../strings';
 import { Action } from 'redux';
@@ -31,7 +31,7 @@ export namespace BaseRowKeys {
      */
     export const selected = 'selected';
 }
-export interface BaseRow {
+export type BaseRow = {
     /**
      * id
      */
@@ -40,7 +40,7 @@ export interface BaseRow {
      * selected (行選択フラグ)
      */
     [BaseRowKeys.selected]: boolean;
-}
+};
 
 // NormalDataRowKeys
 export namespace NormalRowKeys {
@@ -79,7 +79,7 @@ export namespace NormalRowKeys {
     // TODO: 実験
     export const invalid = 'invalid'; // : boolean;
 }
-export interface NormalRow extends BaseRow {
+export type NormalRow = BaseRow & {
     type: Readonly<'Normal'>;
 
     /**
@@ -111,7 +111,7 @@ export interface NormalRow extends BaseRow {
 
     // TODO: 実験
     [NormalRowKeys.invalid]: boolean;
-}
+};
 
 // 合計表示行
 export namespace TotalPriceRowKeys {
@@ -126,7 +126,7 @@ export namespace TotalPriceRowKeys {
      */
     export const totalPrice = 'totalPrice';
 }
-export interface TotalPriceRow extends BaseRow {
+export type TotalPriceRow = BaseRow & {
     type: Readonly<'TotalPrice'>;
 
     /**
@@ -142,7 +142,7 @@ export interface TotalPriceRow extends BaseRow {
      * selected override
      */
     [BaseRowKeys.selected]: false;
-}
+};
 
 // 小計表示行
 export namespace SubtotalPriceRowKeys {
@@ -158,7 +158,7 @@ export namespace SubtotalPriceRowKeys {
      */
     export const subtotalPrice = 'subtotalPrice';
 }
-export interface SubtotalPriceRow extends BaseRow {
+export type SubtotalPriceRow = BaseRow & {
     type: Readonly<'SubtotalPrice'>;
 
     /**
@@ -170,14 +170,14 @@ export interface SubtotalPriceRow extends BaseRow {
      * Subtotal Price
      */
     [SubtotalPriceRowKeys.subtotalPrice]: number;
-}
+};
 
 export type FormDataRow = NormalRow | SubtotalPriceRow | TotalPriceRow;
 
 /**
- * IFormData
+ * FormData
  */
-export interface IFormData {
+export type FormData = {
     /**
      * 帳票タイトル
      */
@@ -192,16 +192,16 @@ export interface IFormData {
      * TODO: 帳票合計　現状使ってない？
      */
     totalPrice: number;
-}
+};
 
 /**
- * ICreateFormState
+ * CreateFormState
  */
-export interface ICreateFormState {
+export type CreateFormState = {
     /**
      * 帳票データ
      */
-    formData: IFormData;
+    formData: FormData;
 
     formDataEditted: boolean; // 帳票データが編集済みか？
     edittingTitle: boolean;
@@ -214,7 +214,7 @@ export interface ICreateFormState {
     notify: NotifyContext; // 通知コンテキスト
 
     printing: boolean; //
-}
+};
 const initialDataRow: FormDataRow = {
     type: 'Normal',
 
@@ -254,7 +254,7 @@ const initialTotalpriceRow: TotalPriceRow = {
     [TotalPriceRowKeys.totalPrice]: 0,
     selected: false
 };
-const initialState: ICreateFormState = {
+const initialState: CreateFormState = {
     formData: {
         dataRows: [
             // 空行
@@ -335,7 +335,7 @@ const getSlecetedRowsInfo = (rows: FormDataRow[]): { count: number; firstIdx: nu
 /**
  * CreateFormStateReducer
  */
-export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(initialState)
+export const CreateFormStateReducer = reducerWithInitialState<CreateFormState>(initialState)
     /**
      * 行追加
      */
@@ -817,7 +817,7 @@ export const CreateFormStateReducer = reducerWithInitialState<ICreateFormState>(
  * 非同期でautoCompleteOptionsを更新する
  */
 export const updateAutoCompleteOptionsWorker = wrapThunkAsyncActionWorker<
-    IAppState,
+    AppState,
     { rowData: NormalRow; columnDDKey?: keyof DataDoc },
     autoCompleteOptionsType,
     Error
@@ -857,7 +857,7 @@ export const updateAutoCompleteOptionsWorker = wrapThunkAsyncActionWorker<
 /**
  * TODO: 非同期帳票読込
  */
-export const openFormWorker = wrapThunkAsyncActionParamVoidWorker<IAppState, Buffer, string>(
+export const openFormWorker = wrapThunkAsyncActionParamVoidWorker<AppState, Buffer, string>(
     CreateFormActions.openForm,
     openForm
 );
@@ -865,7 +865,7 @@ export const openFormWorker = wrapThunkAsyncActionParamVoidWorker<IAppState, Buf
 /**
  * TODO: 非同期帳票保存
  */
-export const saveFormWorker = wrapThunkAsyncActionParamVoidWorker<IAppState, void, string>(
+export const saveFormWorker = wrapThunkAsyncActionParamVoidWorker<AppState, void, string>(
     CreateFormActions.saveForm,
     saveForm
 );
@@ -874,8 +874,8 @@ export const saveFormWorker = wrapThunkAsyncActionParamVoidWorker<IAppState, voi
  * TODO: 確認付き帳票読込 ※ここに置くべきか？要検討
  */
 export const openFormWithConfirmWorker = () => (
-    dispatch: ThunkDispatch<IAppState, undefined, Action>,
-    getState: () => IAppState
+    dispatch: ThunkDispatch<AppState, undefined, Action>,
+    getState: () => AppState
 ) => {
     const { formDataEditted } = getState().createFormState;
 
@@ -892,8 +892,8 @@ export const openFormWithConfirmWorker = () => (
  * TODO: 確認付き新規帳票作成 ※ここに置くべきか？要検討
  */
 export const newFormWithConfirmWorker = () => (
-    dispatch: ThunkDispatch<IAppState, undefined, Action>,
-    getState: () => IAppState
+    dispatch: ThunkDispatch<AppState, undefined, Action>,
+    getState: () => AppState
 ) => {
     const { formDataEditted } = getState().createFormState;
 
@@ -910,8 +910,8 @@ export const newFormWithConfirmWorker = () => (
  * TODO: 印刷処理ワーカー
  */
 export const printFormWorker = () => async (
-    dispatch: ThunkDispatch<IAppState, undefined, Action>,
-    getState: () => IAppState
+    dispatch: ThunkDispatch<AppState, undefined, Action>,
+    getState: () => AppState
 ) => {
     // 印刷開始
     dispatch(CreateFormActions.startPrintForm());
