@@ -1,9 +1,6 @@
 # Sabatora
 
-# History
-
-2018/09/11 初めの一歩。
-
 # 概要
 
-TBD
+帳票作成アプリの試作。
+React + Redux + Typescript + Electron + NeDB + Webpack
