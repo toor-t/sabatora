@@ -2,7 +2,7 @@
  * file_io_main
  */
 
-import { dialog, ipcMain, Event } from 'electron';
+import { dialog, ipcMain, IpcMainEvent } from 'electron';
 import { win } from './main';
 import { OpenForm, SaveForm } from './file_io';
 import * as fs from 'fs';
@@ -31,7 +31,7 @@ function sleep(waitMSec: number, callbackFunc: () => void) {
 /**
  * 帳票読込リクエスト待ち受け
  */
-ipcMain.on(OpenForm.Request, (event: Event, arg: unknown) => {
+ipcMain.on(OpenForm.Request, (event: IpcMainEvent, arg: unknown) => {
     // TODO: 実験：waitしてみる
     sleep(200, () => {
         const asyncFunc = async () => {
@@ -53,35 +53,33 @@ const openForm = (): Promise<Buffer> => {
     return new Promise((resolve, reject) => {
         if (win) {
             // ファイル読込ダイアログを表示する
-            dialog.showOpenDialog(
-                win,
-                {
-                    title: '帳票読込',
-                    filters: [
-                        { name: 'JSON File', extensions: ['json'] }, // TODO: 拡張子は仮
-                        { name: 'All Files', extensions: ['*'] }
-                    ]
-                },
-                filename => {
-                    if (filename && filename[0]) {
-                        // ファイルオープン
-                        fs.readFile(filename[0], (err, data) => {
-                            if (err) {
-                                // エラー
-                                // TODO:
-                                reject(err);
-                            } else {
-                                // ファイル読込完了
-                                // TODO: ここでファイル内容の確認が必要か？
-                                resolve(data);
-                            }
-                        });
+            const filename: string[] | undefined = dialog.showOpenDialogSync(win, {
+                title: '帳票読込',
+                filters: [
+                    { name: 'JSON File', extensions: ['json'] }, // TODO: 拡張子は仮
+                    { name: 'All Files', extensions: ['*'] }
+                ]
+            });
+            // filename => {
+            if (filename && filename[0]) {
+                // ファイルオープン
+                fs.readFile(filename[0], (err, data) => {
+                    if (err) {
+                        // エラー
+                        // TODO:
+                        reject(err);
                     } else {
-                        // キャンセルされた
-                        reject('CANCELED'); // TODO:
+                        // ファイル読込完了
+                        // TODO: ここでファイル内容の確認が必要か？
+                        resolve(data);
                     }
-                }
-            );
+                });
+            } else {
+                // キャンセルされた
+                reject('CANCELED'); // TODO:
+            }
+            // }
+            // );
         } else {
             // TODO:
             reject('ERROR');
@@ -93,7 +91,7 @@ const openForm = (): Promise<Buffer> => {
 /**
  * 帳票保存リクエスト待ち受け
  */
-ipcMain.on(SaveForm.Request, (event: Event, arg: [FormData]) => {
+ipcMain.on(SaveForm.Request, (event: IpcMainEvent, arg: [FormData]) => {
     // TODO: 実験：waitしてみる
     sleep(200, () => {
         const asyncFunc = async () => {
@@ -116,39 +114,37 @@ const saveForm = (formData: FormData): Promise<void> => {
     return new Promise((resolve, reject) => {
         if (win) {
             // ファイル保存ダイアログを表示する
-            dialog.showSaveDialog(
-                win,
-                {
-                    title: '帳票保存',
-                    defaultPath: `${formData.title}.json`, // TODO: 拡張子は仮
+            const filename: string | undefined = dialog.showSaveDialogSync(win, {
+                title: '帳票保存',
+                defaultPath: `${formData.title}.json`, // TODO: 拡張子は仮
 
-                    filters: [
-                        { name: 'JSON File', extensions: ['json'] },
-                        { name: 'All Files', extensions: ['*'] }
-                    ]
-                },
-                filename => {
-                    // console.log(filename);
-                    if (filename) {
-                        // TODO:  保存不要なステータスを除去したステータスを用意
-                        const saveFormData = Object.assign({}, formData);
-                        // ファイルに保存
-                        const fileContent = JSON.stringify(saveFormData);
-                        fs.writeFile(filename, fileContent, err => {
-                            if (err) {
-                                // TODO:
-                                alert(err);
-                                reject(err);
-                            } else {
-                                // TODO:
-                                resolve();
-                            }
-                        });
+                filters: [
+                    { name: 'JSON File', extensions: ['json'] },
+                    { name: 'All Files', extensions: ['*'] }
+                ]
+            });
+            // filename => {
+            // console.log(filename);
+            if (filename) {
+                // TODO:  保存不要なステータスを除去したステータスを用意
+                const saveFormData = Object.assign({}, formData);
+                // ファイルに保存
+                const fileContent = JSON.stringify(saveFormData);
+                fs.writeFile(filename, fileContent, err => {
+                    if (err) {
+                        // TODO:
+                        alert(err);
+                        reject(err);
                     } else {
-                        reject('CANCELED');
+                        // TODO:
+                        resolve();
                     }
-                }
-            );
+                });
+            } else {
+                reject('CANCELED');
+            }
+            // }
+            // );
         }
     });
 };

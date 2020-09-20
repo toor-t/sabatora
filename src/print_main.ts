@@ -3,7 +3,7 @@
  */
 
 import { PrintForm } from './print';
-import { ipcMain, Event } from 'electron';
+import { ipcMain, IpcMainEvent, WebContents } from 'electron';
 
 // TODO:
 // setIntervalを使う方法
@@ -29,7 +29,7 @@ function sleep(waitMSec: number, callbackFunc: () => void) {
 /**
  * 帳票印刷リクエスト待ち受け
  */
-ipcMain.on(PrintForm.Request, (event: Event, arg: unknown) => {
+ipcMain.on(PrintForm.Request, (event: IpcMainEvent, arg: unknown) => {
     // TODO: 実験：waitしてみる
     sleep(200, () => {
         const asyncFunc = async () => {
@@ -47,7 +47,7 @@ ipcMain.on(PrintForm.Request, (event: Event, arg: unknown) => {
 /**
  * 帳票印刷
  */
-const printForm = (webContents: Electron.WebContents): Promise<string> => {
+const printForm = (webContents: WebContents): Promise<string> => {
     return new Promise((resolve, reject) => {
         // 印刷処理
         webContents.print(

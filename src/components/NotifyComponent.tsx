@@ -27,10 +27,10 @@ const styles = (theme: Theme) =>
         }
     });
 
-type ThunkActionType = (() => (
+type ThunkActionType = () => (
     dispatch: ThunkDispatch<AppState, undefined, Action<void>>,
     getState: () => AppState
-) => void);
+) => void;
 type ThunkDispatchActionType = ThunkActionType | ActionCreator<void> | undefined;
 
 /**
@@ -183,7 +183,7 @@ class NotifyComponent extends React.Component<
     };
 
     dialogTransition = (props: SlideProps) => {
-        return <Slide direction="up" {...props} />;
+        return <Slide {...props} direction="up" />;
     };
 
     render() {
@@ -224,7 +224,8 @@ class NotifyComponent extends React.Component<
                 Notify = (
                     <Dialog
                         open={this.props.notifyContext.open}
-                        TransitionComponent={this.dialogTransition}
+                        // FIXME: エラー対処できないからコメントアウトしてしまった...
+                        // TransitionComponent={this.dialogTransition}
                         keepMounted={true}
                         // onClose={this.handleDialogClose}
                         aria-labelledby="alert-dialog-slide-title"

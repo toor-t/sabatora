@@ -8,6 +8,7 @@ module.exports = {
 		filename: '[name].js'
 	},
 	node: {
+		global: true,
 		__dirname: false,
 		__filename: false
 	},

@@ -2,7 +2,7 @@
  * db_renderer
  */
 
-import { ipcRenderer, Event } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import {
     UpdateAutoCompleteOptions,
     QueryDb,
@@ -26,7 +26,7 @@ export const updateAutoCompleteOptions = (
         //
         ipcRenderer.once(
             UpdateAutoCompleteOptions.Result,
-            (event: Event, result: [autoCompleteOptionsType | null, Error | null]) => {
+            (event: IpcRendererEvent, result: [autoCompleteOptionsType | null, Error | null]) => {
                 if (result[0] !== null) {
                     resolve(result[0]);
                 } else {
@@ -50,7 +50,7 @@ export const queryDb = (query: DataDoc, projection: (keyof DataDoc)[] = []): Pro
         //
         ipcRenderer.once(
             QueryDb.Result,
-            (event: Event, result: [DataDoc[] | null, Error | null]) => {
+            (event: IpcRendererEvent, result: [DataDoc[] | null, Error | null]) => {
                 if (result[0] !== null) {
                     resolve(result[0]);
                 } else {
@@ -74,7 +74,7 @@ export const updateDb = (query: DataDoc, update: DataDoc): Promise<DataDoc[]> =>
         //
         ipcRenderer.once(
             UpdateDb.Result,
-            (event: Event, result: [DataDoc[] | null, Error | null]) => {
+            (event: IpcRendererEvent, result: [DataDoc[] | null, Error | null]) => {
                 if (result[0] !== null) {
                     resolve(result[0]);
                 } else {
@@ -97,7 +97,7 @@ export const insertDb = (doc: DataDoc): Promise<DataDoc> => {
         //
         ipcRenderer.once(
             InsertDb.Result,
-            (event: Event, result: [DataDoc | null, Error | null]) => {
+            (event: IpcRendererEvent, result: [DataDoc | null, Error | null]) => {
                 if (result[0] !== null) {
                     resolve(result[0]);
                 } else {
@@ -118,13 +118,16 @@ export const insertDb = (doc: DataDoc): Promise<DataDoc> => {
 export const removeDb = (query: DataDoc): Promise<number> => {
     return new Promise((resolve, reject) => {
         //
-        ipcRenderer.once(RemoveDb.Result, (event: Event, result: [number | null, Error | null]) => {
-            if (result[0] !== null) {
-                resolve(result[0]);
-            } else {
-                reject(result[1]);
+        ipcRenderer.once(
+            RemoveDb.Result,
+            (event: IpcRendererEvent, result: [number | null, Error | null]) => {
+                if (result[0] !== null) {
+                    resolve(result[0]);
+                } else {
+                    reject(result[1]);
+                }
             }
-        });
+        );
 
         // Send
         ipcRenderer.send(RemoveDb.Request, [query]);

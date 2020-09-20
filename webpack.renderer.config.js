@@ -9,6 +9,7 @@ const TITLE = 'sabatora.';
 
 module.exports = merge.smart(baseConfig, {
 	target: 'electron-renderer',
+	// target: 'electron-preload',
 	entry: {
 		app: './src/app.tsx'
 	},
