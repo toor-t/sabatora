@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import classnames from 'classnames';
+import classNames from 'classnames';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';

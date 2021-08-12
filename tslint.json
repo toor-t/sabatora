@@ -27,7 +27,8 @@
 		],
 		"jsx-no-string-ref": true,
 		"jsx-self-close": true,
-		"jsx-wrap-multiline": true
+		"jsx-wrap-multiline": true,
+		"import-name": [true, { "classnames": "classNames" }]
 	},
 	"rulesDirectory": []
 }
