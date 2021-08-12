@@ -19,6 +19,7 @@ import { ActionCreator } from 'typescript-fsa';
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
 import { AppState } from '../store';
+import { TransitionProps } from '@material-ui/core/transitions/transition';
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -27,10 +28,10 @@ const styles = (theme: Theme) =>
         }
     });
 
-type ThunkActionType = (() => (
+type ThunkActionType = () => (
     dispatch: ThunkDispatch<AppState, undefined, Action<void>>,
     getState: () => AppState
-) => void);
+) => void;
 type ThunkDispatchActionType = ThunkActionType | ActionCreator<void> | undefined;
 
 /**
@@ -182,8 +183,10 @@ class NotifyComponent extends React.Component<
             this.props.dispatch(this.props.notifyContext.onNotificationClose() as any); // TODO: この as any を止める方法は無いものか
     };
 
-    dialogTransition = (props: SlideProps) => {
-        return <Slide direction="up" {...props} />;
+    dialogTransition: React.ComponentType<TransitionProps> | undefined = (
+        props: TransitionProps
+    ) => {
+        return <Slide {...props} direction="up" />;
     };
 
     render() {

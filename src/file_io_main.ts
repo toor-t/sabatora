@@ -31,7 +31,7 @@ function sleep(waitMSec: number, callbackFunc: () => void) {
 /**
  * 帳票読込リクエスト待ち受け
  */
-ipcMain.on(OpenForm.Request, (event: Event, arg: unknown) => {
+ipcMain.on(OpenForm.Request, (event: Electron.IpcMainEvent, arg: unknown) => {
     // TODO: 実験：waitしてみる
     sleep(200, () => {
         const asyncFunc = async () => {
@@ -53,16 +53,16 @@ const openForm = (): Promise<Buffer> => {
     return new Promise((resolve, reject) => {
         if (win) {
             // ファイル読込ダイアログを表示する
-            dialog.showOpenDialog(
-                win,
-                {
+            dialog
+                .showOpenDialog(win, {
                     title: '帳票読込',
                     filters: [
                         { name: 'JSON File', extensions: ['json'] }, // TODO: 拡張子は仮
                         { name: 'All Files', extensions: ['*'] }
                     ]
-                },
-                filename => {
+                })
+                .then(result => {
+                    const filename = result.filePaths;
                     if (filename && filename[0]) {
                         // ファイルオープン
                         fs.readFile(filename[0], (err, data) => {
@@ -80,8 +80,10 @@ const openForm = (): Promise<Buffer> => {
                         // キャンセルされた
                         reject('CANCELED'); // TODO:
                     }
-                }
-            );
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         } else {
             // TODO:
             reject('ERROR');
@@ -93,7 +95,7 @@ const openForm = (): Promise<Buffer> => {
 /**
  * 帳票保存リクエスト待ち受け
  */
-ipcMain.on(SaveForm.Request, (event: Event, arg: [FormData]) => {
+ipcMain.on(SaveForm.Request, (event: Electron.IpcMainEvent, arg: [FormData]) => {
     // TODO: 実験：waitしてみる
     sleep(200, () => {
         const asyncFunc = async () => {
@@ -116,9 +118,8 @@ const saveForm = (formData: FormData): Promise<void> => {
     return new Promise((resolve, reject) => {
         if (win) {
             // ファイル保存ダイアログを表示する
-            dialog.showSaveDialog(
-                win,
-                {
+            dialog
+                .showSaveDialog(win, {
                     title: '帳票保存',
                     defaultPath: `${formData.title}.json`, // TODO: 拡張子は仮
 
@@ -126,8 +127,9 @@ const saveForm = (formData: FormData): Promise<void> => {
                         { name: 'JSON File', extensions: ['json'] },
                         { name: 'All Files', extensions: ['*'] }
                     ]
-                },
-                filename => {
+                })
+                .then(result => {
+                    const filename = result.filePath;
                     // console.log(filename);
                     if (filename) {
                         // TODO:  保存不要なステータスを除去したステータスを用意
@@ -147,8 +149,10 @@ const saveForm = (formData: FormData): Promise<void> => {
                     } else {
                         reject('CANCELED');
                     }
-                }
-            );
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         }
     });
 };

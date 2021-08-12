@@ -41,7 +41,7 @@ const conf_db: Nedb = new DataStore({
 /**
  * Query DB Request listener
  */
-ipcMain.on(QueryDb.Request, (event: Event, arg: [DataDoc, (keyof DataDoc)[]]) => {
+ipcMain.on(QueryDb.Request, (event: Electron.IpcMainEvent, arg: [DataDoc, (keyof DataDoc)[]]) => {
     // TODO:
     const asyncFunc = async () => {
         try {
@@ -146,7 +146,7 @@ const queryDb = (query: DataDoc, projection: (keyof DataDoc)[] = []): Promise<Da
 /**
  * Update DB Request listener
  */
-ipcMain.on(UpdateDb.Request, (event: Event, arg: [DataDoc, DataDoc]) => {
+ipcMain.on(UpdateDb.Request, (event: Electron.IpcMainEvent, arg: [DataDoc, DataDoc]) => {
     const asyncFunc = async () => {
         try {
             // TODO:
@@ -200,7 +200,7 @@ const updateDb = (query: DataDoc, update: DataDoc): Promise<DataDoc[]> => {
             _query,
             update,
             {},
-            (err: Error, numAffected: number, docs: DataDoc[], upsert: boolean) => {
+            (err: Error | null, numAffected: number, docs: DataDoc[], upsert: boolean) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -215,7 +215,7 @@ const updateDb = (query: DataDoc, update: DataDoc): Promise<DataDoc[]> => {
 /**
  * Insert DB Request listener
  */
-ipcMain.on(InsertDb.Request, (event: Event, arg: [DataDoc]) => {
+ipcMain.on(InsertDb.Request, (event: Electron.IpcMainEvent, arg: [DataDoc]) => {
     const asyncFunc = async () => {
         try {
             // TODO:
@@ -234,7 +234,7 @@ ipcMain.on(InsertDb.Request, (event: Event, arg: [DataDoc]) => {
  */
 const insertDb = (doc: DataDoc): Promise<DataDoc> => {
     return new Promise((resolve, reject) => {
-        data_db.insert<DataDoc>(doc, (err: Error, document: DataDoc) => {
+        data_db.insert<DataDoc>(doc, (err: Error | null, document: DataDoc) => {
             if (err) {
                 reject(err);
             } else {
@@ -248,7 +248,7 @@ const insertDb = (doc: DataDoc): Promise<DataDoc> => {
 /**
  * Remove DB Request listener
  */
-ipcMain.on(RemoveDb.Request, (event: Event, arg: [DataDoc]) => {
+ipcMain.on(RemoveDb.Request, (event: Electron.IpcMainEvent, arg: [DataDoc]) => {
     const asyncFunc = async () => {
         try {
             // TODO:
@@ -267,7 +267,7 @@ ipcMain.on(RemoveDb.Request, (event: Event, arg: [DataDoc]) => {
  */
 const removeDb = (query: DataDoc): Promise<number> => {
     return new Promise((resolve, reject) => {
-        data_db.remove(query, (err: Error, n: number) => {
+        data_db.remove(query, (err: Error | null, n: number) => {
             if (err) {
                 reject(err);
             } else {
@@ -281,19 +281,22 @@ const removeDb = (query: DataDoc): Promise<number> => {
 /**
  * Update AutoCompleteOptions Request listener
  */
-ipcMain.on(UpdateAutoCompleteOptions.Request, (event: Event, arg: [DataDoc, (keyof DataDoc)[]]) => {
-    const asyncFunc = async () => {
-        try {
-            // TODO:
-            const result = await updateAutoCompleteOptions(arg[0], arg[1]);
-            event.sender.send(UpdateAutoCompleteOptions.Result, [result, null]);
-        } catch (reject) {
-            // TODO:
-            event.sender.send(UpdateAutoCompleteOptions.Result, [null, reject]);
-        }
-    };
-    asyncFunc().then();
-});
+ipcMain.on(
+    UpdateAutoCompleteOptions.Request,
+    (event: Electron.IpcMainEvent, arg: [DataDoc, (keyof DataDoc)[]]) => {
+        const asyncFunc = async () => {
+            try {
+                // TODO:
+                const result = await updateAutoCompleteOptions(arg[0], arg[1]);
+                event.sender.send(UpdateAutoCompleteOptions.Result, [result, null]);
+            } catch (reject) {
+                // TODO:
+                event.sender.send(UpdateAutoCompleteOptions.Result, [null, reject]);
+            }
+        };
+        asyncFunc().then();
+    }
+);
 /**
  * Update AutoCompleteOptions
  * @param query
@@ -412,9 +415,11 @@ const updateAutoCompleteOptions = (
                                 // 複数候補がある場合は無視する
                                 return;
                             }
-                            result = docs[0][currentKey].map((value, index, array) => {
-                                return value.toString();
-                            });
+                            result = docs[0][currentKey].map(
+                                (value: any, index: any, array: any) => {
+                                    return value.toString();
+                                }
+                            );
 
                             break;
 
@@ -461,7 +466,7 @@ export function makeDummyDB() {
 
             unitPrice: [(i + 1) * 100, (i + 1) * 100 + 100, (i + 1) * 100 + 200]
         };
-        data_db.insert(doc, (err: Error, newdoc: DataDoc) => {
+        data_db.insert(doc, (err: Error | null, newdoc: DataDoc) => {
             console.log(newdoc);
         });
     }

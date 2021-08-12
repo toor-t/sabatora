@@ -29,7 +29,7 @@ function sleep(waitMSec: number, callbackFunc: () => void) {
 /**
  * 帳票印刷リクエスト待ち受け
  */
-ipcMain.on(PrintForm.Request, (event: Event, arg: unknown) => {
+ipcMain.on(PrintForm.Request, (event: Electron.IpcMainEvent, arg: unknown) => {
     // TODO: 実験：waitしてみる
     sleep(200, () => {
         const asyncFunc = async () => {
