@@ -104,7 +104,7 @@
 		"husky": "^1.2.0",
 		"image-webpack-loader": "^4.6.0",
 		"jest": "^23.6.0",
-		"lint-staged": "^8.1.0",
+		"lint-staged": "^13.1.0",
 		"prettier": "^1.15.3",
 		"react-hot-loader": "3.1.1",
 		"react-test-renderer": "^16.6.3",
