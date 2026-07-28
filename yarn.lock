@@ -5182,9 +5182,9 @@ immutability-helper@^2.8.1:
   dependencies:
     invariant "^2.2.0"
 
-immutable@^4.0.0-rc.12:
-  version "4.0.0-rc.14"
-  resolved "https://registry.npmjs.org/immutable/-/immutable-4.0.0-rc.14.tgz"
+immutable@^4.3.9:
+  version "4.3.9"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.3.9.tgz#c98349e05e9c6e2a4d8fe88ac0b363e0d536b544"
 
 import-fresh@^2.0.0:
   version "2.0.0"

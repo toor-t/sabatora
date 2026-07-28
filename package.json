@@ -139,7 +139,7 @@
 		"classnames": "^2.2.6",
 		"electron-store": "^2.0.0",
 		"immutability-helper": "^2.8.1",
-		"immutable": "^4.0.0-rc.12",
+		"immutable": "^4.3.9",
 		"nedb": "^1.8.0",
 		"react": "^16.6.3",
 		"react-data-grid": "^5.0.5",
