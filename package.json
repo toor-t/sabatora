@@ -102,7 +102,7 @@
 		"file-loader": "^2.0.0",
 		"html-webpack-plugin": "^5.6.6",
 		"husky": "^1.2.0",
-		"image-webpack-loader": "^4.6.0",
+		"image-webpack-loader": "^8.1.0",
 		"jest": "^30.4.2",
 		"lint-staged": "^16.4.0",
 		"prettier": "^1.15.3",
