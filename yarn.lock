@@ -3847,9 +3847,9 @@ electron-to-chromium@^1.5.420:
   version "1.5.422"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.422.tgz#e27fb1ca0e6bef612a647022e1469701fea9ee1f"
 
-electron@^41.10.4:
-  version "41.10.4"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-41.10.4.tgz#a7b753ab7d0a04afd539fd432fa3380b7feb1406"
+electron@^41.10.6:
+  version "41.10.6"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-41.10.6.tgz#df613dbd30a4f6fd0715468632acd35080e9df78"
   dependencies:
     "@electron-internal/extract-zip" "^1.0.1"
     "@electron/get" "^5.0.0"
